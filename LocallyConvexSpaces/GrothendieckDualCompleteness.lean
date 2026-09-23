@@ -19,16 +19,14 @@ bounded sets satisfy these hypotheses. Boundedness and closure under scalar mult
 unnecessary for the completeness equivalence itself.
 
 The approximation lemma imported from `LocallyConvexSpaces.GrothendieckApproximation` uses
-separation of the graph of a linear form restricted to a
-closed convex balanced set. The notation `E →Lᵤ[𝕜, 𝔖] 𝕜` denotes Mathlib's continuous dual
-with uniform convergence on the members of `𝔖`; `E →ᵤ[𝔖] 𝕜` denotes all functions with the
-same convergence. The dual-pair formulation uses `LinearMap.polarUniformSpace` and expresses
-completeness as representation of forms which are weakly continuous on the family.
+separation of the graph of a linear form restricted to a closed convex balanced set. The notation
+`E →Lᵤ[𝕜, 𝔖] 𝕜` denotes Mathlib's continuous dual with uniform convergence on the members of `𝔖`;
+`E →ᵤ[𝔖] 𝕜` denotes all functions with the same convergence. The dual-pair formulation uses
+`LinearMap.polarUniformSpace` and expresses completeness as representation of forms which are weakly
+continuous on the family.
 
 ## Main statements
 
-* Imported `LinearMap.exists_strongDual_norm_sub_le_of_continuousOn`: uniform approximation on a
-  closed convex balanced set, by separation of the restricted graph.
 * `UniformConvergenceCLM.completeSpace_of_forall_continuousOn`: the sufficiency direction,
   requiring only a complete nontrivially normed scalar field and a covering family.
 * `UniformConvergenceCLM.completeSpace_iff_forall_continuousOn`: the general criterion for
@@ -100,7 +98,7 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E]
 /-- If a directed nonempty family has cofinally many closed convex balanced members,
 a linear form continuous on every member is approximable by continuous linear forms
 for uniform convergence on the family. This is the approximation part of the general
-Grothendieck criterion, independently formalized from Schaefer–Wolff, IV §6.2. -/
+Grothendieck criterion, following Schaefer–Wolff, IV §6.2. -/
 theorem mem_closure_range_coeFn_of_continuousOn
     (h𝔖ne : 𝔖.Nonempty) (h𝔖dir : DirectedOn (· ⊆ ·) 𝔖)
     (h𝔖disk : ∀ S ∈ 𝔖, ∃ T ∈ 𝔖, S ⊆ T ∧ IsClosed T ∧ Convex ℝ T ∧ Balanced 𝕜 T)
@@ -120,7 +118,7 @@ theorem mem_closure_range_coeFn_of_continuousOn
 
 /-- If the continuous dual is complete for uniform convergence on a covering directed
 family with cofinally many closed convex balanced members, continuity of a linear form
-on every member implies its global continuity. This independently formalizes the necessity
+on every member implies its global continuity. This is the necessity
 part of Schaefer–Wolff, IV §6.2. -/
 theorem continuous_of_continuousOn_of_completeSpace
     (h𝔖ne : 𝔖.Nonempty) (h𝔖dir : DirectedOn (· ⊆ ·) 𝔖) (h𝔖cover : ⋃₀ 𝔖 = univ)
@@ -138,7 +136,7 @@ theorem continuous_of_continuousOn_of_completeSpace
 the dual is complete exactly when continuity on the family detects continuity of linear
 forms. A covering directed family with cofinally many closed convex balanced members suffices;
 in particular, this applies to saturated covering families of bounded sets. Boundedness
-is unnecessary for this uniform-space statement. This independently formalizes
+is unnecessary for this uniform-space statement. This is
 Schaefer–Wolff, IV §6.2. -/
 theorem completeSpace_iff_forall_continuousOn
     (h𝔖ne : 𝔖.Nonempty) (h𝔖dir : DirectedOn (· ⊆ ·) 𝔖) (h𝔖cover : ⋃₀ 𝔖 = univ)
@@ -160,7 +158,7 @@ variable {𝕜 E F : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E]
 is equivalent to representation by a point of every linear form on the other space whose
 restrictions to the family are weakly continuous. This applies in particular to saturated
 covering families of weakly bounded sets, and does not require the pairing to separate
-points. This independently formalizes Schaefer–Wolff, IV §6.2 and its dual-pair formulation. -/
+points. This is Schaefer–Wolff, IV §6.2 and its dual-pair formulation. -/
 theorem completeSpace_polarUniformSpace_iff
     (h𝔖ne : 𝔖.Nonempty) (h𝔖dir : DirectedOn (· ⊆ ·) 𝔖) (h𝔖cover : ⋃₀ 𝔖 = univ)
     (h𝔖disk : ∀ S ∈ 𝔖, ∃ T ∈ 𝔖, S ⊆ T ∧ IsClosed T ∧ Convex ℝ T ∧ Balanced 𝕜 T) :

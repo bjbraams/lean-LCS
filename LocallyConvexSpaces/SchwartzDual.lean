@@ -13,12 +13,20 @@ public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
 
 Mathlib's Schwartz space `𝓢(E, F)` of rapidly decreasing smooth functions is first countable,
 hence bornological. Its real or complex strong dual is therefore complete for uniform
-convergence on bounded sets, without assuming that the normed target `F` is complete.
-In particular this applies to scalar-valued tempered distributions with the strong topology.
+convergence on bounded sets, without assuming that the normed target `F` is complete. In
+particular this applies to scalar-valued tempered distributions with the strong topology.
 
-Mathlib equips `TemperedDistribution` with the topology of pointwise convergence. The
-completeness result here concerns `StrongDual`, and makes no claim about that different
-topology. Schwartz notation is from the `SchwartzMap` scope.
+Mathlib equips `TemperedDistribution` with the topology of pointwise convergence. The result
+here concerns `StrongDual`, and makes no claim about that different topology. The notation
+`𝓢(E, F)` is from the `SchwartzMap` scope.
+
+## Main statements
+
+* `SchwartzMap.instCompleteSpaceStrongDual`: the strong dual of Schwartz space is complete.
+
+## References
+
+* [H. H. Schaefer and M. P. Wolff, *Topological Vector Spaces*][schaefer1999], IV §6.1
 -/
 
 public section

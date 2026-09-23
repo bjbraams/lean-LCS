@@ -10,10 +10,13 @@ public import Mathlib.Analysis.Convex.Gauge
 /-!
 # Gauge seminorm balls of convex balanced neighbourhoods
 
-`gaugeSeminorm_ball_mem_nhds` shows that positive-radius gauge seminorm balls are
-neighbourhoods of zero. `gaugeSeminorm_ball_one_subset` places the open unit ball inside
-the original convex balanced neighbourhood. These results need no locally convex
-ambient topology.
+These results need no locally convex ambient topology.
+
+## Main statements
+
+* `gaugeSeminorm_ball_mem_nhds`: the balls of positive radius of the gauge seminorm of a convex
+  balanced neighbourhood of zero are neighbourhoods of zero.
+* `gaugeSeminorm_ball_one_subset`: its open unit ball lies in the neighbourhood.
 
 ## References
 

@@ -13,9 +13,12 @@ public import Mathlib.Analysis.RCLike.Basic
 /-!
 # Balanced and convex polars of linear pairings
 
-`LinearMap.balanced_polar` proves balancedness of polars over normed commutative rings.
-`LinearMap.convex_polar` proves real convexity for real or complex pairings. Neither
-result requires a topology on the paired modules.
+Neither result requires a topology on the paired modules.
+
+## Main statements
+
+* `LinearMap.balanced_polar`: polars are balanced, over a normed commutative ring.
+* `LinearMap.convex_polar`: polars are convex over the reals, for real or complex pairings.
 -/
 
 public section

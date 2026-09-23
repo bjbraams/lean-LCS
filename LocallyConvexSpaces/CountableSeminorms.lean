@@ -13,23 +13,18 @@ public import TopologicalVectorSpaces.Gauge
 # First-countable locally convex spaces are countably seminormed
 
 Mathlib shows that a topology defined by a countable family of seminorms is first countable
-(`WithSeminorms.firstCountableTopology`). This file proves the converse for locally convex
-spaces over `ℝ` or `ℂ`, using the more general result for polynormable spaces from
+(`WithSeminorms.firstCountableTopology`). This file proves the converse for locally convex spaces
+over `ℝ` or `ℂ`, using the more general result for polynormable spaces from
 `TopologicalVectorSpaces.CountableSeminorms`. A sequence of continuous seminorm balls is chosen
-inside a countable
-zero-neighbourhood basis using Mathlib's `PolynormableSpace.hasBasis_zero_ball`. Together with
-Mathlib's metrizability of first-countable uniform groups this gives the
-usual equivalence between first-countable and countably seminormed locally convex spaces.
-Such spaces are pseudometrizable, and metrizable if they are Hausdorff.
+inside a countable zero-neighbourhood basis using Mathlib's `PolynormableSpace.hasBasis_zero_ball`.
+Together with Mathlib's metrizability of first-countable uniform groups this gives the usual
+equivalence between first-countable and countably seminormed locally convex spaces. Such spaces are
+pseudometrizable, and metrizable if they are Hausdorff.
 
 ## Main statements
 
-* `gaugeSeminorm_ball_mem_nhds` (imported from `TopologicalVectorSpaces.Gauge`): balls of the gauge
-  seminorm of a convex balanced neighbourhood
-  of zero are neighbourhoods of zero.
 * `exists_continuous_seminorm_ball_subset`: every neighbourhood of zero contains the open unit
   ball of a continuous seminorm.
-* `PolynormableSpace.exists_seminormFamily_nat_withSeminorms`: the imported polynormable core.
 * `exists_seminormFamily_nat_withSeminorms`: a first-countable locally convex space has a
   sequence of seminorms that defines its topology.
 

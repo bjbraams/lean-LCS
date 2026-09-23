@@ -14,26 +14,23 @@ public import WebbedSpaces.Basic
 /-!
 # Spaces covered by a sequence of bounded closed disks are strictly webbed
 
-A complete topological vector space that is the union of a sequence of closed, convex, balanced,
-von Neumann bounded sets is strictly webbed: the sets of the web depend only on the first index.
-The main application is that the strong dual of a first-countable (for instance metrizable)
-topological vector space is strictly webbed, with the polars of a countable basis of
-neighbourhoods of zero as the covering sequence
-([G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.4.(11); compare §35.4.(12)).
+A complete topological vector space that is the union of a sequence of closed, convex, balanced, von
+Neumann bounded sets is strictly webbed: the sets of the web depend only on the first index. The
+main application is that the strong dual of a first-countable (for instance metrizable) topological
+vector space is strictly webbed, with the polars of a countable basis of neighbourhoods of zero as
+the covering sequence ([G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.4.(11); compare
+§35.4.(12)).
 
 The explicit web constructions and their calculation lemmas live in the `WebConstruction`
 namespace.
 
 ## Main definitions
 
-* `WebConstruction.webOfSeq K`: the web whose set for a finite sequence with first index `n` is `K
-  n`.
+* `WebConstruction.webOfSeq K`: the web whose set for a finite sequence with first index `n` is
+  `K n`.
 
 ## Main statements
 
-* Imported convex-combination lemmas `Convex.sum_smul_mem_smul`, `Convex.sum_smul_mem`: sums with
-  nonnegative coefficients of
-  points of a convex set.
 * `WebConstruction.isStrictWeb_webOfSeq`
 * `StrictlyWebbedSpace.of_iUnion_isVonNBounded`
 * `StrongDual.instStrictlyWebbedSpace`: the strong dual of a first-countable topological vector
@@ -142,9 +139,8 @@ variable {𝕜 F : Type*} [RCLike 𝕜] [AddCommGroup F] [Module 𝕜 F] [Module
   [IsScalarTower ℝ 𝕜 F] [UniformSpace F] [IsUniformAddGroup F] [CompleteSpace F]
 
 /-- The series condition of `WebConstruction.isStrictWeb_webOfSeq` for a closed, convex, balanced,
-von Neumann
-bounded subset of a complete topological vector space. -/
-theorem exists_tendsto_sum_of_isVonNBounded {K : Set F} (hcl : IsClosed K)
+von Neumann bounded subset of a complete topological vector space. -/
+theorem Bornology.IsVonNBounded.exists_mem_tendsto_sum_smul {K : Set F} (hcl : IsClosed K)
     (hconv : Convex ℝ K) (hbal : Balanced 𝕜 K) (hbdd : IsVonNBounded 𝕜 K) {x : ℕ → F}
     {c : ℕ → ℝ} (hx : ∀ k, x k ∈ K) (hc : ∀ k, 0 ≤ c k ∧ c k ≤ (1 / 2 : ℝ) ^ (k + 1)) :
     ∃ s ∈ K, Tendsto (fun N ↦ ∑ k ∈ Finset.range N, c k • x k) atTop (𝓝 s) := by
@@ -198,7 +194,7 @@ theorem StrictlyWebbedSpace.of_iUnion_isVonNBounded {K : ℕ → Set F} (hK : �
     (hbdd : ∀ n, IsVonNBounded 𝕜 (K n)) : StrictlyWebbedSpace 𝕜 F := by
   refine ⟨WebConstruction.webOfSeq K,
     WebConstruction.isStrictWeb_webOfSeq hK hconv hbal fun n x c hx hc k₀ ↦ ?_⟩
-  refine exists_tendsto_sum_of_isVonNBounded (hcl n) (hconv n) (hbal n) (hbdd n)
+  refine Bornology.IsVonNBounded.exists_mem_tendsto_sum_smul (hcl n) (hconv n) (hbal n) (hbdd n)
     (fun k ↦ hx (k₀ + k)) fun k ↦ ⟨(hc (k₀ + k)).1, (hc (k₀ + k)).2.trans ?_⟩
   exact pow_le_pow_of_le_one (by norm_num) (by norm_num) (by omega)
 

@@ -10,9 +10,14 @@ public import Mathlib.Analysis.Convex.Combination
 /-!
 # Finite convex combinations with bounded total weight
 
-`Convex.sum_smul_mem_smul` bounds a finite positive combination by a scalar multiple of a
-convex set. `Convex.sum_smul_mem` handles nonnegative weights of sum at most one when zero
-belongs to the set. Scalars lie in an arbitrary linearly ordered field.
+Scalars lie in an arbitrary linearly ordered field.
+
+## Main statements
+
+* `Convex.sum_smul_mem_smul`: a finite combination of points of a convex set with nonnegative
+  coefficients of positive sum `c` lies in `c • K`.
+* `Convex.sum_smul_mem`: the same with coefficients of sum at most one, when zero lies in the
+  set.
 -/
 
 public section
@@ -21,7 +26,8 @@ open Set
 
 open scoped Pointwise
 
-variable {R F : Type*} [Field R] [LinearOrder R] [IsStrictOrderedRing R] [AddCommGroup F] [Module R F] {K : Set F} {ι : Type*}
+variable {R F : Type*} [Field R] [LinearOrder R] [IsStrictOrderedRing R] [AddCommGroup F]
+  [Module R F] {K : Set F} {ι : Type*}
 
 /-- A sum `∑ c i • x i` of points of a convex set with nonnegative coefficients lies in
 `(∑ c i) • K`, if the sum of the coefficients is positive. -/

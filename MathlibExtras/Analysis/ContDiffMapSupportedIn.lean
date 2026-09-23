@@ -10,11 +10,14 @@ public import Mathlib.Analysis.Distribution.ContDiffMapSupportedIn
 /-!
 # First countability for functions with fixed compact support
 
-The topology of `𝓓^{n}_{K}(E, F)` is induced by its countable family of derivative maps
-into spaces of bounded continuous functions. Consequently it is first countable, for every
-smoothness order `n : ℕ∞`, without completeness or finite-dimensionality assumptions.
-The notation is Mathlib's `Distributions` notation for functions supported in the compact
-set `K`.
+The topology of `𝓓^{n}_{K}(E, F)` is induced by its countable family of derivative maps into
+spaces of bounded continuous functions. Consequently it is first countable, for every smoothness
+order `n : ℕ∞`, without completeness or finite-dimensionality assumptions. The notation is from
+Mathlib's `Distributions` scope.
+
+## Main statements
+
+* `ContDiffMapSupportedIn.instFirstCountableTopology`.
 -/
 
 public section

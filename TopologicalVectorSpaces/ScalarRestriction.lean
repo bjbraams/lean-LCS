@@ -11,10 +11,14 @@ public import Mathlib.Topology.Algebra.Module.Basic
 /-!
 # Continuity of complex scalar multiplication from the real action
 
-On a real topological vector space with a compatible `RCLike` module structure, joint
-continuity of the scalar action is equivalent to continuity of multiplication by the
-imaginary unit. The proof uses the decomposition of a scalar into real and imaginary parts.
-No local convexity, separation, or norm on the vector space is needed.
+The proof uses the decomposition of a scalar into real and imaginary parts. No local convexity,
+separation, or norm on the vector space is needed.
+
+## Main statements
+
+* `RCLike.continuousSMul_iff_continuous_smul_I`: on a real topological vector space with a
+  compatible `RCLike` module structure, the scalar action is jointly continuous if and only if
+  multiplication by the imaginary unit is continuous.
 -/
 
 public section

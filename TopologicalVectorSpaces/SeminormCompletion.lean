@@ -14,15 +14,30 @@ public import Mathlib.Analysis.Normed.Group.SeparationQuotient
 # The Banach space associated with a seminorm
 
 For a seminorm `p`, `p.Completion` is the separated completion of the space with seminorm `p`,
-equivalently the completion of the normed quotient by its kernel. The canonical map has dense
-range and norm `p x`. Domination of seminorms gives contraction maps between the completions.
-More generally, a linear map bounded with respect to two seminorms induces a unique
-continuous linear map between their completions, with the same bound. These maps preserve
-identities and composition. Mutually dominating seminorms have continuously linearly
-equivalent completions. Bounds are recorded by nonnegative real constants.
-These are the local Banach spaces used in the projective representation of a locally convex
-space (Casselman, *Introduction to topological vector spaces*, §5). The construction and
-proofs here independently use Mathlib's completion and extension theorems.
+equivalently the completion of the normed quotient by its kernel. These local Banach spaces are
+used in the projective representation of a locally convex space. Bounds are recorded by
+nonnegative real constants.
+
+## Main definitions
+
+* `Seminorm.Space p`, `Seminorm.NormedQuotient p`, `Seminorm.Completion p`: the space with the
+  single seminorm `p`, its normed quotient, and its completion.
+* `Seminorm.toCompletion p`: the canonical map, with dense range and norm `p x`.
+* `Seminorm.completionMap`: the contraction between completions for dominated seminorms.
+* `Seminorm.mapCompletion`: the continuous linear map between completions induced by a linear
+  map bounded with respect to two seminorms.
+* `Seminorm.completionEquivOfBounds`: completions of mutually dominating seminorms are
+  isomorphic.
+
+## Main statements
+
+* `Seminorm.mapCompletion_unique`, `Seminorm.mapCompletion_id`, `Seminorm.mapCompletion_comp`:
+  functoriality.
+* `Seminorm.opNorm_mapCompletion_le`: the seminorm bound is preserved.
+
+## References
+
+* [B. Casselman, *Introduction to Topological Vector Spaces*][casselman2016], §5
 -/
 
 @[expose] public noncomputable section

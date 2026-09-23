@@ -40,14 +40,11 @@ sets.
   that absorbs every sequence tending to zero is a neighbourhood of zero.
 * `exists_tendsto_atTop_tendsto_smul_zero`: in a first-countable topological vector space, for
   `x n → 0` there are `ρ n → ∞` with `ρ n • x n → 0` (Köthe I §28.1.(5)).
-* `Convex.balancedCore`, `Convex.sum_smul_mem_smul`, `Convex.sum_smul_mem`.
-* `ContinuousLinearMap.isClosed_graph`.
-* `closure_mem_nhds_zero_of_not_isMeagre`, `exists_mem_closure_image_sub_mem_nhds_zero`,
-  `exists_forall_not_isMeagre_res`: non-meagre sets in topological vector spaces and along
-  trees of sets indexed by finite sequences. The translate and tree lemmas are imported from
-  `TopologicalGroups.Basic` and `MathlibExtras.Topology.BaireTree`, respectively. Convex-combination
-  lemmas are imported from
-  `MathlibExtras.Analysis.ConvexCombinations`.
+* `Convex.balancedCore`: the balanced core of a convex set containing zero is convex.
+* `ContinuousLinearMap.isClosed_graph`: the graph of a continuous linear map into a Hausdorff
+  space is closed.
+* `closure_mem_nhds_zero_of_not_isMeagre`: in a real topological vector space the closure of a
+  convex, symmetric, non-meagre set is a neighbourhood of zero.
 
 ## Implementation notes
 
@@ -193,7 +190,8 @@ theorem Bornology.IsVonNBounded.balancedHull [ContinuousSMul 𝕜 E] {s : Set E}
 /-- In a first-countable topological vector space a set that absorbs the range of every
 sequence tending to zero is a neighbourhood of zero. The proof follows
 `LinearMap.continuousAt_zero_of_locally_bounded` of Mathlib. -/
-theorem mem_nhds_zero_of_forall_absorbs_range [ContinuousSMul 𝕜 E] [FirstCountableTopology E] {s : Set E}
+theorem mem_nhds_zero_of_forall_absorbs_range [ContinuousSMul 𝕜 E] [FirstCountableTopology E]
+    {s : Set E}
     (hs : ∀ x : ℕ → E, Tendsto x atTop (𝓝 0) → Absorbs 𝕜 s (range x)) :
     s ∈ 𝓝 (0 : E) := by
   obtain ⟨c, hc0, hc1⟩ := NormedField.exists_norm_lt_one 𝕜

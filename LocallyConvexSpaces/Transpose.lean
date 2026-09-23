@@ -27,8 +27,8 @@ space.
 ## Main definitions
 
 * `ContinuousLinearMap.transpose`: the transpose `φ ↦ φ ∘ f`, between the strong duals.
-* `Submodule.strongDualQuotientEquiv`: the dual of a subspace `M` is `E' ⧸ M^⊥`.
-* `Submodule.strongDualMkQEquiv`: the dual of the quotient `E ⧸ M` is `M^⊥`.
+* `Submodule.strongDualSubmoduleEquiv`: the dual of a subspace `M` is `E' ⧸ M^⊥`.
+* `Submodule.strongDualQuotientEquiv`: the dual of the quotient `E ⧸ M` is `M^⊥`.
 
 ## Main statements
 
@@ -280,15 +280,15 @@ theorem isInducing_weakSpace_map_subtypeL :
 /-- **The dual of a subspace**: the continuous dual of a subspace `M` of a locally convex space
 `E` is linearly equivalent to the quotient of the dual of `E` by the annihilator of `M`. -/
 @[expose]
-noncomputable def strongDualQuotientEquiv :
+noncomputable def strongDualSubmoduleEquiv :
     (StrongDual 𝕜 E ⧸ StrongDual.polarSubmodule 𝕜 M) ≃ₗ[𝕜] StrongDual 𝕜 M :=
   (Submodule.quotEquivOfEq _ _ M.ker_transpose_subtypeL.symm).trans
     (M.subtypeL.transpose.toLinearMap.quotKerEquivOfSurjective
       M.surjective_transpose_subtypeL)
 
 /-- The identification of the dual of a subspace sends the class of `φ` to its restriction. -/
-theorem strongDualQuotientEquiv_mk (φ : StrongDual 𝕜 E) (x : M) :
-    M.strongDualQuotientEquiv (Submodule.Quotient.mk φ) x = φ x :=
+theorem strongDualSubmoduleEquiv_mk (φ : StrongDual 𝕜 E) (x : M) :
+    M.strongDualSubmoduleEquiv (Submodule.Quotient.mk φ) x = φ x :=
   rfl
 
 end Subspace
@@ -322,14 +322,14 @@ theorem range_transpose_mkQL :
 /-- **The dual of a quotient**: the continuous dual of `E ⧸ M` is linearly equivalent to the
 annihilator of `M`. -/
 @[expose]
-noncomputable def strongDualMkQEquiv :
+noncomputable def strongDualQuotientEquiv :
     StrongDual 𝕜 (E ⧸ M) ≃ₗ[𝕜] StrongDual.polarSubmodule 𝕜 M :=
   (LinearEquiv.ofInjective M.mkQL.transpose.toLinearMap
     M.injective_transpose_mkQL).trans (LinearEquiv.ofEq _ _ M.range_transpose_mkQL)
 
 /-- The identification of the dual of a quotient sends `ψ` to `ψ ∘ mkQ`. -/
-theorem strongDualMkQEquiv_apply (ψ : StrongDual 𝕜 (E ⧸ M)) (x : E) :
-    (M.strongDualMkQEquiv ψ : StrongDual 𝕜 E) x = ψ (M.mkQ x) :=
+theorem strongDualQuotientEquiv_apply (ψ : StrongDual 𝕜 (E ⧸ M)) (x : E) :
+    (M.strongDualQuotientEquiv ψ : StrongDual 𝕜 E) x = ψ (M.mkQ x) :=
   rfl
 
 end Quotient

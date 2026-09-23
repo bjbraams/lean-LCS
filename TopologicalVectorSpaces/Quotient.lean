@@ -10,8 +10,12 @@ public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Quotient
 /-!
 # Neighbourhood bases in module quotients
 
-`Submodule.Quotient.nhds_zero_hasBasis_image` transports any basis at zero through the open
-quotient map. The scalar ring need not carry a topology or a norm.
+The scalar ring need not carry a topology or a norm.
+
+## Main statements
+
+* `Submodule.Quotient.nhds_zero_hasBasis_image`: the image of a basis of neighbourhoods of zero
+  under the open quotient map is a basis of neighbourhoods of zero.
 -/
 
 public section

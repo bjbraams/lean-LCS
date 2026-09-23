@@ -13,23 +13,22 @@ public import LocallyConvexSpaces.PolarTopology
 # The dual of the topology of compact convergence
 
 Let `E` be a quasi-complete locally convex space over `ℝ` or `ℂ`. Every linear functional on the
-dual
-of `E` that is continuous for the topology of compact convergence is the evaluation at a point
+dual of `E` that is continuous for the topology of compact convergence is the evaluation at a point
 of `E`. In the language of dual pairs, the topology of compact convergence on `E'` is compatible
-with the pairing between `E'` and `E`; this is the part of the Mackey–Arens theorem that is
-needed for the Krein–Šmulian theorem.
+with the pairing between `E'` and `E`; this is the part of the Mackey–Arens theorem that is needed
+for the Krein–Šmulian theorem.
 
 The proof is the classical one. A functional `Λ` that is continuous for compact convergence is
 bounded by one on the polar `K°` of a compact set `K`, which may be taken convex and balanced
 because `E` is quasi-complete
-(`IsCompact.exists_isCompact_convex_balanced_superset_of_quasiComplete`). The image of `K`
+(`IsCompact.exists_isCompact_convex_balanced_superset_of_quasiCompleteSpace`). The image of `K`
 in the algebraic dual `G` of `E'` is compact for the weak topology `σ(G, E')`, hence closed, and
 it is convex and balanced. By the bipolar theorem for the pairing of `G` with `E'`
 (`LinearMap.flip_polar_polar_eq_self`) it is its own bipolar, and `Λ` lies in that bipolar.
 
 ## Main statements
 
-The lemmas ending in `_of_quasiComplete` give the quasi-complete versions of the following
+The lemmas ending in `_of_quasiCompleteSpace` give the quasi-complete versions of the following
 complete-space corollaries.
 
 * `CompactConvergenceCLM.exists_forall_apply_eq`: a continuous linear functional on
@@ -83,7 +82,8 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module
 
 /-- Let `E` be a quasi-complete locally convex space. A linear functional on the dual of `E` that is
 continuous for the topology of compact convergence is the evaluation at a point of `E`. -/
-theorem exists_forall_apply_eq_of_quasiComplete [QuasiCompleteSpace 𝕜 E] (Λ : (E →L_c[𝕜] 𝕜) →L[𝕜] 𝕜) :
+theorem exists_forall_apply_eq_of_quasiCompleteSpace [QuasiCompleteSpace 𝕜 E]
+    (Λ : (E →L_c[𝕜] 𝕜) →L[𝕜] 𝕜) :
     ∃ x : E, ∀ f : E →L_c[𝕜] 𝕜, Λ f = f x := by
   -- `Λ` is bounded by one on the polar of a compact set `K`.
   have hnhds : Λ ⁻¹' closedBall (0 : 𝕜) 1 ∈ 𝓝 (0 : E →L_c[𝕜] 𝕜) :=
@@ -93,7 +93,7 @@ theorem exists_forall_apply_eq_of_quasiComplete [QuasiCompleteSpace 𝕜 E] (Λ 
   obtain ⟨K₀, hK₀, hK₀Λ⟩ := (CompactConvergenceCLM.hasBasis_nhds_zero_polar).mem_iff.mp hnhds
   -- Enlarge `K` to a compact, convex, balanced set.
   obtain ⟨K, hK₀K, hK, hKc, hKb, hK0⟩ :=
-    hK₀.exists_isCompact_convex_balanced_superset_of_quasiComplete (𝕜 := 𝕜)
+    hK₀.exists_isCompact_convex_balanced_superset_of_quasiCompleteSpace (𝕜 := 𝕜)
   have hΛ (f : E →L_c[𝕜] 𝕜) (hf : ∀ x ∈ K, ‖f x‖ ≤ 1) : ‖Λ f‖ ≤ 1 := by
     have h := hK₀Λ (UniformConvergenceCLM.mem_polar.mpr fun x hx ↦ hf x (hK₀K hx))
     simpa using h
@@ -123,10 +123,10 @@ theorem exists_forall_apply_eq_of_quasiComplete [QuasiCompleteSpace 𝕜 E] (Λ 
   exact ⟨x, fun f ↦ (LinearMap.congr_fun hx f).symm⟩
 
 /-- Let `E` be a quasi-complete locally convex space, `S` a compact subset of `E` and `T` a convex
-set
-of continuous linear functionals that does not meet the polar of `S`. Then `T` is separated from
+set of continuous linear functionals that does not meet the polar of `S`. Then `T` is separated from
 zero by a point of `E`: there are `x : E` and `u > 0` with `u ≤ re (f x)` for all `f ∈ T`. -/
-theorem exists_pos_le_re_apply_of_quasiComplete [QuasiCompleteSpace 𝕜 E] {S : Set E} (hS : IsCompact S) {T : Set (E →L_c[𝕜] 𝕜)}
+theorem exists_pos_le_re_apply_of_quasiCompleteSpace [QuasiCompleteSpace 𝕜 E] {S : Set E}
+    (hS : IsCompact S) {T : Set (E →L_c[𝕜] 𝕜)}
     (hT : Convex ℝ T)
     (hdisj : Disjoint (UniformConvergenceCLM.polar 𝕜 {S : Set E | IsCompact S} S) T) :
     ∃ x : E, ∃ u : ℝ, 0 < u ∧ ∀ f ∈ T, u ≤ RCLike.re (f x) := by
@@ -140,7 +140,7 @@ theorem exists_pos_le_re_apply_of_quasiComplete [QuasiCompleteSpace 𝕜 E] {S :
   have hsc : Convex ℝ s := hpc.interior
   obtain ⟨Λ, u, hΛs, hΛt⟩ := RCLike.geometric_hahn_banach_open (𝕜 := 𝕜) hsc isOpen_interior hT
     (hdisj.mono_left interior_subset)
-  obtain ⟨x, hx⟩ := exists_forall_apply_eq_of_quasiComplete Λ
+  obtain ⟨x, hx⟩ := exists_forall_apply_eq_of_quasiCompleteSpace Λ
   refine ⟨x, u, by simpa using hΛs 0 hs0, fun f hf ↦ ?_⟩
   rw [← hx]
   exact hΛt f hf
@@ -149,7 +149,7 @@ theorem exists_pos_le_re_apply_of_quasiComplete [QuasiCompleteSpace 𝕜 E] {S :
 space is evaluation at a point of the original space. -/
 theorem exists_forall_apply_eq [CompleteSpace E] (Λ : (E →L_c[𝕜] 𝕜) →L[𝕜] 𝕜) :
     ∃ x : E, ∀ f : E →L_c[𝕜] 𝕜, Λ f = f x :=
-  exists_forall_apply_eq_of_quasiComplete Λ
+  exists_forall_apply_eq_of_quasiCompleteSpace Λ
 
 /-- In a complete locally convex space, a convex set of functionals missing the polar of a
 compact set is separated from zero by evaluation at a point. -/
@@ -157,6 +157,6 @@ theorem exists_pos_le_re_apply [CompleteSpace E] {S : Set E} (hS : IsCompact S)
     {T : Set (E →L_c[𝕜] 𝕜)} (hT : Convex ℝ T)
     (hdisj : Disjoint (UniformConvergenceCLM.polar 𝕜 {S : Set E | IsCompact S} S) T) :
     ∃ x : E, ∃ u : ℝ, 0 < u ∧ ∀ f ∈ T, u ≤ RCLike.re (f x) :=
-  exists_pos_le_re_apply_of_quasiComplete hS hT hdisj
+  exists_pos_le_re_apply_of_quasiCompleteSpace hS hT hdisj
 
 end CompactConvergenceCLM

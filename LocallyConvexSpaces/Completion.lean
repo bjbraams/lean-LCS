@@ -17,40 +17,28 @@ public import TopologicalVectorSpaces.Completion
 # The completion of a topological vector space and of a locally convex space
 
 Mathlib gives the completion `UniformSpace.Completion E` of a topological vector space `E` the
-structure of a uniform additive group and of a module with continuous multiplication by each
-scalar. The imported module `TopologicalVectorSpaces.Completion` proves joint continuity of
-scalar multiplication and identifies the continuous duals. This file proves the remaining
-locally convex consequence: the completion of a locally convex space is locally convex.
-It also identifies zero-neighbourhood polars in the weak-* duals of the space and its
-completion. Evaluation of extended functionals is weak-* continuous on these polars.
+structure of a uniform additive group and of a module with continuous multiplication by each scalar.
+`TopologicalVectorSpaces.Completion` proves joint continuity of scalar multiplication and identifies
+the continuous duals. This file proves the remaining locally convex consequence: the completion of a
+locally convex space is locally convex. It also identifies zero-neighbourhood polars in the weak-*
+duals of the space and its completion. Evaluation of extended functionals is weak-* continuous on
+these polars.
 
 Mathlib's module structure on the completion assumes `UniformContinuousConstSMul 𝕜 E`. In a
 topological vector space this holds by `uniformContinuousConstSMul_of_continuousConstSMul`,
 which cannot be an instance; it is therefore a hypothesis here as well.
 
-## Imported definitions from `TopologicalVectorSpaces.Completion`
+## Main definitions
 
-* `UniformSpace.Completion.coeCLM 𝕜 E`: the canonical map `E → Completion E` as a continuous
-  linear map.
-* `UniformSpace.Completion.strongDualEquiv 𝕜 E`: restriction to `E` as a linear equivalence
-  between the dual of the completion and the dual of `E`.
+* `UniformSpace.Completion.polarHomeomorph`: the identification of zero-neighbourhood polars
+  is a weak-* homeomorphism.
 
 ## Main statements
 
-* Imported from `TopologicalGroups.Completion`:
-  `UniformSpace.Completion.hasBasis_nhds_zero_closure_image`: the
-  closures of the images of the
-  neighbourhoods of zero in `E` form a basis of neighbourhoods of zero in the completion.
-* Imported from `TopologicalVectorSpaces.Completion`: `UniformSpace.Completion.instContinuousSMul`:
-  the completion is a
-  topological vector space.
 * `UniformSpace.Completion.instLocallyConvexSpace`: the completion of a locally convex space is
   locally convex.
-
 * `UniformSpace.Completion.mem_polar_closure_image_iff`: restriction identifies the polars
   of a set and of the closure of its image.
-* `UniformSpace.Completion.polarHomeomorph`: the identification of zero-neighbourhood polars
-  is a weak-* homeomorphism.
 * `UniformSpace.Completion.continuousOn_extend_eval_polar`: evaluation after extension is
   weak-* continuous on each zero-neighbourhood polar.
 

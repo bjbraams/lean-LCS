@@ -26,9 +26,6 @@ strictly webbed; this covers sequentially complete (DF)-spaces, Köthe II §35.4
 
 ## Main statements
 
-* Imported from `TopologicalGroups.Series`: `tendsto_sum_range_add_of_tendsto_sum_range`: the tails
-  of a convergent
-  series converge.
 * `IsCompletingWeb.isStrictWeb_of_isSeqClosed`: criterion (2).
 * `IsWeb.isCompletingWeb_of_isBanachDisk`: criterion (1).
 * `StrictlyWebbedSpace.of_iUnion_isBanachDisk`.

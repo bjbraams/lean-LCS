@@ -50,14 +50,6 @@ construction; here the translation by `b k` lets one approximation lemma serve a
 
 ## Main statements
 
-* Imported from `TopologicalVectorSpaces.Basic`: `closure_mem_nhds_zero_of_not_isMeagre`: in a real
-  topological vector
-  space the closure of a
-  convex, symmetric, non-meagre set is a neighbourhood of zero.
-* Imported group lemma `exists_mem_closure_image_sub_mem_nhds_zero`: a non-meagre subset `S` of a
-  topological group
-  contains a point `a` such that the closure of `S - a` is a neighbourhood of zero.
-* Imported tree lemma `exists_forall_not_isMeagre_res`: a strand of non-meagre sets.
 * `Submodule.image_mem_nhds_zero_of_isSeqClosed`, `Submodule.image_mem_nhds_zero_of_isClosed`:
   De Wilde's theorem for linear relations.
 * `Submodule.image_mem_nhds_zero_of_locallyConvexFinalTopology`: the passage to locally convex
@@ -413,27 +405,32 @@ is a neighbourhood of zero in `E`. Köthe II §35.2.(2) and §35.3.(5), (6). -/
 theorem Submodule.image_mem_nhds_zero_of_ultrabornologicalSpace (G : Submodule 𝕜 (F × E))
     (hG : IsSeqClosed (G : Set (F × E))) (hsurj : Prod.snd '' (G : Set (F × E)) = univ)
     {V : Set F} (hV : V ∈ 𝓝 (0 : F)) : SetRel.image (G : Set (F × E)) V ∈ 𝓝 (0 : E) := by
-  obtain ⟨ι, X, _, _, _, _, _, f, hf⟩ := UltrabornologicalSpace.exists_family (𝕜 := 𝕜) (E := E)
-  have key := Submodule.image_mem_nhds_zero_of_locallyConvexFinalTopology f G hsurj
-    (fun i V hV ↦ ?_) hV
-  · rwa [← hf] at key
-  -- The pullback of `G` to the Banach space `X i` is sequentially closed with full projection.
-  have hfi : Continuous (f i) := by
-    have h := locallyConvexFinalTopology.continuous_apply f i
-    rwa [← hf] at h
-  have hcont : Continuous (LinearMap.prodMap (LinearMap.id : F →ₗ[𝕜] F) (f i)) :=
-    continuous_fst.prodMk (hfi.comp continuous_snd)
-  refine Submodule.image_mem_nhds_zero_of_isSeqClosed
-    (G.comap (LinearMap.prodMap LinearMap.id (f i))) (hG.preimage hcont.seqContinuous) ?_ hV
-  have huniv : Prod.snd '' ((G.comap (LinearMap.prodMap LinearMap.id (f i)) :
-      Submodule 𝕜 (F × X i)) : Set (F × X i)) = univ := by
+  obtain ⟨V', ⟨hV', hV'c, hV'b⟩, hV'V⟩ :=
+    (nhds_zero_hasBasis_convex_balanced 𝕜 F).mem_iff.mp hV
+  refine mem_of_superset (UltrabornologicalSpace.mem_nhds_zero (G.convex_relImage hV'c)
+    (G.balanced_relImage hV'b) (G.absorbent_relImage (absorbent_nhds_zero hV') hsurj)
+    fun X _ _ _ f ↦ ?_) (SetRel.image_mono hV'V)
+  -- The pullback of `G` to the complete seminormed space `X` is sequentially closed with full
+  -- projection, so De Wilde's theorem applies on `X`.
+  let _ : Module ℝ X := NormedSpace.restrictScalars ℝ 𝕜 X |>.toModule
+  have : IsScalarTower ℝ 𝕜 X := IsScalarTower.restrictScalars ℝ 𝕜 X
+  have : ContinuousSMul ℝ X := IsScalarTower.continuousSMul 𝕜
+  have hcont : Continuous (LinearMap.prodMap (LinearMap.id : F →ₗ[𝕜] F) f.toLinearMap) :=
+    continuous_fst.prodMk (f.continuous.comp continuous_snd)
+  let Gf := G.comap (LinearMap.prodMap LinearMap.id f.toLinearMap)
+  have huniv : Prod.snd '' (Gf : Set (F × X)) = univ := by
     refine eq_univ_of_forall fun e ↦ ?_
-    obtain ⟨q, hq, hqe⟩ : f i e ∈ Prod.snd '' (G : Set (F × E)) := hsurj ▸ mem_univ _
+    obtain ⟨q, hq, hqe⟩ : f e ∈ Prod.snd '' (G : Set (F × E)) := hsurj ▸ mem_univ _
     refine ⟨(q.1, e), ?_, rfl⟩
-    change (q.1, f i e) ∈ G
+    change (q.1, f e) ∈ G
     rw [← hqe]
     exact hq
-  rw [huniv]
-  exact not_isMeagre_of_isOpen isOpen_univ univ_nonempty
+  have hne : ¬IsMeagre (Prod.snd '' (Gf : Set (F × X))) := by
+    rw [huniv]
+    exact not_isMeagre_of_isOpen isOpen_univ univ_nonempty
+  refine mem_of_superset (Submodule.image_mem_nhds_zero_of_isSeqClosed Gf
+    (hG.preimage hcont.seqContinuous) hne hV') ?_
+  rintro x ⟨v, hv, hvx⟩
+  exact ⟨v, hv, hvx⟩
 
 end Ultrabornological

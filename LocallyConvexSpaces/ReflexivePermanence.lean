@@ -15,16 +15,27 @@ public import Mathlib.Analysis.LocallyConvex.WeakSpace
 /-!
 # Permanence of semi-reflexivity and reflexivity
 
-Semi-reflexivity passes to closed locally convex subspaces and to continuous linear
-retracts. Reflexivity also passes to continuous linear retracts, over a nontrivially normed
-field and without local convexity. Quotient statements require a bounded-lifting hypothesis.
-The subspace and bounded-lifting reflexivity results additionally require barrelledness
-(or quasi-barrelledness) of the resulting space: closed subspaces of
-reflexive locally convex spaces need not be reflexive, and arbitrary quotients need not
-be semi-reflexive. See Schaefer–Wolff, Chapter IV, §5, following Theorem 5.7.
+Semi-reflexivity passes to closed locally convex subspaces, to continuous linear retracts and to
+arbitrary products. Reflexivity passes to continuous linear retracts, over a nontrivially normed
+field and without local convexity, and to arbitrary products of locally convex spaces. Images
+and quotients require a bounded-lifting hypothesis. The subspace and bounded-lifting
+reflexivity results additionally require quasi-barrelledness of the resulting space: closed
+subspaces of reflexive locally convex spaces need not be reflexive, and quotients need not be
+semi-reflexive.
 
-The proofs below independently combine transposition, Hahn–Banach, and the characterizations
-of semi-reflexivity and reflexivity already developed in this project.
+## Main statements
+
+* `SemiReflexiveSpace.of_rightInverse`, `ReflexiveSpace.of_rightInverse`,
+  `BarrelledSpace.of_rightInverse`: continuous linear retracts.
+* `SemiReflexiveSpace.submodule`, `ReflexiveSpace.submodule_of_quasiBarrelledSpace`: closed
+  subspaces.
+* `SemiReflexiveSpace.of_bounded_lifting`, `ReflexiveSpace.of_bounded_lifting`,
+  `ReflexiveSpace.quotient_of_bounded_lifting`: images that lift bounded sets up to closure.
+* `SemiReflexiveSpace.pi`, `ReflexiveSpace.pi`: arbitrary products.
+
+## References
+
+* [H. H. Schaefer and M. P. Wolff, *Topological Vector Spaces*][schaefer1999], IV §5.7, §5.8
 -/
 
 public section
@@ -111,7 +122,7 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module
   [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E]
 
 /-- Closed subspaces of semi-reflexive locally convex spaces are semi-reflexive.
-This is the permanence assertion after Schaefer–Wolff IV, Theorem 5.7, independently proved
+This is the permanence assertion after Schaefer–Wolff IV, Theorem 5.7, proved
 using extension of functionals and separation by the annihilator. -/
 theorem SemiReflexiveSpace.submodule [SemiReflexiveSpace 𝕜 E]
     (M : Submodule 𝕜 E) (hM : IsClosed (M : Set E)) : SemiReflexiveSpace 𝕜 M := by
@@ -201,8 +212,8 @@ variable {𝕜 ι : Type*} [RCLike 𝕜] {E : ι → Type*}
   [∀ i, AddCommGroup (E i)] [∀ i, Module 𝕜 (E i)] [∀ i, TopologicalSpace (E i)]
   [∀ i, IsTopologicalAddGroup (E i)] [∀ i, ContinuousSMul 𝕜 (E i)]
 
-/-- Arbitrary products of semi-reflexive spaces are semi-reflexive.
-This independently proves the product assertion of Schaefer–Wolff IV, Theorem 5.8. -/
+/-- Arbitrary products of semi-reflexive spaces are semi-reflexive. This is the product assertion of
+Schaefer–Wolff IV, Theorem 5.8. -/
 instance SemiReflexiveSpace.pi [∀ i, SemiReflexiveSpace 𝕜 (E i)] :
     SemiReflexiveSpace 𝕜 (∀ i, E i) := by
   classical

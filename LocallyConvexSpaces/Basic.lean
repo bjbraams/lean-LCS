@@ -23,9 +23,6 @@ neighbourhoods that are convex over `ℝ` and balanced over `𝕜`. This file pr
 
 ## Main statements
 
-* Imported from `TopologicalVectorSpaces.Basic`: `Convex.balancedCore`: the `𝕜`-balanced core of an
-  `ℝ`-convex set containing zero is
-  `ℝ`-convex.
 * `LocallyConvexSpace.of_real`, `PolynormableSpace.of_locallyConvexSpace_real`: a real or complex
   topological vector space that is locally convex over `ℝ` is locally convex over `𝕜` for the
   order `ComplexOrder`, and is polynormable over `𝕜`. This links the convention of this library

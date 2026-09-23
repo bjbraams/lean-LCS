@@ -30,7 +30,6 @@ polar is used need not be a neighbourhood, and no separation assumption is neede
 ## References
 
 * [H. H. Schaefer and M. P. Wolff, *Topological Vector Spaces*][schaefer1999], IV §6.2.
-  The graph-separation argument is independently formalized.
 -/
 
 public section
@@ -46,7 +45,7 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module
 
 /-- A linear form continuous on a closed convex balanced set can be approximated uniformly
 there by continuous linear forms on the entire space. Boundedness of the set is unnecessary.
-This independently formalizes the approximation step in Schaefer–Wolff, IV §6.2, using
+This is the approximation step in Schaefer–Wolff, IV §6.2, using
 separation of its graph in the product with the scalar field. -/
 theorem LinearMap.exists_strongDual_norm_sub_le_of_continuousOn
     (f : E →ₗ[𝕜] 𝕜) {S : Set E} (hScl : IsClosed S) (hSc : Convex ℝ S)

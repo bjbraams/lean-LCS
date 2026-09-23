@@ -14,19 +14,18 @@ public import TopologicalGroups.Basic
 /-!
 # Polar topologies for a pairing
 
-Let `B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜` be a bilinear pairing and `𝔖` a family of subsets of `F`. The
-*polar topology* or *`𝔖`-topology* on `E` is the topology of uniform convergence on the members
-of `𝔖`, where a point `x` of `E` is regarded as the function `y ↦ B x y` on `F`. If `𝔖` is
-nonempty, directed and stable under nonzero scalar multiples, the polars `{x | ∀ y ∈ S, ‖B x y‖ ≤
-1}` of the
+Let `B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜` be a bilinear pairing and `𝔖` a family of subsets of `F`. The *polar
+topology* or *`𝔖`-topology* on `E` is the topology of uniform convergence on the members of `𝔖`,
+where a point `x` of `E` is regarded as the function `y ↦ B x y` on `F`. If `𝔖` is nonempty,
+directed and stable under nonzero scalar multiples, the polars `{x | ∀ y ∈ S, ‖B x y‖ ≤ 1}` of the
 members of `𝔖` form a basis of neighbourhoods of zero.
 
-The topology is defined as the topology induced on `E` by the linear map
-`x ↦ B x ·` into Mathlib's space `WeakBilin B.flip →Lᵤ[𝕜, 𝔖] 𝕜` of continuous linear functionals
-on `F` with the weak topology `σ(F, E)`, with the topology of `𝔖`-convergence. It is a term and
-not an instance, like `locallyConvexFinalTopology`. The family `𝔖` consists of subsets of
-`WeakBilin B.flip`, which is `F` with the weak topology, so that weak boundedness and weak
-compactness of its members can be expressed.
+The topology is defined as the topology induced on `E` by the linear map `x ↦ B x ·` into Mathlib's
+space `WeakBilin B.flip →Lᵤ[𝕜, 𝔖] 𝕜` of continuous linear functionals on `F` with the weak topology
+`σ(F, E)`, with the topology of `𝔖`-convergence. It is a term and not an instance, like
+`locallyConvexFinalTopology`. The family `𝔖` consists of subsets of `WeakBilin B.flip`, which is `F`
+with the weak topology, so that weak boundedness and weak compactness of its members can be
+expressed.
 
 ## Main definitions
 
@@ -38,10 +37,7 @@ compactness of its members can be expressed.
 
 * `LinearMap.polarTopology.isTopologicalAddGroup`, `.continuousSMul`, `.locallyConvexSpace`.
 * `LinearMap.polarTopology.hasBasis_nhds_zero`: the basis of polars.
-* Imported from `TopologicalGroups.Basic`: `TopologicalSpace.le_of_nhds_zero_le` compares group
-  topologies.
-* `LinearMap.polarTopology_antitone` (and its compatibility wrapper `polarTopology_mono`): a larger
-  family gives a finer topology.
+* `LinearMap.polarTopology_antitone`: a larger family gives a finer topology.
 
 ## References
 
@@ -147,11 +143,6 @@ end polarTopology
 /-- Polar topology is antitone in the family of sets, for Mathlib's order on topologies. -/
 theorem polarTopology_antitone : Antitone B.polarTopology := fun _ _ h ↦
   induced_mono (UniformConvergenceCLM.topologicalSpace_mono (RingHom.id 𝕜) 𝕜 h)
-
-/-- A larger family of sets gives a finer polar topology. -/
-theorem polarTopology_mono {𝔖₁ 𝔖₂ : Set (Set (WeakBilin B.flip))} (h : 𝔖₂ ⊆ 𝔖₁) :
-    B.polarTopology 𝔖₁ ≤ B.polarTopology 𝔖₂ :=
-  B.polarTopology_antitone h
 
 end General
 

@@ -210,6 +210,21 @@ theorem mem_nhds_zero {U : Set F} (hc : Convex ℝ U) (hb : Balanced 𝕜 U) (ha
       (by simpa [Seminorm.mem_ball_zero, p] using hx)
   exact nhds_mono hle (mem_of_superset hball hsub)
 
+/-- A seminorm on `F` is continuous for the final locally convex topology as soon as its
+compositions with the maps of the family are continuous. -/
+theorem continuous_seminorm (p : Seminorm 𝕜 F) (hp : ∀ i, Continuous fun x ↦ p (f i x)) :
+    @Continuous F ℝ (locallyConvexFinalTopology f) _ p := by
+  let _ : TopologicalSpace F := locallyConvexFinalTopology f
+  have h1 : IsTopologicalAddGroup F := isTopologicalAddGroup f
+  have h2 : ContinuousSMul 𝕜 F := continuousSMul f
+  refine Seminorm.continuous (r := 1) (mem_nhds_zero f (p.convex_ball 0 1)
+    (p.balanced_ball_zero 1) (p.absorbent_ball_zero one_pos) fun i ↦ ?_)
+  refine mem_of_superset (((hp i).isOpen_preimage _ (isOpen_Iio (a := (1 : ℝ)))).mem_nhds
+    (by simp)) ?_
+  intro x hx
+  rw [mem_preimage, p.mem_ball_zero]
+  exact hx
+
 /-- The final locally convex topology for a family of maps from barrelled spaces is barrelled.
 In particular locally convex direct sums and inductive limits of barrelled spaces are
 barrelled. -/

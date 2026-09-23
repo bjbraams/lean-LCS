@@ -28,6 +28,12 @@ The limit induces on every step its own topology: each `f n` is a topological em
 This rests on the extension lemma for convex balanced neighbourhoods of zero along a linear
 embedding. The limit of complete steps is complete, by separation in its completion.
 
+## Main definitions
+
+* `IsStrictInductiveLimit j f`: the maps `j n` and `f n` form a strict inductive sequence with
+  limit space `F`.
+* `StrictInductiveLimit.transition`: the composed transition maps `E n → E (n + k)`.
+
 ## Main statements
 
 * `ContinuousLinearMap.exists_convex_balanced_nhds_preimage_eq`: if `j : E →L[𝕜] G` is an
@@ -36,29 +42,27 @@ embedding. The limit of complete steps is complete, by separation in its complet
   with `j ⁻¹' W = V`. The variants `…_preimage_eq_subset_add` and `…_preimage_eq_notMem` in
   addition make `W ⊆ j '' V + N` for a given neighbourhood `N`, respectively `p ∉ W` for a
   given point `p` outside the closed range of `j`.
-* `StrictInductiveLimit.exists_nhds_preimage_eq`: a convex balanced neighbourhood of zero in a
+* `IsStrictInductiveLimit.exists_nhds_preimage_eq`: a convex balanced neighbourhood of zero in a
   step `E n` is the preimage of a neighbourhood of zero of the limit.
-* `StrictInductiveLimit.isInducing`: every `f n` is inducing for the final locally convex
-  topology; with injectivity, `StrictInductiveLimit.isEmbedding`.
-* `StrictInductiveLimit.t2Space`: a strict inductive limit of Hausdorff spaces is Hausdorff.
+* `IsStrictInductiveLimit.isInducing`: every `f n` is inducing for the final locally convex
+  topology; with injectivity, `IsStrictInductiveLimit.isEmbedding`.
+* `IsStrictInductiveLimit.t2Space`: a strict inductive limit of Hausdorff spaces is Hausdorff.
+* `IsStrictInductiveLimit.isClosed_range`: if every step is closed in the next one, then every
+  step is closed in the limit.
+* `IsStrictInductiveLimit.exists_subset_range_of_isVonNBounded`: the **Dieudonné–Schwartz
+  theorem**: under the same hypothesis every bounded subset of the limit lies in a step. The
+  proof separates points outside the steps by functionals that vanish on the steps, instead of
+  the usual recursive construction of a neighbourhood.
+* `IsStrictInductiveLimit.exists_subset_range_and_isVonNBounded_preimage`: a bounded set is
+  contained and bounded in one step when the transition ranges are closed.
+* `IsStrictInductiveLimit.completeSpace`: a countable strict inductive limit of complete
+  locally convex spaces is complete, without metrizability or separation hypotheses.
 
 Barrelledness, bornologicity and ultrabornologicity of the limit are instances of the general
 statements `locallyConvexFinalTopology.barrelledSpace`,
 `locallyConvexFinalTopology.bornologicalSpace` and
 `locallyConvexFinalTopology.ultrabornologicalSpace`; in particular a strict LF space (a strict
 inductive limit of Fréchet spaces) is barrelled, bornological and ultrabornological.
-
-* `StrictInductiveLimit.isClosed_range`: if every step is closed in the next one, then every
-  step is closed in the limit.
-* `StrictInductiveLimit.exists_subset_range_of_isVonNBounded`: the **Dieudonné–Schwartz
-  theorem**: under the same hypothesis every bounded subset of the limit lies in a step. The
-  proof separates points outside the steps by functionals that vanish on the steps, instead of
-  the usual recursive construction of a neighbourhood.
-
-* `StrictInductiveLimit.exists_subset_range_and_isVonNBounded_preimage`: a bounded set is
-  contained and bounded in one step when the transition ranges are closed.
-* `StrictInductiveLimit.completeSpace`: a countable strict inductive limit of complete
-  locally convex spaces is complete, without metrizability or separation hypotheses.
 
 ## References
 
@@ -264,6 +268,36 @@ theorem isClosed_range_transition (hj : ∀ n, Topology.IsClosedEmbedding (j n))
 
 end Transition
 
+end StrictInductiveLimit
+
+section Structure
+
+variable {𝕜 : Type*} [Semiring 𝕜] {E : ℕ → Type*} {F : Type*}
+  [∀ n, AddCommMonoid (E n)] [∀ n, Module 𝕜 (E n)] [∀ n, TopologicalSpace (E n)]
+  [AddCommMonoid F] [Module 𝕜 F]
+
+/-- A **strict inductive sequence** with limit space `F`: continuous linear maps
+`j n : E n →L[𝕜] E (n + 1)` that are topological embeddings, together with injective linear maps
+`f n : E n →ₗ[𝕜] F` that are compatible with the maps `j n` and whose ranges cover `F`. The
+*strict inductive limit* is `F` with the final locally convex topology
+`locallyConvexFinalTopology f`; that topology is not part of this structure. -/
+structure IsStrictInductiveLimit (j : ∀ n, E n →L[𝕜] E (n + 1)) (f : ∀ n, E n →ₗ[𝕜] F) :
+    Prop where
+  /-- Every step is topologically embedded in the next one. -/
+  isEmbedding_step : ∀ n, Topology.IsEmbedding (j n)
+  /-- The maps into `F` are compatible with the steps. -/
+  apply_step : ∀ n x, f (n + 1) (j n x) = f n x
+  /-- The maps into `F` are injective. -/
+  injective : ∀ n, Injective (f n)
+  /-- The ranges of the maps into `F` cover `F`. -/
+  exists_apply_eq : ∀ y : F, ∃ n x, f n x = y
+
+end Structure
+
+namespace IsStrictInductiveLimit
+
+open StrictInductiveLimit
+
 variable {𝕜 : Type*} [RCLike 𝕜] {E : ℕ → Type*} {F : Type*}
   [∀ n, AddCommGroup (E n)] [∀ n, Module 𝕜 (E n)] [∀ n, Module ℝ (E n)]
   [∀ n, IsScalarTower ℝ 𝕜 (E n)] [∀ n, TopologicalSpace (E n)]
@@ -272,11 +306,9 @@ variable {𝕜 : Type*} [RCLike 𝕜] {E : ℕ → Type*} {F : Type*}
   [AddCommGroup F] [Module 𝕜 F] [Module ℝ F] [IsScalarTower ℝ 𝕜 F]
   (j : ∀ n, E n →L[𝕜] E (n + 1)) (f : ∀ n, E n →ₗ[𝕜] F)
 
-variable (hj : ∀ n, Topology.IsInducing (j n)) (hjinj : ∀ n, Injective (j n))
-  (hf : ∀ n x, f (n + 1) (j n x) = f n x) (hfinj : ∀ n, Injective (f n))
-  (hF : ∀ y : F, ∃ n x, f n x = y)
+variable {j f} (h : IsStrictInductiveLimit j f)
 
-include hj hjinj hf hfinj hF in
+include h in
 /-- In a strict inductive limit, every convex balanced neighbourhood `V` of zero in a step
 `E n` is the preimage under `f n` of a neighbourhood of zero of the limit. -/
 theorem exists_nhds_preimage_eq (n : ℕ) {V : Set (E n)} (hV : V ∈ 𝓝 (0 : E n))
@@ -288,8 +320,8 @@ theorem exists_nhds_preimage_eq (n : ℕ) {V : Set (E n)} (hV : V ∈ 𝓝 (0 : 
   have step (k : ℕ) (W : Set (E (n + k))) (hW : P k W) :
       ∃ W' : Set (E (n + k + 1)), P (k + 1) W' ∧ j (n + k) ⁻¹' W' = W := by
     obtain ⟨W', h1, h2, h3, h4⟩ :=
-      (j (n + k)).exists_convex_balanced_nhds_preimage_eq (hj (n + k)) (hjinj (n + k)) hW.1 hW.2.1
-        hW.2.2
+      (j (n + k)).exists_convex_balanced_nhds_preimage_eq (h.isEmbedding_step (n + k)).isInducing
+        (h.isEmbedding_step (n + k)).injective hW.1 hW.2.1 hW.2.2
     exact ⟨W', ⟨h1, h2, h3⟩, h4⟩
   let A : ∀ k, {W : Set (E (n + k)) // P k W} := fun k ↦
     Nat.rec (motive := fun k ↦ {W : Set (E (n + k)) // P k W}) ⟨V, hV, hVc, hVb⟩
@@ -303,7 +335,7 @@ theorem exists_nhds_preimage_eq (n : ℕ) {V : Set (E n)} (hV : V ∈ 𝓝 (0 : 
   have hT (k : ℕ) (x : E n) : f (n + k) (T k x) = f n x := by
     induction k with
     | zero => rfl
-    | succ k ih => exact (hf (n + k) (T k x)).trans ih
+    | succ k ih => exact (h.apply_step (n + k) (T k x)).trans ih
   have hTA (k : ℕ) (x : E n) (hx : T k x ∈ (A k).1) : x ∈ V := by
     induction k with
     | zero => exact hx
@@ -315,7 +347,7 @@ theorem exists_nhds_preimage_eq (n : ℕ) {V : Set (E n)} (hV : V ∈ 𝓝 (0 : 
   let U : Set F := ⋃ k, f (n + k) '' (A k).1
   have hmono : Monotone fun k ↦ f (n + k) '' (A k).1 := monotone_nat_of_le_succ fun k ↦ by
     rintro _ ⟨x, hx, rfl⟩
-    refine ⟨j (n + k) x, ?_, hf (n + k) x⟩
+    refine ⟨j (n + k) x, ?_, h.apply_step (n + k) x⟩
     have : x ∈ j (n + k) ⁻¹' (A (k + 1)).1 := by rwa [hA k]
     exact this
   have hUc : Convex ℝ U := hmono.directed_le.convex_iUnion fun k ↦
@@ -324,12 +356,12 @@ theorem exists_nhds_preimage_eq (n : ℕ) {V : Set (E n)} (hV : V ∈ 𝓝 (0 : 
   have hUpre (k : ℕ) : f (n + k) ⁻¹' U ∈ 𝓝 (0 : E (n + k)) :=
     mem_of_superset (A k).2.1 fun x hx ↦ mem_iUnion.mpr ⟨k, x, hx, rfl⟩
   have hUpre' (m : ℕ) : f m ⁻¹' U ∈ 𝓝 (0 : E m) := by
-    refine preimage_mem_nhds_of_add j f hf n m ?_
+    refine preimage_mem_nhds_of_add j f h.apply_step n m ?_
     have h := hUpre m
     rwa [Nat.add_comm n m] at h
   have hUabs : Absorbent 𝕜 U := by
     intro y
-    obtain ⟨m, x, rfl⟩ := hF y
+    obtain ⟨m, x, rfl⟩ := h.exists_apply_eq y
     have hx : Absorbs 𝕜 (f m ⁻¹' U) {x} := absorbent_nhds_zero (hUpre' m) x
     refine Filter.Eventually.mono hx fun c hc ↦ ?_
     rw [singleton_subset_iff] at hc ⊢
@@ -339,11 +371,11 @@ theorem exists_nhds_preimage_eq (n : ℕ) {V : Set (E n)} (hV : V ∈ 𝓝 (0 : 
     Subset.antisymm ?_ ?_⟩
   · intro x hx
     obtain ⟨k, w, hw, hwx⟩ := mem_iUnion.mp hx
-    have h1 : T k x = w := (hfinj (n + k) (hwx.trans (hT k x).symm)).symm
+    have h1 : T k x = w := (h.injective (n + k) (hwx.trans (hT k x).symm)).symm
     exact hTA k x (h1 ▸ hw)
   · exact fun x hx ↦ mem_iUnion.mpr ⟨0, x, hx, rfl⟩
 
-include hj hjinj hf hfinj hF in
+include h in
 /-- In a strict inductive limit the final locally convex topology induces on every step its
 own topology: each `f n` is inducing. -/
 theorem isInducing (n : ℕ) :
@@ -358,29 +390,29 @@ theorem isInducing (n : ℕ) :
     exact map_le_iff_le_comap.mp h
   · obtain ⟨V', ⟨hV', hV'c, hV'b⟩, hV'V⟩ :=
       (nhds_zero_hasBasis_convex_balanced 𝕜 (E n)).mem_iff.mp hV
-    obtain ⟨U, hU, hUV'⟩ := exists_nhds_preimage_eq j f hj hjinj hf hfinj hF n hV' hV'c hV'b
+    obtain ⟨U, hU, hUV'⟩ := h.exists_nhds_preimage_eq n hV' hV'c hV'b
     exact mem_comap.mpr ⟨U, hU, hUV'.subset.trans hV'V⟩
 
-include hj hjinj hf hfinj hF in
+include h in
 /-- In a strict inductive limit every step is topologically embedded in the limit. -/
 theorem isEmbedding (n : ℕ) :
     @Topology.IsEmbedding (E n) F _ (locallyConvexFinalTopology f) (f n) :=
   @Topology.IsEmbedding.mk _ _ _ (locallyConvexFinalTopology f) _
-    (isInducing j f hj hjinj hf hfinj hF n) (hfinj n)
+    (h.isInducing n) (h.injective n)
 
-include hj hjinj hf hfinj hF in
+include h in
 /-- A strict inductive limit of Hausdorff locally convex spaces is Hausdorff. -/
 theorem t2Space [∀ n, T1Space (E n)] : @T2Space F (locallyConvexFinalTopology f) := by
   let _ : TopologicalSpace F := locallyConvexFinalTopology f
   have h1 : IsTopologicalAddGroup F := locallyConvexFinalTopology.isTopologicalAddGroup f
   refine IsTopologicalAddGroup.t2Space_of_zero_sep fun y hy ↦ ?_
-  obtain ⟨n, x, rfl⟩ := hF y
+  obtain ⟨n, x, rfl⟩ := h.exists_apply_eq y
   have hx : x ≠ 0 := fun h ↦ hy (by rw [h, map_zero])
   -- A convex balanced neighbourhood of zero in `E n` that does not contain `x`.
   have hV : ({x}ᶜ : Set (E n)) ∈ 𝓝 (0 : E n) := isOpen_compl_singleton.mem_nhds (Ne.symm hx)
   obtain ⟨V, ⟨hV', hVc, hVb⟩, hVx⟩ :=
     (nhds_zero_hasBasis_convex_balanced 𝕜 (E n)).mem_iff.mp hV
-  obtain ⟨U, hU, hUV⟩ := exists_nhds_preimage_eq j f hj hjinj hf hfinj hF n hV' hVc hVb
+  obtain ⟨U, hU, hUV⟩ := h.exists_nhds_preimage_eq n hV' hVc hVb
   refine ⟨U, hU, fun hyU ↦ ?_⟩
   have hxV : x ∈ V := by
     rw [← hUV]
@@ -389,30 +421,30 @@ theorem t2Space [∀ n, T1Space (E n)] : @T2Space F (locallyConvexFinalTopology 
 
 variable (hjcl : ∀ n, IsClosed (range (j n)))
 
-include hj hjinj hf hfinj hF hjcl in
+include h hjcl in
 /-- If every step of a strict inductive sequence is closed in the next one, then every step is
 closed in the limit. -/
 theorem isClosed_range (n : ℕ) : @IsClosed F (locallyConvexFinalTopology f) (range (f n)) := by
   let _ : TopologicalSpace F := locallyConvexFinalTopology f
   have h1 : IsTopologicalAddGroup F := locallyConvexFinalTopology.isTopologicalAddGroup f
-  have hjce (m : ℕ) : Topology.IsClosedEmbedding (j m) := ⟨⟨hj m, hjinj m⟩, hjcl m⟩
+  have hjce (m : ℕ) : Topology.IsClosedEmbedding (j m) := ⟨h.isEmbedding_step m, hjcl m⟩
   rw [← isOpen_compl_iff, isOpen_iff_mem_nhds]
   intro y hy
-  obtain ⟨m, x, rfl⟩ := hF y
+  obtain ⟨m, x, rfl⟩ := h.exists_apply_eq y
   -- The point lies in a later step, outside the closed range of the transition map.
   rcases le_total m n with hmn | hnm
-  · exact absurd (range_mono j f hf hmn ⟨x, rfl⟩) hy
+  · exact absurd (range_mono j f h.apply_step hmn ⟨x, rfl⟩) hy
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hnm
   have hx : x ∉ range (transition j n k) := by
     rintro ⟨z, rfl⟩
-    exact hy ⟨z, (apply_transition j f hf n k z).symm⟩
+    exact hy ⟨z, (apply_transition j f h.apply_step n k z).symm⟩
   have hN : {v : E (n + k) | x - v ∈ (range (transition j n k))ᶜ} ∈ 𝓝 (0 : E (n + k)) := by
     have hc : ContinuousAt (fun v : E (n + k) ↦ x - v) 0 := by fun_prop
     exact hc.preimage_mem_nhds
       ((isClosed_range_transition j hjce n k).isOpen_compl.mem_nhds (by simpa using hx))
   obtain ⟨V, ⟨hV, hVc, hVb⟩, hVN⟩ :=
     (nhds_zero_hasBasis_convex_balanced 𝕜 (E (n + k))).mem_iff.mp hN
-  obtain ⟨U, hU, hUV⟩ := exists_nhds_preimage_eq j f hj hjinj hf hfinj hF (n + k) hV hVc hVb
+  obtain ⟨U, hU, hUV⟩ := h.exists_nhds_preimage_eq (n + k) hV hVc hVb
   -- The neighbourhood `y - U` of `y` does not meet the range of `f n`.
   have hyU : {y' : F | f (n + k) x - y' ∈ U} ∈ 𝓝 (f (n + k) x) := by
     have hc : ContinuousAt (fun y' : F ↦ f (n + k) x - y') (f (n + k) x) := by fun_prop
@@ -420,14 +452,14 @@ theorem isClosed_range (n : ℕ) : @IsClosed F (locallyConvexFinalTopology f) (r
   refine mem_of_superset hyU ?_
   rintro _ hy' ⟨z, rfl⟩
   have h2 : f (n + k) (x - transition j n k z) ∈ U := by
-    rw [map_sub, apply_transition j f hf n k z]
+    rw [map_sub, apply_transition j f h.apply_step n k z]
     exact hy'
   have h3 : x - transition j n k z ∈ V := by
     rw [← hUV]
     exact h2
   exact hVN h3 ⟨z, by abel⟩
 
-include hj hjinj hf hfinj hF hjcl in
+include h hjcl in
 /-- The **Dieudonné–Schwartz theorem**: in a strict inductive limit in which every step is
 closed in the next one, every bounded set is contained in a step. -/
 theorem exists_subset_range_of_isVonNBounded {B : Set F}
@@ -446,7 +478,7 @@ theorem exists_subset_range_of_isVonNBounded {B : Set F}
   have hφ (n : ℕ) : ∃ φ : StrongDual 𝕜 F, (∀ z ∈ range (f n), φ z = 0) ∧ φ (y n) ≠ 0 := by
     obtain ⟨φ, hφ, hφy⟩ := StrongDual.exists_mem_polar_one_lt_norm (𝕜 := 𝕜)
       ((LinearMap.range (f n)).restrictScalars ℝ).convex (LinearMap.range (f n)).balanced
-      (isClosed_range j f hj hjinj hf hfinj hF hjcl n) ⟨0, (LinearMap.range (f n)).zero_mem⟩
+      (h.isClosed_range hjcl n) ⟨0, (LinearMap.range (f n)).zero_mem⟩
       (hy n)
     refine ⟨φ, fun z hz ↦ ?_, fun h0 ↦ ?_⟩
     · exact LinearMap.eq_zero_of_forall_norm_le_one (Q := LinearMap.range (f n))
@@ -484,11 +516,11 @@ theorem exists_subset_range_of_isVonNBounded {B : Set F}
     refine mem_of_superset hfin fun x hx n ↦ ?_
     rcases lt_or_ge n m with hnm | hmn
     · exact (mem_iInter₂.mp hx) n (Finset.mem_range.mpr hnm)
-    · rw [hφ0 n _ (range_mono j f hf hmn ⟨x, rfl⟩), norm_zero]
+    · rw [hφ0 n _ (range_mono j f h.apply_step hmn ⟨x, rfl⟩), norm_zero]
       exact div_nonneg (norm_nonneg _) (by positivity)
   have hUabs : Absorbent 𝕜 U := by
     intro z
-    obtain ⟨m, x, rfl⟩ := hF z
+    obtain ⟨m, x, rfl⟩ := h.exists_apply_eq z
     have hx : Absorbs 𝕜 (f m ⁻¹' U) {x} := absorbent_nhds_zero (hUpre m) x
     refine Filter.Eventually.mono hx fun c hc ↦ ?_
     rw [singleton_subset_iff] at hc ⊢
@@ -517,20 +549,22 @@ theorem exists_subset_range_of_isVonNBounded {B : Set F}
     exact le_of_mul_le_mul_left h7 hpos
   linarith
 
-include hj hjinj hf hfinj hF hjcl in
+include h hjcl in
 /-- In a countable strict inductive limit with closed transition ranges, a bounded set is
 contained in one step and its preimage is bounded in that step's own topology. -/
 theorem exists_subset_range_and_isVonNBounded_preimage {B : Set F}
     (hB : @Bornology.IsVonNBounded 𝕜 F _ _ _ (locallyConvexFinalTopology f) B) :
     ∃ n, B ⊆ range (f n) ∧ Bornology.IsVonNBounded 𝕜 (f n ⁻¹' B) := by
   let _ : TopologicalSpace F := locallyConvexFinalTopology f
-  obtain ⟨n, hn⟩ := exists_subset_range_of_isVonNBounded j f hj hjinj hf hfinj hF hjcl hB
-  exact ⟨n, hn, hB.preimage_of_isInducing (f n) (isInducing j f hj hjinj hf hfinj hF n)⟩
+  obtain ⟨n, hn⟩ := h.exists_subset_range_of_isVonNBounded hjcl hB
+  exact ⟨n, hn, hB.preimage_of_isInducing (f n) (h.isInducing n)⟩
 
-end StrictInductiveLimit
+end IsStrictInductiveLimit
 
 
-namespace StrictInductiveLimit
+namespace IsStrictInductiveLimit
+
+open StrictInductiveLimit
 
 section Completeness
 
@@ -543,14 +577,11 @@ variable {𝕜 : Type*} [RCLike 𝕜] {E : ℕ → Type*} {F : Type*}
   [uF : UniformSpace F] [IsUniformAddGroup F] [ContinuousSMul 𝕜 F]
 
 /-- A countable strict inductive limit of complete locally convex spaces is complete.
-No metrizability or separation assumption is needed. This independently formalizes the
+No metrizability or separation assumption is needed. This is the
 completeness theorem of Schaefer–Wolff, II §6.6, by separating a hypothetical new point of
 its completion from the complete steps. In particular it applies to strict LF spaces. -/
-theorem completeSpace
-    (j : ∀ n, E n →L[𝕜] E (n + 1)) (f : ∀ n, E n →ₗ[𝕜] F)
-    (hj : ∀ n, Topology.IsInducing (j n)) (hjinj : ∀ n, Injective (j n))
-    (hf : ∀ n x, f (n + 1) (j n x) = f n x) (hfinj : ∀ n, Injective (f n))
-    (hF : ∀ y : F, ∃ n x, f n x = y)
+theorem completeSpace {j : ∀ n, E n →L[𝕜] E (n + 1)} {f : ∀ n, E n →ₗ[𝕜] F}
+    (h : IsStrictInductiveLimit j f)
     (hFtop : uF.toTopologicalSpace = locallyConvexFinalTopology f) :
     CompleteSpace F := by
   let : ContinuousSMul ℝ F := IsScalarTower.continuousSMul 𝕜
@@ -562,7 +593,7 @@ theorem completeSpace
     exact hFtop.symm ▸ locallyConvexFinalTopology.locallyConvexSpace f
   let c := UniformSpace.Completion.coeCLM 𝕜 F
   have hfi (n : ℕ) : Topology.IsInducing (f n) := by
-    exact hFtop.symm ▸ isInducing j f hj hjinj hf hfinj hF n
+    exact hFtop.symm ▸ h.isInducing n
   let g (n : ℕ) : E n →L[𝕜] UniformSpace.Completion F :=
     c.comp { f n with cont := (hfi n).continuous }
   have hg (n : ℕ) : IsClosed (range (g n)) :=
@@ -619,11 +650,11 @@ theorem completeSpace
     refine mem_of_superset hfin fun x hx n ↦ ?_
     rcases lt_or_ge n m with hnm | hmn
     · exact (mem_iInter₂.mp hx) n (Finset.mem_range.mpr hnm)
-    · rw [hφ0 n _ (range_mono j f hf hmn ⟨x, rfl⟩), norm_zero]
+    · rw [hφ0 n _ (range_mono j f h.apply_step hmn ⟨x, rfl⟩), norm_zero]
       exact div_nonneg (norm_nonneg _) (by positivity)
   have hUabs : Absorbent 𝕜 U := by
     intro z
-    obtain ⟨m, x, rfl⟩ := hF z
+    obtain ⟨m, x, rfl⟩ := h.exists_apply_eq z
     have hx : Absorbs 𝕜 (f m ⁻¹' U) {x} := absorbent_nhds_zero (hUpre m) x
     refine Filter.Eventually.mono hx fun c hc ↦ ?_
     rw [singleton_subset_iff] at hc ⊢
@@ -662,4 +693,4 @@ theorem completeSpace
 
 end Completeness
 
-end StrictInductiveLimit
+end IsStrictInductiveLimit

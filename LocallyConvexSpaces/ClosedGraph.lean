@@ -18,18 +18,18 @@ convex topological vector space is continuous. No Hausdorff assumption is needed
 statement; in particular it applies to every Fréchet codomain.
 
 The proof has two steps. Barrelledness of the domain makes every linear map *nearly continuous*
-(`LinearMap.closure_preimage_mem_nhds` in `LocallyConvexSpaces.Barrel`): the closure of the
-preimage of a convex balanced neighbourhood of zero is a barrel, hence a neighbourhood of zero.
-Completeness and first countability of the codomain together with closedness of the graph then
-upgrade near continuity to continuity (`AddMonoidHom.continuous_of_isClosed_graph` in
-`TopologicalGroups.NearlyOpen`).
+(`LinearMap.closure_preimage_mem_nhds_of_barrelledSpace` in `LocallyConvexSpaces.Barrel`): the
+closure of the preimage of a convex balanced neighbourhood of zero is a barrel, hence a
+neighbourhood of zero. Completeness and first countability of the codomain together with closedness
+of the graph then upgrade near continuity to continuity
+(`AddMonoidHom.continuous_of_isClosed_graph_of_nearlyContinuous` in `TopologicalGroups.NearlyOpen`).
 
 ## Main statements
 
 * `LinearMap.continuous_of_isClosed_graph_of_barrelledSpace`: the closed graph theorem.
-* `LinearMap.continuous_of_forall_continuous_comp`: a linear map `g` from a barrelled space to a
-  Fréchet space is continuous as soon as `φ i ∘ g` is continuous for a family `φ` of continuous
-  linear functionals that separates the points of the codomain.
+* `LinearMap.continuous_of_forall_continuous_comp_of_barrelledSpace`: a linear map `g` from a
+  barrelled space to a Fréchet space is continuous as soon as `φ i ∘ g` is continuous for a family
+  `φ` of continuous linear functionals that separates the points of the codomain.
 
 ## Relation to other closed graph theorems
 
@@ -75,15 +75,16 @@ theorem LinearMap.continuous_of_isClosed_graph_of_barrelledSpace (g : E →ₗ[�
   have hgraph : (g.toAddMonoidHom.graph : Set (E × F)) = (g.graph : Set (E × F)) := by
     ext p
     exact eq_comm
-  refine g.toAddMonoidHom.continuous_of_isClosed_graph (hgraph ▸ hg) fun V hV ↦ ?_
+  refine g.toAddMonoidHom.continuous_of_isClosed_graph_of_nearlyContinuous (hgraph ▸ hg)
+    fun V hV ↦ ?_
   obtain ⟨W, ⟨hW, hWc, hWb⟩, hWV⟩ := (nhds_zero_hasBasis_convex_balanced 𝕜 F).mem_iff.mp hV
-  exact mem_of_superset (g.closure_preimage_mem_nhds hWc hWb hW)
+  exact mem_of_superset (g.closure_preimage_mem_nhds_of_barrelledSpace hWc hWb hW)
     (closure_mono (preimage_mono hWV))
 
 /-- A linear map `g` from a barrelled space to a complete, first-countable, locally convex space
 is continuous if `φ i ∘ g` is continuous for every member of a family `φ` of continuous linear
 functionals that separates the points of the codomain. -/
-theorem LinearMap.continuous_of_forall_continuous_comp (g : E →ₗ[𝕜] F) {ι : Type*}
+theorem LinearMap.continuous_of_forall_continuous_comp_of_barrelledSpace (g : E →ₗ[𝕜] F) {ι : Type*}
     (φ : ι → F →L[𝕜] 𝕜) (hφ : ∀ y : F, (∀ i, φ i y = 0) → y = 0)
     (h : ∀ i, Continuous (φ i ∘ g)) : Continuous g := by
   refine g.continuous_of_isClosed_graph_of_barrelledSpace ?_

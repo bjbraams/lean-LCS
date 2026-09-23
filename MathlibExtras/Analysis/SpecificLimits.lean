@@ -10,8 +10,10 @@ public import Mathlib.Analysis.SpecificLimits.Basic
 /-!
 # A bound for geometric partial sums
 
-`sum_half_pow_succ_le_one` bounds the partial sums of the positive geometric series
-with terms `(1 / 2) ^ (k + 1)`. It is used to choose radii in web constructions.
+## Main statements
+
+* `sum_half_pow_succ_le_one`: the partial sums of `∑ (1 / 2) ^ (k + 1)` are at most one. The
+  bound is used to choose radii in web constructions.
 -/
 
 public section

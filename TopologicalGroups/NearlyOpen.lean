@@ -17,12 +17,12 @@ This file contains the successive approximation argument that underlies the open
 closed graph theorems, in a form that does not refer to scalar multiplication, to a Baire
 category argument, or to convexity. It concerns commutative topological groups only.
 
-Let `G` be a complete, first-countable commutative topological group, `H` a commutative
-topological group, and `R` a closed subgroup of `G × H`, viewed as a relation. Say that `R` is
-*nearly open* if for every neighbourhood `U` of the identity in `G` the closure of the image `R[U]` is
-a neighbourhood of the identity in `H`. The main result says that then `R[U]` itself is a
-neighbourhood of the identity, for every such `U`. No separation, completeness or countability assumption is made
-on `H`.
+Let `G` be a complete, first-countable commutative topological group, `H` a commutative topological
+group, and `R` a closed subgroup of `G × H`, viewed as a relation. Say that `R` is *nearly open* if
+for every neighbourhood `U` of the identity in `G` the closure of the image `R[U]` is a
+neighbourhood of the identity in `H`. The main result says that then `R[U]` itself is a
+neighbourhood of the identity, for every such `U`. No separation, completeness or countability
+assumption is made on `H`.
 
 Applied to the graph of a homomorphism `f : G →* H` this says that a nearly open homomorphism
 with closed graph is open. Applied to the transposed graph of a homomorphism `g : H →* G` it
@@ -37,13 +37,11 @@ the closed graph theorem for a barrelled domain.
   `closure (R[V (n + 2)]) ⊆ R[V n]`.
 * `Subgroup.image_mem_nhds_one`: a closed nearly open relation is open at the identity.
 * `MonoidHom.isOpenMap_of_isClosed_graph_of_nearlyOpen`: a nearly open homomorphism with closed
-  graph,
-  defined on a complete first-countable group, is an open map.
+  graph, defined on a complete first-countable group, is an open map.
 * `MonoidHom.isOpenMap_of_continuous_of_nearlyOpen`: the same for a continuous homomorphism into a
   Hausdorff group.
 * `MonoidHom.continuous_of_isClosed_graph_of_nearlyContinuous`: a nearly continuous homomorphism
-  with closed
-  graph, with values in a complete first-countable group, is continuous.
+  with closed graph, with values in a complete first-countable group, is continuous.
 
 ## Implementation notes
 
@@ -86,20 +84,17 @@ open scoped Topology Uniformity Pointwise SetRel
 section Duplicates
 
 /-- An antitone basis of neighbourhoods of the identity in a topological group has an antitone
-subbasis
-`w` with `w (n + 1) * w (n + 1) ⊆ w n` and `closure (w (n + 1)) ⊆ w n`.
+subbasis `w` with `w (n + 1) * w (n + 1) ⊆ w n` and `closure (w (n + 1)) ⊆ w n`.
 
-Duplicate: this is
-`Filter.HasAntitoneBasis.exists_subbasis_mul_closure_subset` of Mathlib PR #40983
-(K. H. Wilson), file `Mathlib/Topology/Algebra/Group/Pointwise.lean`. Statement and proof are
-copied from that PR. Delete this copy once that PR is in the pinned Mathlib. -/
-@[to_additive /-- An antitone basis of neighbourhoods of zero in a topological group has an antitone subbasis
-`w` with `w (n + 1) + w (n + 1) ⊆ w n` and `closure (w (n + 1)) ⊆ w n`.
+Duplicate: this is `Filter.HasAntitoneBasis.exists_subbasis_mul_closure_subset` of Mathlib PR #40983
+(K. H. Wilson), file `Mathlib/Topology/Algebra/Group/Pointwise.lean`. Statement and proof are copied
+from that PR. Delete this copy once that PR is in the pinned Mathlib. -/
+@[to_additive /-- An antitone basis of neighbourhoods of zero in a topological group has an antitone
+subbasis `w` with `w (n + 1) + w (n + 1) ⊆ w n` and `closure (w (n + 1)) ⊆ w n`.
 
-Duplicate: this is the additive form of
-`Filter.HasAntitoneBasis.exists_subbasis_mul_closure_subset` of Mathlib PR #40983
-(K. H. Wilson), file `Mathlib/Topology/Algebra/Group/Pointwise.lean`. Statement and proof are
-copied from that PR. Delete this copy once that PR is in the pinned Mathlib. -/]
+Duplicate: this is the additive form of `Filter.HasAntitoneBasis.exists_subbasis_mul_closure_subset`
+of Mathlib PR #40983 (K. H. Wilson), file `Mathlib/Topology/Algebra/Group/Pointwise.lean`. Statement
+and proof are copied from that PR. Delete this copy once that PR is in the pinned Mathlib. -/]
 theorem Filter.HasAntitoneBasis.exists_subbasis_mul_closure_subset {G : Type*} [Group G]
     [TopologicalSpace G] [IsTopologicalGroup G] {v : ℕ → Set G}
     (hv : (𝓝 (1 : G)).HasAntitoneBasis v) :
@@ -149,9 +144,9 @@ omit [UniformSpace G] [IsUniformGroup G] [CompleteSpace G] in
 of `G × H` and let the closure of `R[T]` be a neighbourhood of the identity. Then a point `w` of the
 closure of `R[S]` is approximated by some `z` with `(x, z) ∈ R` and `x ∈ S` in such a way that
 the residual `w / z` lies in the closure of `R[T]`. -/
-@[to_additive /-- The approximation step of the open mapping and closed graph theorems. Let `R` be a subgroup
-of `G × H` and let the closure of `R[T]` be a neighbourhood of zero. Then a point `w` of the
-closure of `R[S]` is approximated by some `z` with `(x, z) ∈ R` and `x ∈ S` in such a way that
+@[to_additive /-- The approximation step of the open mapping and closed graph theorems. Let `R` be a
+subgroup of `G × H` and let the closure of `R[T]` be a neighbourhood of zero. Then a point `w` of
+the closure of `R[S]` is approximated by some `z` with `(x, z) ∈ R` and `x ∈ S` in such a way that
 the residual `w - z` lies in the closure of `R[T]`. -/]
 private theorem Subgroup.exists_div_mem_closure_image (R : Subgroup (G × H)) {S T : Set G}
     (hT : _root_.closure (SetRel.image (R : Set (G × H)) T) ∈ 𝓝 (1 : H)) {w : H}
@@ -168,30 +163,28 @@ private theorem Subgroup.exists_div_mem_closure_image (R : Subgroup (G × H)) {S
 Let `R` be a closed subgroup of `G × H`, with `G` complete, and let `V` be an antitone basis of
 neighbourhoods of the identity in `G` with `V (n + 1) * V (n + 1) ⊆ V n` and
 `closure (V (n + 1)) ⊆ V n`. If the closure of each image `R[V n]` is a neighbourhood of the
-identity
-then `closure (R[V (n + 2)]) ⊆ R[V n]`.
+identity then `closure (R[V (n + 2)]) ⊆ R[V n]`.
 
-The organization of the proof follows that of `ContinuousLinearMap.isOpenMap` in Mathlib PR
-#41166 (K. H. Wilson), file `Mathlib/Analysis/Normed/Operator/OpenMapping.lean`, which is the
-special case in which `R` is the graph of a continuous linear map into a Hausdorff space.
-The proof is adapted from that source. Delete this adapted proof once the PR is in pinned
-Mathlib. Preserve the stronger relation theorem by migrating it upstream or replacing its
-proof using the general upstream infrastructure; the specialized open mapping theorem alone
-does not imply this relation theorem. -/
-@[to_additive /-- The successive approximation argument of the open mapping and closed graph theorems.
+The organization of the proof follows that of `ContinuousLinearMap.isOpenMap` in Mathlib PR #41166
+(K. H. Wilson), file `Mathlib/Analysis/Normed/Operator/OpenMapping.lean`, which is the special case
+in which `R` is the graph of a continuous linear map into a Hausdorff space. The proof is adapted
+from that source. Delete this adapted proof once the PR is in pinned Mathlib. Preserve the stronger
+relation theorem by migrating it upstream or replacing its proof using the general upstream
+infrastructure; the specialized open mapping theorem alone does not imply this relation theorem. -/
+@[to_additive /-- The successive approximation argument of the open mapping and closed graph
+theorems.
 
 Let `R` be a closed subgroup of `G × H`, with `G` complete, and let `V` be an antitone basis of
-neighbourhoods of zero in `G` with `V (n + 1) + V (n + 1) ⊆ V n` and
-`closure (V (n + 1)) ⊆ V n`. If the closure of each image `R[V n]` is a neighbourhood of zero
-then `closure (R[V (n + 2)]) ⊆ R[V n]`.
+neighbourhoods of zero in `G` with `V (n + 1) + V (n + 1) ⊆ V n` and `closure (V (n + 1)) ⊆ V n`. If
+the closure of each image `R[V n]` is a neighbourhood of zero then
+`closure (R[V (n + 2)]) ⊆ R[V n]`.
 
-The organization of the proof follows that of `ContinuousLinearMap.isOpenMap` in Mathlib PR
-#41166 (K. H. Wilson), file `Mathlib/Analysis/Normed/Operator/OpenMapping.lean`, which is the
-special case in which `R` is the graph of a continuous linear map into a Hausdorff space.
-The proof is adapted from that source. Delete this adapted proof once the PR is in pinned
-Mathlib. Preserve the stronger relation theorem by migrating it upstream or replacing its
-proof using the general upstream infrastructure; the specialized open mapping theorem alone
-does not imply this relation theorem. -/]
+The organization of the proof follows that of `ContinuousLinearMap.isOpenMap` in Mathlib PR #41166
+(K. H. Wilson), file `Mathlib/Analysis/Normed/Operator/OpenMapping.lean`, which is the special case
+in which `R` is the graph of a continuous linear map into a Hausdorff space. The proof is adapted
+from that source. Delete this adapted proof once the PR is in pinned Mathlib. Preserve the stronger
+relation theorem by migrating it upstream or replacing its proof using the general upstream
+infrastructure; the specialized open mapping theorem alone does not imply this relation theorem. -/]
 theorem Subgroup.closure_image_subset_image (R : Subgroup (G × H))
     (hR : IsClosed (R : Set (G × H))) {V : ℕ → Set G} (hV : (𝓝 (1 : G)).HasAntitoneBasis V)
     (hadd : ∀ n, V (n + 1) * V (n + 1) ⊆ V n) (hcl : ∀ n, _root_.closure (V (n + 1)) ⊆ V n)
@@ -275,8 +268,8 @@ variable [FirstCountableTopology G]
 /-- A closed subgroup `R` of `G × H`, with `G` complete and first countable, that is nearly
 open is open at the identity: if the closure of `R[U]` is a neighbourhood of the identity for every
 neighbourhood `U` of zero, then so is `R[U]` itself. -/
-@[to_additive /-- A closed subgroup `R` of `G × H`, with `G` complete and first countable, that is nearly
-open is open at zero: if the closure of `R[U]` is a neighbourhood of zero for every
+@[to_additive /-- A closed subgroup `R` of `G × H`, with `G` complete and first countable, that is
+nearly open is open at zero: if the closure of `R[U]` is a neighbourhood of zero for every
 neighbourhood `U` of zero, then so is `R[U]` itself. -/]
 theorem Subgroup.image_mem_nhds_one (R : Subgroup (G × H)) (hR : IsClosed (R : Set (G × H)))
     (near : ∀ U ∈ 𝓝 (1 : G), _root_.closure (SetRel.image (R : Set (G × H)) U) ∈ 𝓝 (1 : H))
@@ -293,9 +286,9 @@ theorem Subgroup.image_mem_nhds_one (R : Subgroup (G × H)) (hR : IsClosed (R : 
 /-- A homomorphism `f : G →* H` with closed graph, defined on a complete first-countable group,
 that is nearly open is an open map. Here nearly open means that the closure of `f '' U` is a
 neighbourhood of the identity for every neighbourhood `U` of zero. -/
-@[to_additive /-- A homomorphism `f : G →+ H` with closed graph, defined on a complete first-countable group,
-that is nearly open is an open map. Here nearly open means that the closure of `f '' U` is a
-neighbourhood of zero for every neighbourhood `U` of zero. -/]
+@[to_additive /-- A homomorphism `f : G →+ H` with closed graph, defined on a complete
+first-countable group, that is nearly open is an open map. Here nearly open means that the closure
+of `f '' U` is a neighbourhood of zero for every neighbourhood `U` of zero. -/]
 theorem MonoidHom.isOpenMap_of_isClosed_graph_of_nearlyOpen (f : G →* H)
     (hf : IsClosed (f.graph : Set (G × H)))
     (near : ∀ U ∈ 𝓝 (1 : G), closure (f '' U) ∈ 𝓝 (1 : H)) : IsOpenMap f := by
@@ -311,18 +304,19 @@ theorem MonoidHom.isOpenMap_of_isClosed_graph_of_nearlyOpen (f : G →* H)
 
 /-- A continuous homomorphism `f : G →* H` from a complete first-countable group to a Hausdorff
 group that is nearly open is an open map. -/
-@[to_additive /-- A continuous homomorphism `f : G →+ H` from a complete first-countable group to a Hausdorff
-group that is nearly open is an open map. -/]
+@[to_additive /-- A continuous homomorphism `f : G →+ H` from a complete first-countable group to a
+Hausdorff group that is nearly open is an open map. -/]
 theorem MonoidHom.isOpenMap_of_continuous_of_nearlyOpen [T2Space H] (f : G →* H) (hf : Continuous f)
     (near : ∀ U ∈ 𝓝 (1 : G), closure (f '' U) ∈ 𝓝 (1 : H)) : IsOpenMap f :=
-  f.isOpenMap_of_isClosed_graph_of_nearlyOpen (isClosed_eq (hf.comp continuous_fst) continuous_snd) near
+  f.isOpenMap_of_isClosed_graph_of_nearlyOpen
+    (isClosed_eq (hf.comp continuous_fst) continuous_snd) near
 
 /-- A homomorphism `g : H →* G` with closed graph, with values in a complete first-countable
 group, that is nearly continuous is continuous. Here nearly continuous means that the closure
 of `g ⁻¹' V` is a neighbourhood of the identity for every neighbourhood `V` of zero. -/
-@[to_additive /-- A homomorphism `g : H →+ G` with closed graph, with values in a complete first-countable
-group, that is nearly continuous is continuous. Here nearly continuous means that the closure
-of `g ⁻¹' V` is a neighbourhood of zero for every neighbourhood `V` of zero. -/]
+@[to_additive /-- A homomorphism `g : H →+ G` with closed graph, with values in a complete
+first-countable group, that is nearly continuous is continuous. Here nearly continuous means that
+the closure of `g ⁻¹' V` is a neighbourhood of zero for every neighbourhood `V` of zero. -/]
 theorem MonoidHom.continuous_of_isClosed_graph_of_nearlyContinuous (g : H →* G)
     (hg : IsClosed (g.graph : Set (H × G)))
     (near : ∀ V ∈ 𝓝 (1 : G), closure (g ⁻¹' V) ∈ 𝓝 (1 : H)) : Continuous g := by
@@ -341,33 +335,3 @@ theorem MonoidHom.continuous_of_isClosed_graph_of_nearlyContinuous (g : H →* G
   rw [map_one] at hV
   have h := R.image_mem_nhds_one hR (fun U hU ↦ by simpa only [himage] using near U hU) hV
   rwa [himage] at h
-
-/-- Compatibility name for `MonoidHom.isOpenMap_of_isClosed_graph_of_nearlyOpen`; the near-openness
-or
-near-continuity hypothesis is essential. -/
-alias MonoidHom.isOpenMap_of_isClosed_graph := MonoidHom.isOpenMap_of_isClosed_graph_of_nearlyOpen
-
-/-- Compatibility name for `AddMonoidHom.isOpenMap_of_isClosed_graph_of_nearlyOpen`; the
-near-openness or
-near-continuity hypothesis is essential. -/
-alias AddMonoidHom.isOpenMap_of_isClosed_graph := AddMonoidHom.isOpenMap_of_isClosed_graph_of_nearlyOpen
-
-/-- Compatibility name for `MonoidHom.isOpenMap_of_continuous_of_nearlyOpen`; the near-openness or
-near-continuity hypothesis is essential. -/
-alias MonoidHom.isOpenMap_of_continuous := MonoidHom.isOpenMap_of_continuous_of_nearlyOpen
-
-/-- Compatibility name for `AddMonoidHom.isOpenMap_of_continuous_of_nearlyOpen`; the near-openness
-or
-near-continuity hypothesis is essential. -/
-alias AddMonoidHom.isOpenMap_of_continuous := AddMonoidHom.isOpenMap_of_continuous_of_nearlyOpen
-
-/-- Compatibility name for `MonoidHom.continuous_of_isClosed_graph_of_nearlyContinuous`; the
-near-openness or
-near-continuity hypothesis is essential. -/
-alias MonoidHom.continuous_of_isClosed_graph := MonoidHom.continuous_of_isClosed_graph_of_nearlyContinuous
-
-/-- Compatibility name for `AddMonoidHom.continuous_of_isClosed_graph_of_nearlyContinuous`; the
-near-openness or
-near-continuity hypothesis is essential. -/
-alias AddMonoidHom.continuous_of_isClosed_graph :=
-  AddMonoidHom.continuous_of_isClosed_graph_of_nearlyContinuous

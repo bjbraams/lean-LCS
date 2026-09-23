@@ -26,7 +26,7 @@ weak topology `σ(E, F)` and coarser than the Mackey topology `τ(E, F)`.
 
 * `LinearMap.mackeyFamily B`: the `σ(F, E)`-compact, convex, balanced subsets of `F`.
 * `LinearMap.mackeyTopology B`: the Mackey topology on `E`.
-* `LinearMap.IsCompatible B`: the topology of `E` is compatible with the pairing.
+* `LinearMap.IsCompatibleTopology B`: the topology of `E` is compatible with the pairing.
 
 ## Main statements
 
@@ -34,10 +34,11 @@ weak topology `σ(E, F)` and coarser than the Mackey topology `τ(E, F)`.
   bounded.
 * `LinearMap.exists_eq_of_continuous_mackeyTopology`: every linear functional that is continuous
   for the Mackey topology is of the form `x ↦ B x y`.
-* `LinearMap.mackeyTopology_le_of_isCompatible`: a compatible locally convex topology is coarser
-  than the Mackey topology.
-* `LinearMap.isCompatible_mackeyTopology`: the Mackey topology is compatible with the pairing.
-* `LinearMap.isCompatible_iff_mackeyTopology_le`: the **Mackey–Arens theorem**.
+* `LinearMap.mackeyTopology_le_of_isCompatibleTopology`: a compatible locally convex topology is
+  coarser than the Mackey topology.
+* `LinearMap.isCompatibleTopology_mackeyTopology`: the Mackey topology is compatible with the
+  pairing.
+* `LinearMap.isCompatibleTopology_iff_mackeyTopology_le`: the **Mackey–Arens theorem**.
 
 ## References
 
@@ -151,7 +152,7 @@ theorem exists_eq_of_continuous_mackeyTopology (f : E →ₗ[𝕜] 𝕜)
 /-- A topology on `E` is **compatible** with the pairing `B` if its continuous linear functionals
 are exactly the functionals `x ↦ B x y` with `y : F`. -/
 @[expose]
-def IsCompatible [TopologicalSpace E] : Prop :=
+def IsCompatibleTopology [TopologicalSpace E] : Prop :=
   ∀ f : E →ₗ[𝕜] 𝕜, Continuous f ↔ ∃ y : F, ∀ x, f x = B x y
 
 /-- Every point of `F` lies in a member of the Mackey family: the balanced hull of a point is
@@ -179,7 +180,8 @@ theorem continuous_apply_mackeyTopology (y : F) :
   exact @Continuous.comp E _ 𝕜 B.mackeyTopology _ _ _ _ hc2 hc1
 
 /-- The Mackey topology is compatible with the pairing. -/
-theorem isCompatible_mackeyTopology : @IsCompatible 𝕜 E F _ _ _ _ _ B B.mackeyTopology :=
+theorem isCompatibleTopology_mackeyTopology :
+    @IsCompatibleTopology 𝕜 E F _ _ _ _ _ B B.mackeyTopology :=
   fun f ↦ ⟨B.exists_eq_of_continuous_mackeyTopology f, fun ⟨y, hy⟩ ↦ by
     have hfy : (f : E → 𝕜) = fun x ↦ B x y := funext hy
     rw [hfy]
@@ -193,13 +195,13 @@ variable [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] [IsTopol
 omit [Module ℝ F] [IsScalarTower ℝ 𝕜 F] [Module ℝ E] [IsScalarTower ℝ 𝕜 E]
   [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] in
 /-- For a compatible topology the functionals `x ↦ B x y` are continuous. -/
-theorem IsCompatible.continuous_apply (h : B.IsCompatible) (y : F) :
+theorem IsCompatibleTopology.continuous_apply (h : B.IsCompatibleTopology) (y : F) :
     Continuous fun x ↦ B x y :=
   (h (B.flip y)).mpr ⟨y, fun _ ↦ rfl⟩
 
 /-- **The easy half of the Mackey–Arens theorem**: a locally convex topology that is compatible
 with the pairing is coarser than the Mackey topology. -/
-theorem mackeyTopology_le_of_isCompatible (h : B.IsCompatible) :
+theorem mackeyTopology_le_of_isCompatibleTopology (h : B.IsCompatibleTopology) :
     B.mackeyTopology ≤ (inferInstance : TopologicalSpace E) := by
   have : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
   have hτ : @IsTopologicalAddGroup E B.mackeyTopology _ :=
@@ -259,10 +261,10 @@ theorem mackeyTopology_le_of_isCompatible (h : B.IsCompatible) :
 with a pairing `B` of `E` and `F` if and only if the functionals `x ↦ B x y` are continuous,
 which says that the topology is finer than the weak topology `σ(E, F)`, and the topology is
 coarser than the Mackey topology `τ(E, F)`. -/
-theorem isCompatible_iff_mackeyTopology_le :
-    B.IsCompatible ↔ (∀ y : F, Continuous fun x ↦ B x y) ∧
+theorem isCompatibleTopology_iff_mackeyTopology_le :
+    B.IsCompatibleTopology ↔ (∀ y : F, Continuous fun x ↦ B x y) ∧
       B.mackeyTopology ≤ (inferInstance : TopologicalSpace E) := by
-  refine ⟨fun h ↦ ⟨h.continuous_apply B, B.mackeyTopology_le_of_isCompatible h⟩,
+  refine ⟨fun h ↦ ⟨h.continuous_apply B, B.mackeyTopology_le_of_isCompatibleTopology h⟩,
     fun ⟨h1, h2⟩ f ↦ ⟨fun hf ↦ ?_, fun ⟨y, hy⟩ ↦ ?_⟩⟩
   · exact B.exists_eq_of_continuous_mackeyTopology f (continuous_le_dom h2 hf)
   · have hfy : (f : E → 𝕜) = fun x ↦ B x y := funext hy
@@ -271,10 +273,10 @@ theorem isCompatible_iff_mackeyTopology_le :
 
 /-- If the pairing evaluations are continuous, compatibility is equivalent to the topology
 being coarser than the Mackey topology. -/
-theorem isCompatible_iff_mackeyTopology_le_of_continuous
+theorem isCompatibleTopology_iff_mackeyTopology_le_of_continuous
     (h : ∀ y : F, Continuous fun x ↦ B x y) :
-    B.IsCompatible ↔ B.mackeyTopology ≤ (inferInstance : TopologicalSpace E) := by
-  rw [B.isCompatible_iff_mackeyTopology_le]
+    B.IsCompatibleTopology ↔ B.mackeyTopology ≤ (inferInstance : TopologicalSpace E) := by
+  rw [B.isCompatibleTopology_iff_mackeyTopology_le]
   exact and_iff_right h
 
 end Compatible

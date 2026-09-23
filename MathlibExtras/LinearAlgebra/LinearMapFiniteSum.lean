@@ -10,9 +10,16 @@ public import Mathlib.LinearAlgebra.Pi
 /-!
 # Finite sums of coordinate linear maps
 
-`LinearMap.finsetSumProj` sums a finite family of coordinate maps. If the ranges of the
-coordinate maps span the target, the ranges of these finite sums cover it, as expressed
-by `LinearMap.iUnion_range_finsetSumProj`. No topologies are needed.
+No topologies are needed.
+
+## Main definitions
+
+* `LinearMap.finsetSumProj f s`: the linear map `x ↦ ∑ i ∈ s, f i (x i)` on a product.
+
+## Main statements
+
+* `LinearMap.iUnion_range_finsetSumProj`: if the ranges of the maps `f i` span the target, the
+  ranges of the finite sums cover it.
 -/
 
 public section

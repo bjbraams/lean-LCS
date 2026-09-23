@@ -12,10 +12,14 @@ public import Mathlib.Analysis.SpecificLimits.Basic
 /-!
 # Seminorm bounds for finite sums and convergent sequences
 
-`Seminorm.sum_smul_le_of_le` estimates arbitrary finite linear combinations using bounds
-only on the selected terms. Continuous seminorms are bounded on null sequences. The
-sequence-specialized wrappers and the ℓ¹ bound support the Fréchet-space application; the
-ℓ¹ estimate is a direct specialization of Mathlib's `lp.sum_rpow_le_norm_rpow`.
+## Main statements
+
+* `Seminorm.sum_smul_le_of_le`: `p (∑ n ∈ t, a n • x n) ≤ C * ∑ n ∈ t, ‖a n‖` when
+  `p (x n) ≤ C` for the terms that occur.
+* `Seminorm.exists_forall_le_of_tendsto_zero`: a continuous seminorm is bounded on a null
+  sequence.
+* `lp.sum_norm_le_norm_one`: the norm of an element of `ℓ¹` dominates its finite partial sums;
+  a specialization of Mathlib's `lp.sum_rpow_le_norm_rpow`.
 -/
 
 public section
@@ -39,11 +43,6 @@ theorem Seminorm.sum_smul_le_of_le {𝕜 E ι : Type*} [SeminormedRing 𝕜] [Ad
 section Estimates
 
 variable {𝕜 E : Type*} [SeminormedRing 𝕜] [AddCommGroup E] [Module 𝕜 E]
-
-/-- If `p (x n) ≤ C` for all `n` then `p (∑ n ∈ t, a n • x n) ≤ C * ∑ n ∈ t, ‖a n‖`. -/
-theorem Seminorm.sum_smul_le (p : Seminorm 𝕜 E) (t : Finset ℕ) (a : ℕ → 𝕜) (x : ℕ → E) {C : ℝ}
-    (hC : ∀ n, p (x n) ≤ C) : p (∑ n ∈ t, a n • x n) ≤ C * ∑ n ∈ t, ‖a n‖ :=
-  p.sum_smul_le_of_le t a x fun n _ ↦ hC n
 
 /-- A continuous seminorm is bounded on a sequence that tends to zero. -/
 theorem Seminorm.exists_forall_le_of_tendsto_zero [TopologicalSpace E] {p : Seminorm 𝕜 E}

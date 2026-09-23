@@ -11,12 +11,25 @@ public import TopologicalVectorSpaces.Quotient
 /-!
 # Quotient seminorms
 
-`Seminorm.quotient p N` takes the infimum of `p` on each coset of `N`. Open balls are images
-of the original seminorm balls, and a continuous seminorm induces a continuous quotient
-seminorm. No local convexity or closedness of `N` is needed.
-The quotient seminorm is the largest seminorm whose pullback is bounded by `p`.
-This universal property gives monotonicity, descent of seminorms vanishing on `N`,
-and bounds for the linear maps induced on the quotient.
+The quotient seminorm takes the infimum of `p` on each coset of `N`. It is the largest seminorm
+on `E ⧸ N` whose pullback is bounded by `p`. No local convexity or closedness of `N` is needed.
+
+## Main definitions
+
+* `Seminorm.quotient p N`: the quotient seminorm on `E ⧸ N`.
+
+## Main statements
+
+* `Seminorm.le_quotient_iff`: the universal property.
+* `Seminorm.quotient_comp_mkQ`, `Seminorm.comp_liftQ_le_quotient_iff`: descent of seminorms and
+  of seminorm bounds for linear maps.
+* `Seminorm.image_mkQ_ball`: the open balls of the quotient seminorm are the images of the open
+  balls of `p`.
+* `Seminorm.continuous_quotient`: the quotient of a continuous seminorm is continuous.
+
+## References
+
+* [H. H. Schaefer and M. P. Wolff, *Topological Vector Spaces*][schaefer1999], II §4
 -/
 
 public section

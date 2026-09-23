@@ -19,8 +19,6 @@ multiple and the remaining indices continue the strand of `C` that starts with `
 
 ## Main statements
 
-* Imported sequence lemma `PiNat.exists_res_eq`: every finite sequence is the restriction of an
-  infinite one.
 * `IsStrictWeb.strictlyWebbedSpace_span`.
 
 ## References

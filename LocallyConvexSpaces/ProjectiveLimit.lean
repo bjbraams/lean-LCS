@@ -13,13 +13,37 @@ public import Mathlib.Topology.UniformSpace.AbstractCompletion
 /-!
 # Projective representation by local Banach spaces
 
-A directed defining family of seminorms gives a system of Banach completions and contraction
-maps. Its projective limit is the closed subspace of compatible families in the product.
-The original space maps densely and uniformly inducingly into this limit, identifying it
-with the separated completion. This independently formalizes the construction in Casselman,
-*Introduction to topological vector spaces*, §5, using Mathlib's completion uniqueness theorem.
-The directed and monotone defining-family selection lemmas are imported from
-`TopologicalVectorSpaces.CountableSeminorms` and require only a topology.
+A directed defining family of seminorms gives a system of local Banach spaces
+`Seminorm.Completion` and contraction maps between them. Its projective limit is the closed
+subspace of compatible families in the product. The original space maps densely and uniformly
+inducingly into this limit, which identifies the limit with the separated completion. The proof
+uses Mathlib's uniqueness of completions. The directed and monotone defining families are
+provided by `TopologicalVectorSpaces.CountableSeminorms`.
+
+## Main definitions
+
+* `SeminormFamily.toCompletionProduct`: the diagonal map into the product of local Banach
+  spaces.
+* `SeminormFamily.projectiveLimit`: the projective limit of the local Banach spaces.
+* `SeminormFamily.toProjectiveLimit`, `SeminormFamily.projectiveLimitLift`: the canonical map
+  and the universal property.
+* `SeminormFamily.projectiveCompletion`: the projective limit as an `AbstractCompletion`.
+* `SeminormFamily.completionEquiv`, `PolynormableSpace.completionEquiv`: the completion as a
+  projective limit.
+
+## Main statements
+
+* `SeminormFamily.isUniformInducing_toProjectiveLimit`,
+  `SeminormFamily.denseRange_toProjectiveLimit`.
+* `SeminormFamily.equivProjectiveLimit`: a complete Hausdorff space is the projective limit of
+  its local Banach spaces.
+* `PolynormableSpace.exists_countable_completionEquiv`,
+  `PolynormableSpace.exists_countable_equivProjectiveLimit`: countable representations in the
+  first-countable case, in particular for Fréchet spaces.
+
+## References
+
+* [B. Casselman, *Introduction to Topological Vector Spaces*][casselman2016], §5
 -/
 
 @[expose] public noncomputable section
@@ -175,7 +199,7 @@ def projectiveCompletion [Nonempty ι] (hp : WithSeminorms p) (hd : Directed (·
   dense := p.denseRange_toProjectiveLimit hd
 
 /-- The separated completion is uniformly isomorphic to the projective limit.
-This is the projective completion theorem of Casselman, §5, independently formalized here. -/
+This is the projective completion theorem of Casselman, §5. -/
 def completionUniformEquiv [Nonempty ι] (hp : WithSeminorms p) (hd : Directed (· ≤ ·) p) :
     UniformSpace.Completion E ≃ᵤ p.projectiveLimit :=
   UniformSpace.Completion.cPkg.compareEquiv (p.projectiveCompletion hp hd)
@@ -191,7 +215,8 @@ variable [UniformContinuousConstSMul 𝕜 E]
 /-- A complete Hausdorff space is itself the projective limit of its local Banach spaces. -/
 def equivProjectiveLimit [Nonempty ι] [CompleteSpace E] [T0Space E]
     (hp : WithSeminorms p) (hd : Directed (· ≤ ·) p) : E ≃L[𝕜] p.projectiveLimit := by
-  let e : E ≃ᵤ p.projectiveLimit := (AbstractCompletion.ofComplete (α := E)).compareEquiv (p.projectiveCompletion hp hd)
+  let e : E ≃ᵤ p.projectiveLimit := (AbstractCompletion.ofComplete (α := E)).compareEquiv
+    (p.projectiveCompletion hp hd)
   have he (x : E) : e x = p.toProjectiveLimit x :=
     (AbstractCompletion.ofComplete (α := E)).compare_coe (p.projectiveCompletion hp hd) x
   exact
@@ -234,10 +259,14 @@ def completionEquiv [Nonempty ι] (hp : WithSeminorms p) (hd : Directed (· ≤ 
   toLinearEquiv :=
     { (p.completionMap hp).toLinearMap with
       invFun := (p.completionUniformEquiv hp hd).symm
-      left_inv := by intro x; change (p.completionUniformEquiv hp hd).symm (p.completionMap hp x) = x
-                     rw [p.completionMap_eq_uniformEquiv hp hd]; simp
-      right_inv := by intro x; change p.completionMap hp _ = x
-                      rw [p.completionMap_eq_uniformEquiv hp hd]; simp }
+      left_inv := by
+        intro x
+        change (p.completionUniformEquiv hp hd).symm (p.completionMap hp x) = x
+        rw [p.completionMap_eq_uniformEquiv hp hd]; simp
+      right_inv := by
+        intro x
+        change p.completionMap hp _ = x
+        rw [p.completionMap_eq_uniformEquiv hp hd]; simp }
   continuous_toFun := (p.completionMap hp).continuous
   continuous_invFun := (p.completionUniformEquiv hp hd).symm.continuous
 

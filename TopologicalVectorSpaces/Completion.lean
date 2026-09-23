@@ -13,11 +13,20 @@ public import TopologicalGroups.Completion
 /-!
 # Completion of topological vector spaces
 
-The completion has jointly continuous scalar multiplication. `coeCLM` is the canonical
-continuous linear map, and `strongDualEquiv` identifies the continuous duals by restriction
-and extension. The neighbourhood-basis lemma is imported from `TopologicalGroups.Completion`.
 The hypothesis `UniformContinuousConstSMul` provides Mathlib's module structure on the
 completion. The local-convexity consequence is in `LocallyConvexSpaces.Completion`.
+
+## Main definitions
+
+* `UniformSpace.Completion.coeCLM`: the canonical map as a continuous linear map.
+* `UniformSpace.Completion.strongDualEquiv`: restriction identifies the continuous duals of the
+  completion and of the space.
+
+## Main statements
+
+* `UniformSpace.Completion.instContinuousSMul`: scalar multiplication on the completion is
+  jointly continuous.
+* `UniformSpace.Completion.denseRange_coeCLM`, `UniformSpace.Completion.isUniformInducing_coeCLM`.
 
 ## References
 

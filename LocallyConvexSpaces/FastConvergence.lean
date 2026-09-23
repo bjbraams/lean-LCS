@@ -29,10 +29,6 @@ continuous if it maps fast convergent null sequences to bounded sequences.
 
 ## Main statements
 
-* Imported from `TopologicalVectorSpaces.Basic`: `exists_tendsto_atTop_tendsto_smul_zero`: in a
-  first-countable
-  topological vector space, for
-  `x n → 0` there are `ρ n → ∞` with `ρ n • x n → 0` (Köthe I §28.1.(5)).
 * `isFastNullSeq_iff_exists_smul`
 * `IsBanachDisk.isFastNullSeq_of_tendsto_zero`, `isFastNullSeq_iff_exists_isBanachDisk`:
   the remark after §35.7.(4).
@@ -223,12 +219,10 @@ section Ultrabornological
 /-- **In an ultrabornological space a convex balanced set that absorbs the fast convergent null
 sequences is a neighbourhood of zero**, Köthe II §35.7.(3). -/
 theorem UltrabornologicalSpace.mem_nhds_zero_of_forall_absorbs_isFastNullSeq
-    [TopologicalSpace E] [UltrabornologicalSpace 𝕜 E] {M : Set E} (hc : Convex ℝ M)
+    [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E]
+    [UltrabornologicalSpace 𝕜 E] {M : Set E} (hc : Convex ℝ M)
     (hb : Balanced 𝕜 M) (h : ∀ x : ℕ → E, IsFastNullSeq 𝕜 x → Absorbs 𝕜 M (range x)) :
     M ∈ 𝓝 (0 : E) := by
-  have : IsTopologicalAddGroup E := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 E
-  have : ContinuousSMul 𝕜 E := UltrabornologicalSpace.continuousSMul 𝕜 E
-  have : LocallyConvexSpace ℝ E := UltrabornologicalSpace.locallyConvexSpace 𝕜 E
   have heq := UltrabornologicalSpace.eq_locallyConvexFinalTopology_compactDisks (𝕜 := 𝕜) (E := E)
   let g := fun K : compactDisks 𝕜 E ↦ DiskSpace.incl 𝕜 K.1
   have habs : Absorbent 𝕜 M := fun v ↦
@@ -274,12 +268,12 @@ theorem UltrabornologicalSpace.of_forall_absorbs_isFastNullSeq [UniformSpace E]
 convergent null sequences to bounded sequences is continuous**, Köthe II §35.7.(6) b); for
 linear functionals this is §35.7.(5) c). -/
 theorem LinearMap.continuous_of_forall_isVonNBounded_range_isFastNullSeq [TopologicalSpace E]
+    [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E]
     [UltrabornologicalSpace 𝕜 E] {F : Type*} [AddCommGroup F] [Module 𝕜 F] [Module ℝ F]
     [IsScalarTower ℝ 𝕜 F] [TopologicalSpace F] [IsTopologicalAddGroup F] [ContinuousSMul 𝕜 F]
     [LocallyConvexSpace ℝ F] (A : E →ₗ[𝕜] F)
     (hA : ∀ x : ℕ → E, IsFastNullSeq 𝕜 x → IsVonNBounded 𝕜 (Set.range fun n ↦ A (x n))) :
     Continuous A := by
-  have : IsTopologicalAddGroup E := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 E
   refine continuous_of_continuousAt_zero A ?_
   rw [ContinuousAt, map_zero]
   intro V hV

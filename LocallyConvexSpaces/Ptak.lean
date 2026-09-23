@@ -37,8 +37,8 @@ onto a barrelled Hausdorff locally convex space is open; it contains the open ma
 ## Main statements
 
 * `PtakSpace.toInfraPtakSpace`: a Pták space is an infra-Pták space.
-* `PtakSpace.of_completeSpace_firstCountable`: a complete, first-countable, locally convex space
-  is a Pták space.
+* `PtakSpace.of_completeSpace_firstCountableTopology`: a complete, first-countable, locally convex
+  space is a Pták space.
 * `LinearMap.isAlmostWeakStarClosed_transposeDomain`: if `E` is barrelled then the domain of the
   transpose of a linear map `g : E →ₗ[𝕜] F` is almost weak-\* closed.
 * `LinearMap.eq_zero_of_forall_transposeDomain_apply_eq_zero`: if `g` has closed graph then the
@@ -125,7 +125,7 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module
 
 /-- A complete, first-countable, locally convex space is a Pták space. This is the
 Krein–Šmulian theorem applied to subspaces. -/
-instance (priority := 100) PtakSpace.of_completeSpace_firstCountable : PtakSpace 𝕜 E where
+instance (priority := 100) PtakSpace.of_completeSpace_firstCountableTopology : PtakSpace 𝕜 E where
   isClosed_of_isAlmostWeakStarClosed Q hQ :=
     StrongDual.isClosed_of_isAlmostWeakStarClosed (Q.restrictScalars ℝ).convex hQ
 
@@ -170,7 +170,8 @@ theorem LinearMap.isAlmostWeakStarClosed_transposeDomain [BarrelledSpace 𝕜 E]
   intro V hV
   obtain ⟨W, ⟨hW, hWc, hWb⟩, hWV⟩ := (nhds_zero_hasBasis_convex_balanced 𝕜 F).mem_iff.mp hV
   -- By barrelledness the closure `U` of `g ⁻¹' W` is a neighbourhood of zero.
-  have hU : closure (g ⁻¹' W) ∈ 𝓝 (0 : E) := g.closure_preimage_mem_nhds hWc hWb hW
+  have hU : closure (g ⁻¹' W) ∈ 𝓝 (0 : E) :=
+    g.closure_preimage_mem_nhds_of_barrelledSpace hWc hWb hW
   -- `A` is the set of functionals `φ` with `φ ∘ g` bounded by one on `U`.
   let A : Set (StrongDual 𝕜 F) := {φ | ∀ x ∈ closure (g ⁻¹' W), ‖φ (g x)‖ ≤ 1}
   have hAQ : A ⊆ g.transposeDomain := fun φ hφ ↦ by
@@ -309,7 +310,7 @@ theorem LinearMap.continuous_of_isClosed_graph_of_infraPtakSpace (g : E →ₗ[�
     rw [hpre]
     exact isClosed_biInter fun φ _ ↦ isClosed_le (hcont φ).norm continuous_const
   -- By barrelledness the closure of the preimage is a neighbourhood of zero.
-  have hnear := g.closure_preimage_mem_nhds hW₀c.closure hW₀b.closure hWnhds
+  have hnear := g.closure_preimage_mem_nhds_of_barrelledSpace hW₀c.closure hW₀b.closure hWnhds
   rw [hclosed.closure_eq] at hnear
   exact mem_of_superset hnear (preimage_mono hWV)
 
@@ -359,7 +360,7 @@ theorem ContinuousLinearMap.isAlmostWeakStarClosed_range_transpose [LocallyConve
   obtain ⟨W, ⟨hW, hWc, hWb⟩, hWU⟩ := (nhds_zero_hasBasis_convex_balanced 𝕜 E).mem_iff.mp hU
   -- By barrelledness the closure `V` of `f '' W` is a neighbourhood of zero.
   have hV : closure (f '' W) ∈ 𝓝 (0 : F) :=
-    LinearMap.closure_image_mem_nhds (f := f.toLinearMap) hf hWc hWb hW
+    LinearMap.closure_image_mem_nhds_of_barrelledSpace (f := f.toLinearMap) hf hWc hWb hW
   -- The transpose, as a weak-* continuous map, and the image of the weak-* compact polar of `V`.
   let T : WeakDual 𝕜 F → WeakDual 𝕜 E := fun ξ ↦
     StrongDual.toWeakDual (f.transpose (WeakDual.toStrongDual ξ))
@@ -415,8 +416,8 @@ theorem ContinuousLinearMap.mem_range_transpose_of_forall_ker_of_separatingDual
   linarith
 
 omit [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] in
-/-- If the dual of `F` separates points and the range of the transpose of `f : E →L[𝕜] F` is
-weak-\* closed, then it consists of all functionals that vanish on the kernel of `f`. -/
+/-- If `F` is a Hausdorff locally convex space and the range of the transpose of `f : E →L[𝕜] F`
+is weak-\* closed, then it consists of all functionals that vanish on the kernel of `f`. -/
 theorem ContinuousLinearMap.mem_range_transpose_of_forall_ker [LocallyConvexSpace ℝ F]
     [T1Space F] (f : E →L[𝕜] F)
     (hQ : IsClosed (WeakDual.toStrongDual ⁻¹'
@@ -442,7 +443,7 @@ theorem ContinuousLinearMap.isOpenMap_of_ptakSpace [LocallyConvexSpace ℝ E] [P
   obtain ⟨U₁, hU₁, hU₁s⟩ := exists_nhds_zero_half (mem_map.mp hs)
   obtain ⟨W, ⟨hW, hWc, hWb⟩, hWU₁⟩ := (nhds_zero_hasBasis_convex_balanced 𝕜 E).mem_iff.mp hU₁
   have hV : closure (f '' W) ∈ 𝓝 (0 : F) :=
-    LinearMap.closure_image_mem_nhds (f := f.toLinearMap) hf hWc hWb hW
+    LinearMap.closure_image_mem_nhds_of_barrelledSpace (f := f.toLinearMap) hf hWc hWb hW
   refine mem_of_superset hV fun y₀ hy₀ ↦ ?_
   obtain ⟨x₀, rfl⟩ := hf y₀
   -- The point `x₀` lies in the closure of `W + ker f`, by the bipolar theorem.

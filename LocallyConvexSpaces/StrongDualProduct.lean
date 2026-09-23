@@ -12,10 +12,24 @@ public import Mathlib.Topology.Algebra.InfiniteSum.Constructions
 # Functionals on products
 
 Strongly bounded families of functionals on a product have a common finite set of active
-coordinates. Each functional is the sum of its coordinate restrictions. These results
-support permanence of semi-reflexivity and reflexivity under arbitrary products.
-The decomposition of a functional known to vanish on the other coordinate axes works
-over any nontrivially normed field; the strongly bounded family results use `RCLike`.
+coordinates, and each functional is the sum of its coordinate restrictions. These results
+support the permanence of semi-reflexivity and reflexivity under arbitrary products. The
+decomposition of a single functional works over any nontrivially normed field; the results on
+strongly bounded families use `RCLike` scalars.
+
+## Main statements
+
+* `StrongDual.apply_eq_sum_of_single_eq_zero`: a functional that vanishes on the other
+  coordinate axes is a finite sum of restrictions.
+* `StrongDual.finite_setOf_exists_apply_single_ne_zero`,
+  `StrongDual.exists_finset_apply_eq_sum`: a strongly bounded family uses only finitely many
+  coordinates.
+* `StrongDual.equicontinuous_of_isVonNBounded_pi`, `QuasiBarrelledSpace.pi`: arbitrary products
+  of quasi-barrelled spaces are quasi-barrelled.
+
+## References
+
+* [H. H. Schaefer and M. P. Wolff, *Topological Vector Spaces*][schaefer1999], IV §5.8
 -/
 
 public section

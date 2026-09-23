@@ -17,13 +17,11 @@ set that is convex and balanced, namely the closure of the convex hull of its ba
 
 Mathlib provides the absolute-convex-hull API with scalar convexity. Here
 `MathlibExtras.Analysis.ConvexHull` relates that API to real convexity, while balancedness remains
-over
-`𝕜`. Compactness follows from Mathlib's quasi-completeness theorem for totally bounded sets.
+over `𝕜`. Compactness follows from Mathlib's quasi-completeness theorem for totally bounded sets.
 
 ## Main statements
 
-* `Balanced.convexHull_real` (imported): the real convex hull of a `𝕜`-balanced set is `𝕜`-balanced.
-* `IsCompact.exists_isCompact_convex_balanced_superset_of_quasiComplete`: the quasi-complete
+* `IsCompact.exists_isCompact_convex_balanced_superset_of_quasiCompleteSpace`: the quasi-complete
   version.
 * `IsCompact.exists_isCompact_convex_balanced_superset`: a compact subset of a complete locally
   convex space lies in a compact convex balanced set that contains zero.
@@ -47,7 +45,7 @@ variable [UniformSpace E] [IsUniformAddGroup E] [ContinuousSMul 𝕜 E]
 
 /-- In a quasi-complete locally convex space every compact set lies in a compact convex
 balanced set containing zero. -/
-theorem IsCompact.exists_isCompact_convex_balanced_superset_of_quasiComplete
+theorem IsCompact.exists_isCompact_convex_balanced_superset_of_quasiCompleteSpace
     [QuasiCompleteSpace 𝕜 E] {K : Set E} (hK : IsCompact K) :
     ∃ K' : Set E, K ⊆ K' ∧ IsCompact K' ∧ Convex ℝ K' ∧ Balanced 𝕜 K' ∧ (0 : E) ∈ K' := by
   have : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
@@ -65,7 +63,8 @@ theorem IsCompact.exists_isCompact_convex_balanced_superset_of_quasiComplete
     calc ‖a‖ * ‖c‖ ≤ 1 * 1 := mul_le_mul ha hc (norm_nonneg c) zero_le_one
       _ = 1 := one_mul 1
   have hHtb : TotallyBounded (convexHull ℝ B) := hBc.totallyBounded.convexHull
-  refine ⟨closure (convexHull ℝ B), ?_, isCompact_closure_of_totallyBounded_quasiComplete (𝕜 := 𝕜) hHtb,
+  refine ⟨closure (convexHull ℝ B), ?_,
+    isCompact_closure_of_totallyBounded_quasiComplete (𝕜 := 𝕜) hHtb,
     (convex_convexHull ℝ B).closure, hBbal.convexHull_real.closure, ?_⟩
   · exact ((subset_insert 0 K).trans hBsub).trans ((subset_convexHull ℝ B).trans subset_closure)
   · exact subset_closure (subset_convexHull ℝ B (hBsub (mem_insert 0 K)))
@@ -75,4 +74,4 @@ containing zero. -/
 theorem IsCompact.exists_isCompact_convex_balanced_superset [CompleteSpace E]
     {K : Set E} (hK : IsCompact K) :
     ∃ K' : Set E, K ⊆ K' ∧ IsCompact K' ∧ Convex ℝ K' ∧ Balanced 𝕜 K' ∧ (0 : E) ∈ K' :=
-  hK.exists_isCompact_convex_balanced_superset_of_quasiComplete
+  hK.exists_isCompact_convex_balanced_superset_of_quasiCompleteSpace

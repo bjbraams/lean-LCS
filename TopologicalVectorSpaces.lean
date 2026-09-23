@@ -23,10 +23,10 @@ public import TopologicalVectorSpaces.SeminormCompletion
 /-!
 # Topological vector spaces
 
-This umbrella imports general scalar-action, boundedness, gauge, polynormability,
-completion (including local Banach spaces of seminorms), quotient, and polar results, together with topological graph identities and
-finite sums of linear maps, and images under linear relations. Webbed-space theory is a separate extension.
-No project LCS or webbed-space module is imported.
+This umbrella imports general scalar-action, boundedness, gauge, polynormability, completion
+(including local Banach spaces of seminorms), quotient, and polar results, together with topological
+graph identities and finite sums of linear maps, and images under linear relations. Webbed-space
+theory is a separate extension. No project LCS or webbed-space module is imported.
 
 Quotient seminorms have a universal property, and seminorm-bounded linear maps extend
 functorially to the associated completions. Summability can be checked by absolute

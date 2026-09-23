@@ -10,10 +10,14 @@ public import Mathlib.Topology.MetricSpace.PiNat
 /-!
 # Finite restrictions and extensions of sequences
 
-The `PiNat.res` lemmas describe finite restrictions stored in reverse order, including
-composition and extension of a finite list. `Set.exists_seq_forall_mem_forall_add_eq` extends
-a prescribed tail by points in nonempty sets. These results use no vector-space structure.
-The numerical bound for web radii is in `MathlibExtras.Analysis.SpecificLimits`.
+These results use no vector-space structure.
+
+## Main statements
+
+* `PiNat.res_succ_eq_res_append`, `PiNat.res_comp`, `PiNat.exists_res_eq`: finite restrictions
+  of sequences, stored with the newest entry at the head.
+* `Set.exists_seq_forall_mem_forall_add_eq`: a prescribed tail extends to a sequence of points
+  in nonempty sets.
 -/
 
 public section

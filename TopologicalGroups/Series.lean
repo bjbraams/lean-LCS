@@ -53,8 +53,8 @@ open scoped Topology Pointwise
 
 /-- Let `V k` be sets that contain one, with `V (k + 1) * V (k + 1) ⊆ V k`. If `x k ∈ V (k + 1)`
 for all `k` then every finite product `∏ l ∈ range p, x (j + l)` lies in `V j`. -/
-@[to_additive /-- Let `V k` be sets that contain zero, with `V (k + 1) + V (k + 1) ⊆ V k`. If `x k ∈ V (k + 1)`
-for all `k` then every finite sum `∑ l ∈ range p, x (j + l)` lies in `V j`. -/]
+@[to_additive /-- Let `V k` be sets that contain zero, with `V (k + 1) + V (k + 1) ⊆ V k`. If
+`x k ∈ V (k + 1)` for all `k` then every finite sum `∑ l ∈ range p, x (j + l)` lies in `V j`. -/]
 theorem Finset.prod_range_add_mem_of_mul_subset {G : Type*} [CommMonoid G] {V : ℕ → Set G}
     (h0 : ∀ k, (1 : G) ∈ V k) (hadd : ∀ k, V (k + 1) * V (k + 1) ⊆ V k) {x : ℕ → G}
     (hx : ∀ k, x k ∈ V (k + 1)) (p j : ℕ) : ∏ l ∈ Finset.range p, x (j + l) ∈ V j := by
@@ -71,10 +71,9 @@ section Tails
 variable {G : Type*} [CommMonoid G] [TopologicalSpace G] [ContinuousMul G]
 
 /-- If the infinite product `∏ a (m + k)` converges to `s` then the infinite product `∏ a k`
-converges to
-`∏ k < m, a k * s`. -/
+converges to `(∏ k < m, a k) * s`. -/
 @[to_additive /-- If the series `∑ a (m + k)` converges to `s` then the series `∑ a k` converges to
-`∑ k < m, a k + s`. -/]
+`(∑ k < m, a k) + s`. -/]
 theorem tendsto_prod_range_of_tendsto_prod_range_add {a : ℕ → G} {m : ℕ} {s : G}
     (h : Tendsto (fun N ↦ ∏ k ∈ Finset.range N, a (m + k)) atTop (𝓝 s)) :
     Tendsto (fun N ↦ ∏ k ∈ Finset.range N, a k) atTop
@@ -91,8 +90,10 @@ section Products
 
 variable {ι : Type*} {E : ι → Type*} [∀ j, CommMonoid (E j)] [∀ j, TopologicalSpace (E j)]
 
-/-- Convergence in the product of the partial products, from convergence of the coordinates. -/
-@[to_additive /-- Convergence in the product of the partial sums, from convergence of the coordinates. -/]
+/-- In a product of monoids, the partial products of a sequence converge if their coordinates
+do. -/
+@[to_additive /-- In a product of additive monoids, the partial sums of a sequence converge if
+their coordinates do. -/]
 theorem tendsto_prod_pi {y : ℕ → ∀ j, E j} {s : ∀ j, E j}
     (h : ∀ j, Tendsto (fun N ↦ ∏ k ∈ Finset.range N, y k j) atTop (𝓝 (s j))) :
     Tendsto (fun N ↦ ∏ k ∈ Finset.range N, y k) atTop (𝓝 s) := by
@@ -103,8 +104,10 @@ theorem tendsto_prod_pi {y : ℕ → ∀ j, E j} {s : ∀ j, E j}
 variable {E F : Type*} [CommMonoid E] [CommMonoid F] [TopologicalSpace E]
   [TopologicalSpace F]
 
-/-- Convergence in the product of the partial products, from convergence of the components. -/
-@[to_additive tendsto_sum_prod /-- Convergence in the product of the partial sums, from convergence of the components. -/]
+/-- In a product `E × F` of monoids, the partial products of a sequence converge if their two
+components do. -/
+@[to_additive tendsto_sum_prod /-- In a product `E × F` of additive monoids, the partial sums of a
+sequence converge if their two components do. -/]
 theorem tendsto_prod_prod {y : ℕ → E × F} {s : E} {t : F}
     (hs : Tendsto (fun N ↦ ∏ k ∈ Finset.range N, (y k).1) atTop (𝓝 s))
     (ht : Tendsto (fun N ↦ ∏ k ∈ Finset.range N, (y k).2) atTop (𝓝 t)) :
@@ -130,15 +133,14 @@ theorem tendsto_prod_range_add_of_tendsto_prod_range {a : ℕ → G} {s : G}
   refine (h1.div_const' (∏ k ∈ Finset.range m, a k)).congr fun N ↦ ?_
   rw [Nat.add_comm N m, Finset.prod_range_add, mul_div_cancel_left]
 
-/-- Let `S k` be subsets of a commutative topological group whose closures are neighbourhoods of
-the identity, and let `B k` be neighbourhoods of the identity. Then for every point `x₀` of the
-closure of `S 0`
-there are `x k ∈ S k` such that the remainder `x₀ / ∏ k < n + 1, x k` lies in the closure of
-`S (n + 1)` and in `B n`, for all `n`. -/
-@[to_additive /-- Let `S k` be subsets of a commutative topological group whose closures are neighbourhoods of
-zero, and let `B k` be neighbourhoods of zero. Then for every point `x₀` of the closure of `S 0`
-there are `x k ∈ S k` such that the remainder `x₀ - ∑ k < n + 1, x k` lies in the closure of
-`S (n + 1)` and in `B n`, for all `n`. -/]
+/-- Let `S k` be subsets of a commutative topological group whose closures are neighbourhoods of the
+identity, and let `B k` be neighbourhoods of the identity. Then for every point `x₀` of the closure
+of `S 0` there are `x k ∈ S k` such that the remainder `x₀ / ∏ k < n + 1, x k` lies in the closure
+of `S (n + 1)` and in `B n`, for all `n`. -/
+@[to_additive /-- Let `S k` be subsets of a commutative topological group whose closures are
+neighbourhoods of zero, and let `B k` be neighbourhoods of zero. Then for every point `x₀` of the
+closure of `S 0` there are `x k ∈ S k` such that the remainder `x₀ - ∑ k < n + 1, x k` lies in the
+closure of `S (n + 1)` and in `B n`, for all `n`. -/]
 theorem exists_seq_mem_div_prod_mem_closure {S B : ℕ → Set G}
     (hS : ∀ k, closure (S k) ∈ 𝓝 (1 : G)) (hB : ∀ k, B k ∈ 𝓝 (1 : G)) {x₀ : G}
     (hx₀ : x₀ ∈ closure (S 0)) :
@@ -172,11 +174,10 @@ theorem exists_seq_mem_div_prod_mem_closure {S B : ℕ → Set G}
   exact (R (n + 1)).2
 
 /-- Let `S k` be subsets of a first-countable commutative topological group whose closures are
-neighbourhoods of the identity. Then every point of the closure of `S 0` is the product of a
-infinite product
-`∏ x k` with `x k ∈ S k`. -/
-@[to_additive /-- Let `S k` be subsets of a first-countable commutative topological group whose closures are
-neighbourhoods of zero. Then every point of the closure of `S 0` is the sum of a series
+neighbourhoods of the identity. Then every point of the closure of `S 0` is the value of an
+infinite product `∏ x k` with `x k ∈ S k`. -/
+@[to_additive /-- Let `S k` be subsets of a first-countable commutative topological group whose
+closures are neighbourhoods of zero. Then every point of the closure of `S 0` is the sum of a series
 `∑ x k` with `x k ∈ S k`. -/]
 theorem exists_seq_mem_tendsto_prod_of_mem_closure [FirstCountableTopology G] {S : ℕ → Set G}
     (hS : ∀ k, closure (S k) ∈ 𝓝 (1 : G)) {x₀ : G} (hx₀ : x₀ ∈ closure (S 0)) :

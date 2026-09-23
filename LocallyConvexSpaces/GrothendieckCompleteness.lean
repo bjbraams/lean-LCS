@@ -211,7 +211,8 @@ theorem exists_forall_eq_apply_of_completeSpace [CompleteSpace E]
   refine ⟨x, eq_apply_of_forall_norm_sub_le f fun U hU φ hφ ↦ ?_⟩
   -- `x` lies in the closed set `a U + 2 • U`.
   have hclosed : IsClosed {y : E | y - a U ∈ (2 : ℝ) • U} :=
-    (hU.2.2.2.smul_of_ne_zero (two_ne_zero : (2 : ℝ) ≠ 0)).preimage (continuous_id.sub continuous_const)
+    (hU.2.2.2.smul_of_ne_zero (two_ne_zero : (2 : ℝ) ≠ 0)).preimage
+      (continuous_id.sub continuous_const)
   have hmem : a '' (𝒫 U ∩ goodNhds 𝕜 E) ⊆ {y : E | y - a U ∈ (2 : ℝ) • U} := by
     rintro _ ⟨V, ⟨hVU, hV⟩, rfl⟩
     exact hdiff U hU V hV hVU
@@ -237,7 +238,7 @@ theorem exists_forall_eq_apply_of_completeSpace [CompleteSpace E]
 
 /-- **Grothendieck's completeness criterion**, converse: if every linear form on the dual
 that is weak-* continuous on each zero-neighbourhood polar is evaluation at a point, then the
-space is complete. Separation is not needed for this direction. This independently formalizes
+space is complete. Separation is not needed for this direction. This is
 Schaefer–Wolff, IV §6.2, using extension of functionals to the completion. -/
 theorem completeSpace_of_forall_exists_eq_apply
     (h : ∀ f : StrongDual 𝕜 E →ₗ[𝕜] 𝕜,

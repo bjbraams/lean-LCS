@@ -18,11 +18,11 @@ Fréchet space is a complete, first-countable, locally convex topological vector
 generally, a surjective linear map with closed graph from a Fréchet space onto a barrelled space
 is open.
 
-The proof has two steps. Barrelledness of the codomain makes every surjective linear map
-*nearly open* (`LinearMap.closure_image_mem_nhds` in `LocallyConvexSpaces.Barrel`): the closure
-of the image of a convex balanced neighbourhood of zero is a barrel, hence a neighbourhood of
-zero. Completeness and first countability of the domain together with closedness of the graph
-then upgrade near openness to openness (`AddMonoidHom.isOpenMap_of_isClosed_graph` in
+The proof has two steps. Barrelledness of the codomain makes every surjective linear map *nearly
+open* (`LinearMap.closure_image_mem_nhds_of_barrelledSpace` in `LocallyConvexSpaces.Barrel`): the
+closure of the image of a convex balanced neighbourhood of zero is a barrel, hence a neighbourhood
+of zero. Completeness and first countability of the domain together with closedness of the graph
+then upgrade near openness to openness (`AddMonoidHom.isOpenMap_of_isClosed_graph_of_nearlyOpen` in
 `TopologicalGroups.NearlyOpen`).
 
 ## Main statements
@@ -79,9 +79,9 @@ theorem LinearMap.isOpenMap_of_isClosed_graph_of_barrelledSpace (f : E →ₗ[�
   have hgraph : (f.toAddMonoidHom.graph : Set (E × F)) = (f.graph : Set (E × F)) := by
     ext p
     exact eq_comm
-  refine f.toAddMonoidHom.isOpenMap_of_isClosed_graph (hgraph ▸ hf) fun U hU ↦ ?_
+  refine f.toAddMonoidHom.isOpenMap_of_isClosed_graph_of_nearlyOpen (hgraph ▸ hf) fun U hU ↦ ?_
   obtain ⟨W, ⟨hW, hWc, hWb⟩, hWU⟩ := (nhds_zero_hasBasis_convex_balanced 𝕜 E).mem_iff.mp hU
-  exact mem_of_superset (LinearMap.closure_image_mem_nhds hsurj hWc hWb hW)
+  exact mem_of_superset (LinearMap.closure_image_mem_nhds_of_barrelledSpace hsurj hWc hWb hW)
     (closure_mono (image_mono hWU))
 
 variable [T2Space F]

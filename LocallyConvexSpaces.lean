@@ -131,7 +131,8 @@ Individual LCS modules import only their specific prerequisites.
 
 * `LocallyConvexSpaces.Bornological`: bornivorous sets; bornological spaces (first-countable
   spaces are bornological; locally bounded linear maps are continuous; inductive limits);
-  ultrabornological spaces as inductive limits of Banach spaces.
+  ultrabornological spaces (seminorms continuous along all maps from Banach spaces, equivalently
+  inductive limits of Banach spaces).
 * `LocallyConvexSpaces.BanachDisk`: the seminormed spaces `E_B` spanned by a set `B`
   (`DiskSpace 𝕜 B`), continuity of their inclusion for bounded `B`, completeness for complete
   disks; Banach disks.
@@ -141,16 +142,16 @@ Individual LCS modules import only their specific prerequisites.
 * `LocallyConvexSpaces.FrechetUltrabornological`: Fréchet spaces are ultrabornological, through
   the maps `ℓ¹(ℕ, 𝕜) → E` defined by the sequences that tend to zero.
 * `LocallyConvexSpaces.UltrabornologicalBanachDisk`: the image of the unit ball of a Banach space
-  under a continuous linear map is a Banach disk; a Hausdorff locally convex space is
-  ultrabornological if and only if it is the locally convex hull of
-  the spaces `E_B` of its Banach disks; linear maps bounded on the Banach disks are continuous.
+  under a continuous linear map is a Banach disk; a locally convex space is ultrabornological if
+  and only if the seminorms bounded on its Banach disks are continuous, and if and only if it is
+  the locally convex hull of the spaces `E_B` of its Banach disks; linear maps bounded on the
+  Banach disks are continuous.
 * `LocallyConvexSpaces.UltrabornologicalCompactDisk`: the same with the compact disks.
 * `LocallyConvexSpaces.QuotientBornological`: quotients of bornological and of ultrabornological
   spaces are of the same kind.
-* `LocallyConvexSpaces.FastConvergence`: fast convergent sequences; a Hausdorff locally convex
-  space is ultrabornological
-  if and only if the convex balanced sets that absorb the fast convergent null sequences are
-  neighbourhoods of zero; in a Fréchet space every null sequence is fast convergent.
+* `LocallyConvexSpaces.FastConvergence`: fast convergent sequences; a Hausdorff locally convex space
+  is ultrabornological if and only if the convex balanced sets that absorb the fast convergent null
+  sequences are neighbourhoods of zero; in a Fréchet space every null sequence is fast convergent.
 
 ## Duality
 
@@ -175,8 +176,7 @@ Individual LCS modules import only their specific prerequisites.
   closure of the range, dense range and injectivity of the transpose; the duals of subspaces and
   of quotients.
 * `LocallyConvexSpaces.Completion`: the completion of a locally convex space is locally convex. The
-  general completion
-  and continuous-dual API is imported from `TopologicalVectorSpaces.Completion`.
+  general completion and continuous-dual API is imported from `TopologicalVectorSpaces.Completion`.
 * `LocallyConvexSpaces.PairingTopology`: polar topologies on `E` for a pairing of `E` and `F`.
 * `LocallyConvexSpaces.MackeyArens`: the Mackey topology of a pairing and the Mackey–Arens
   theorem.

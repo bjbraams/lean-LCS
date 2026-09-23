@@ -10,15 +10,16 @@ public import Mathlib.Analysis.LocallyConvex.Bounded
 public import TopologicalVectorSpaces.PolarCalculus
 
 /-!
-# Bounded convex hulls and imported polar calculus
+# Bounded convex hulls
 
-`Bornology.IsVonNBounded.convexHull` proves that the real convex hull of a bounded set
-in a real or complex locally convex space is bounded. Balanced hulls preserve boundedness
-by `TopologicalVectorSpaces.Basic`, so convex balanced hulls are bounded as well.
+The real convex hull of a bounded set in a real or complex locally convex space is bounded.
+Balanced hulls preserve boundedness (`Bornology.IsVonNBounded.balancedHull`), so convex
+balanced hulls of bounded sets are bounded as well. The polar identities for closures, hulls
+and scalar multiples are in `TopologicalVectorSpaces.PolarCalculus`.
 
-The general identities `StrongDual.polar_closure`, `StrongDual.polar_balancedHull`,
-`StrongDual.polar_convexHull`, and `StrongDual.polar_smul` are re-exported from
-`TopologicalVectorSpaces.PolarCalculus`.
+## Main statements
+
+* `Bornology.IsVonNBounded.convexHull`: the convex hull of a bounded set is bounded.
 
 ## References
 

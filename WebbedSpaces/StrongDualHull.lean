@@ -15,10 +15,10 @@ public import WebbedSpaces.Criteria
 # The strong dual of a countable hull of metrizable spaces is strictly webbed
 
 Let `F` carry the final locally convex topology of a sequence of linear maps `f n : X n → F` whose
-ranges span `F`, where every `X n` is a first-countable topological vector space; for instance
-let `F` be an LF space. Then the strong dual of `F` is strictly webbed
-([G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.4.(13)). So De Wilde's closed graph
-theorem applies to maps into spaces of distributions.
+ranges span `F`, where every `X n` is a first-countable topological vector space; for instance let
+`F` be an LF space. Then the strong dual of `F` is strictly webbed ([G. Köthe, *Topological Vector
+Spaces II*][kothe1979], §35.4.(13)). So De Wilde's closed graph theorem applies to maps into spaces
+of distributions.
 
 With `U n` a decreasing basis of neighbourhoods of zero in `X n`, the set of the web for the
 indices `m₀, …, m_{k-1}` consists of the functionals that are bounded by one on `f i (U i (m i))`
@@ -34,7 +34,6 @@ criteria §35.1.(1) and (2) (`WebbedSpaces.Criteria`) finish the proof.
 
 ## Main statements
 
-* Imported `StrongDual.polar_diskHull`: taking a disk hull does not change a polar.
 * `StrongDual.strictlyWebbedSpace_of_locallyConvexFinalTopology`
 
 ## References

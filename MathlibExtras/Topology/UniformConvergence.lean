@@ -11,9 +11,12 @@ public import Mathlib.Topology.UniformSpace.UniformConvergenceTopology
 # Continuity on members of a uniform-convergence family
 
 For `X →ᵤ[𝔖] Y`, the space of functions with uniform convergence on the members of `𝔖`,
-`UniformOnFun.isClosed_setOf_continuousOn` states that continuity on any member of the
-family is a closed condition. This follows by restriction from Mathlib's closedness of
-the continuous functions in the topology of uniform convergence.
+continuity on a member of the family is a closed condition. This follows by restriction from
+Mathlib's closedness of the continuous functions for uniform convergence.
+
+## Main statements
+
+* `UniformOnFun.isClosed_setOf_continuousOn`.
 -/
 
 public section

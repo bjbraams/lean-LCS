@@ -33,7 +33,6 @@ sets. Evaluation embeds a Hausdorff `E` uniformly with dense image.
 ## References
 
 * [H. H. Schaefer and M. P. Wolff, *Topological Vector Spaces*][schaefer1999], IV §6.2.
-  The definitions and proofs here are independently formalized.
 -/
 
 public noncomputable section

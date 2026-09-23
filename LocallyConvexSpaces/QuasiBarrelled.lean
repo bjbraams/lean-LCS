@@ -18,10 +18,13 @@ public import Mathlib.Analysis.LocallyConvex.Montel
 /-!
 # Quasi-barrelled spaces and the characterization of reflexive spaces
 
-A locally convex space is *quasi-barrelled* (or *infrabarrelled*) if every bornivorous barrel is
-a neighbourhood of zero. Barrelled spaces and bornological spaces are quasi-barrelled. Dually, a
-locally convex space is quasi-barrelled if and only if every strongly bounded subset of its dual
-is equicontinuous, and if and only if the canonical map into the bidual is continuous.
+A topological vector space is *quasi-barrelled* (or *infrabarrelled*) if every lower semicontinuous
+seminorm that is bounded on the bounded sets is continuous. This follows Mathlib's seminorm
+definition of `BarrelledSpace`. For real or complex spaces it is equivalent to the classical
+condition that every bornivorous barrel is a neighbourhood of zero. Barrelled spaces and
+bornological spaces are quasi-barrelled. Dually, a locally convex space is quasi-barrelled if and
+only if every strongly bounded subset of its dual is equicontinuous, and if and only if the
+canonical map into the bidual is continuous.
 
 A locally convex space is reflexive if and only if it is semi-reflexive and
 quasi-barrelled, and if and only if it is semi-reflexive and barrelled. Montel spaces are
@@ -31,10 +34,13 @@ non-Hausdorff convention used here.
 
 ## Main definitions
 
-* `QuasiBarrelledSpace 𝕜 E`.
+* `QuasiBarrelledSpace 𝕜 E`: every lower semicontinuous seminorm that is bounded on the
+  bounded sets is continuous.
 
 ## Main statements
 
+* `QuasiBarrelledSpace.mem_nhds_zero`, `QuasiBarrelledSpace.of_forall_mem_nhds_zero`,
+  `quasiBarrelledSpace_iff_forall_mem_nhds_zero`: the characterization by bornivorous barrels.
 * `BarrelledSpace.toQuasiBarrelledSpace`, `BornologicalSpace.toQuasiBarrelledSpace`.
 * `StrongDual.isBarrel_polar_of_isVonNBounded`,
   `StrongDual.isBornivorous_polar_of_isVonNBounded`: the polar in `E` of a strongly bounded
@@ -47,8 +53,8 @@ non-Hausdorff convention used here.
   convex space into its bidual is open onto its image.
 * `StrongDual.continuous_inclusionInDoubleDual_of_forall_equicontinuous`,
   `QuasiBarrelledSpace.continuous_inclusionInDoubleDual`,
-  `QuasiBarrelledSpace.of_continuous_inclusionInDoubleDual`: a locally convex space is quasi-barrelled
-  if and only if its canonical map into the bidual is continuous.
+  `QuasiBarrelledSpace.of_continuous_inclusionInDoubleDual`: a locally convex space is
+  quasi-barrelled if and only if its canonical map into the bidual is continuous.
 * `SemiReflexiveSpace.isVonNBounded_of_forall_isVonNBounded`: in the dual of a semi-reflexive
   space pointwise bounded sets are strongly bounded.
 * `BarrelledSpace.of_semiReflexiveSpace_of_quasiBarrelledSpace`.
@@ -74,28 +80,63 @@ open Set Filter Bornology Function
 
 open scoped Topology Pointwise
 
-variable (𝕜 E : Type*) [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module ℝ E]
-  [TopologicalSpace E]
+section Defs
 
-/-- A topological vector space is **quasi-barrelled** if every bornivorous barrel is a
-neighbourhood of zero. -/
+variable (𝕜 E : Type*) [SeminormedRing 𝕜] [AddGroup E] [SMul 𝕜 E] [TopologicalSpace E]
+
+/-- A topological vector space is **quasi-barrelled** if every lower semicontinuous seminorm
+that is bounded on the von Neumann bounded sets is continuous. This mirrors Mathlib's seminorm
+definition of `BarrelledSpace`. For real or complex spaces it is equivalent to the classical
+condition that every bornivorous barrel is a neighbourhood of zero; see
+`quasiBarrelledSpace_iff_forall_mem_nhds_zero`. -/
 class QuasiBarrelledSpace : Prop where
-  /-- In a quasi-barrelled space every bornivorous barrel is a neighbourhood of zero. -/
-  mem_nhds_zero : ∀ T : Set E, IsBarrel 𝕜 T → IsBornivorous 𝕜 T → T ∈ 𝓝 (0 : E)
-
-variable {𝕜 E} [IsScalarTower ℝ 𝕜 E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E]
+  /-- In a quasi-barrelled space every lower semicontinuous seminorm that is bounded on the
+  bounded sets is continuous. -/
+  continuous_of_lowerSemicontinuous_of_bddAbove : ∀ p : Seminorm 𝕜 E, LowerSemicontinuous p →
+    (∀ s : Set E, IsVonNBounded 𝕜 s → BddAbove (p '' s)) → Continuous p
 
 /-- A barrelled space is quasi-barrelled. -/
 instance (priority := 100) BarrelledSpace.toQuasiBarrelledSpace [BarrelledSpace 𝕜 E] :
     QuasiBarrelledSpace 𝕜 E :=
-  have : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
-  ⟨fun _ hT _ ↦ hT.mem_nhds_zero⟩
+  ⟨fun p hp _ ↦ p.continuous_of_lowerSemicontinuous hp⟩
 
-omit [IsScalarTower ℝ 𝕜 E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] in
 /-- A bornological space is quasi-barrelled. -/
 instance (priority := 100) BornologicalSpace.toQuasiBarrelledSpace [BornologicalSpace 𝕜 E] :
     QuasiBarrelledSpace 𝕜 E :=
-  ⟨fun T hT hTb ↦ BornologicalSpace.mem_nhds_zero T hT.convex hT.balanced hTb⟩
+  ⟨fun p _ hp ↦ BornologicalSpace.continuous_of_bddAbove p hp⟩
+
+end Defs
+
+variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module ℝ E]
+  [TopologicalSpace E] [IsScalarTower ℝ 𝕜 E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E]
+
+/-- In a real or complex quasi-barrelled space every bornivorous barrel is a neighbourhood of
+zero. -/
+theorem QuasiBarrelledSpace.mem_nhds_zero [QuasiBarrelledSpace 𝕜 E] (T : Set E)
+    (hT : IsBarrel 𝕜 T) (hTb : IsBornivorous 𝕜 T) : T ∈ 𝓝 (0 : E) := by
+  have : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
+  have hpc : Continuous hT.gaugeSeminorm :=
+    QuasiBarrelledSpace.continuous_of_lowerSemicontinuous_of_bddAbove _
+      hT.lowerSemicontinuous_gaugeSeminorm fun _ ht ↦
+        hT.gaugeSeminorm.bddAbove_image_of_isBornivorous hTb hT.closedBall_gaugeSeminorm.ge ht
+  rw [← hT.closedBall_gaugeSeminorm]
+  exact mem_of_superset ((hT.gaugeSeminorm.continuous_iff one_pos).mp hpc)
+    (hT.gaugeSeminorm.ball_subset_closedBall 0 1)
+
+/-- A real or complex topological vector space in which every bornivorous barrel is a
+neighbourhood of zero is quasi-barrelled. -/
+theorem QuasiBarrelledSpace.of_forall_mem_nhds_zero
+    (h : ∀ T : Set E, IsBarrel 𝕜 T → IsBornivorous 𝕜 T → T ∈ 𝓝 (0 : E)) :
+    QuasiBarrelledSpace 𝕜 E :=
+  ⟨fun p hl hp ↦ Seminorm.continuous' (r := 1) (h _ (p.isBarrel_closedBall hl one_pos)
+    ((p.isBornivorous_ball hp one_pos).mono (p.ball_subset_closedBall 0 1)))⟩
+
+/-- A real or complex topological vector space is quasi-barrelled if and only if every
+bornivorous barrel is a neighbourhood of zero. -/
+theorem quasiBarrelledSpace_iff_forall_mem_nhds_zero :
+    QuasiBarrelledSpace 𝕜 E ↔
+      ∀ T : Set E, IsBarrel 𝕜 T → IsBornivorous 𝕜 T → T ∈ 𝓝 (0 : E) :=
+  ⟨fun _ ↦ QuasiBarrelledSpace.mem_nhds_zero, QuasiBarrelledSpace.of_forall_mem_nhds_zero⟩
 
 omit [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [IsTopologicalAddGroup E] in
 /-- The set of points at which all functionals of a strongly bounded set `H` are bounded by one
@@ -154,7 +195,7 @@ quasi-barrelled. -/
 theorem QuasiBarrelledSpace.of_forall_equicontinuous
     (h : ∀ H : Set (StrongDual 𝕜 E), IsVonNBounded 𝕜 H → Equicontinuous ((↑) : H → E → 𝕜)) :
     QuasiBarrelledSpace 𝕜 E := by
-  refine ⟨fun T hT hTb ↦ ?_⟩
+  refine QuasiBarrelledSpace.of_forall_mem_nhds_zero fun T hT hTb ↦ ?_
   obtain ⟨U, hU, hTU⟩ := StrongDual.exists_mem_nhds_subset_polar
     (h _ (StrongDual.isVonNBounded_polar_of_isBornivorous hTb))
   refine mem_of_superset hU fun x hx ↦ ?_
@@ -222,7 +263,8 @@ theorem QuasiBarrelledSpace.of_continuous_inclusionInDoubleDual
     StrongDual.hasBasis_nhds_zero_polar.mem_of_mem hH
   have hU : StrongDual.inclusionInDoubleDual 𝕜 E ⁻¹' StrongDual.polar 𝕜 H ∈ 𝓝 (0 : E) :=
     h.continuousAt.preimage_mem_nhds (by rwa [map_zero])
-  have hsub : H ⊆ StrongDual.polar 𝕜 (StrongDual.inclusionInDoubleDual 𝕜 E ⁻¹' StrongDual.polar 𝕜 H) :=
+  have hsub :
+      H ⊆ StrongDual.polar 𝕜 (StrongDual.inclusionInDoubleDual 𝕜 E ⁻¹' StrongDual.polar 𝕜 H) :=
     fun φ hφ x hx ↦ hx φ hφ
   exact (StrongDual.equicontinuous_polar hU).comp (inclusion hsub)
 
@@ -233,7 +275,8 @@ theorem reflexiveSpace_iff_semiReflexiveSpace_and_quasiBarrelledSpace :
   constructor
   · intro h
     exact ⟨h.toSemiReflexiveSpace,
-      QuasiBarrelledSpace.of_continuous_inclusionInDoubleDual h.isInducing_inclusionInDoubleDual.continuous⟩
+      QuasiBarrelledSpace.of_continuous_inclusionInDoubleDual
+        h.isInducing_inclusionInDoubleDual.continuous⟩
   · rintro ⟨hs, hq⟩
     let J : E →ₗ[𝕜] StrongDual 𝕜 (StrongDual 𝕜 E) := StrongDual.inclusionInDoubleDual 𝕜 E
     refine { hs with isInducing_inclusionInDoubleDual := ⟨le_antisymm ?_ ?_⟩ }
@@ -274,7 +317,7 @@ theorem reflexiveSpace_iff_semiReflexiveSpace_and_barrelledSpace :
     fun ⟨_, _⟩ ↦ ⟨inferInstance, inferInstance⟩⟩
 
 /-- The strong dual of a semi-reflexive locally convex space is barrelled.
-This independently formalizes Schaefer–Wolff, IV §5.5, implication (a) ⇒ (c): a pointwise
+This is Schaefer–Wolff, IV §5.5, implication (a) ⇒ (c): a pointwise
 bounded family in the bidual is represented by a bounded set in the original space. -/
 theorem SemiReflexiveSpace.barrelledSpace_strongDual [SemiReflexiveSpace 𝕜 E] :
     BarrelledSpace 𝕜 (StrongDual 𝕜 E) := by
@@ -293,7 +336,7 @@ theorem SemiReflexiveSpace.barrelledSpace_strongDual [SemiReflexiveSpace 𝕜 E]
   exact (StrongDual.equicontinuous_polar hU).comp (inclusion hsub)
 
 /-- The strong dual of a reflexive locally convex space is reflexive, including under the
-non-Hausdorff convention used here. This independently formalizes Schaefer–Wolff, IV §5.6,
+non-Hausdorff convention used here. This is Schaefer–Wolff, IV §5.6,
 Corollary 1, using semi-reflexivity and barrelledness of the strong dual. -/
 theorem ReflexiveSpace.strongDual [ReflexiveSpace 𝕜 E] : ReflexiveSpace 𝕜 (StrongDual 𝕜 E) := by
   apply (reflexiveSpace_iff_semiReflexiveSpace_and_barrelledSpace (𝕜 := 𝕜)
@@ -333,19 +376,3 @@ theorem MontelSpace.reflexiveSpace [T1Space E] [MontelSpace 𝕜 E] [BarrelledSp
     ⟨MontelSpace.semiReflexiveSpace, inferInstance⟩
 
 end Montel
-
-/-- Compatibility name for `StrongDual.exists_nhds_preimage_inclusionInDoubleDual_subset`. -/
-alias StrongDual.exists_nhds_preimage_inclusionInBidual_subset :=
-  StrongDual.exists_nhds_preimage_inclusionInDoubleDual_subset
-
-/-- Compatibility name for `StrongDual.continuous_inclusionInDoubleDual_of_forall_equicontinuous`. -/
-alias StrongDual.continuous_inclusionInBidual_of_forall_equicontinuous :=
-  StrongDual.continuous_inclusionInDoubleDual_of_forall_equicontinuous
-
-/-- Compatibility name for `QuasiBarrelledSpace.continuous_inclusionInDoubleDual`. -/
-alias QuasiBarrelledSpace.continuous_inclusionInBidual :=
-  QuasiBarrelledSpace.continuous_inclusionInDoubleDual
-
-/-- Compatibility name for `QuasiBarrelledSpace.of_continuous_inclusionInDoubleDual`. -/
-alias QuasiBarrelledSpace.of_continuous_inclusionInBidual :=
-  QuasiBarrelledSpace.of_continuous_inclusionInDoubleDual

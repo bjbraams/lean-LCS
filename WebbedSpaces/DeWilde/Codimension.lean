@@ -30,15 +30,12 @@ The proof applies `WebbedSpaces.DeWilde.Kato` to the space `ι →₀ 𝕜` of f
 families with its finest locally convex topology, which is webbed for countable `ι`, and to the
 map `c ↦ ∑ c i • v i` onto an algebraic complement of the range.
 
-## Imported construction
-
-* `Finsupp.finestLocallyConvexTopology 𝕜 ι`: the finest locally convex topology on `ι →₀ 𝕜`,
-  that is the topology of the locally convex direct sum of copies of `𝕜`.
+The finest locally convex topology `Finsupp.finestLocallyConvexTopology 𝕜 ι` on `ι →₀ 𝕜` is
+defined in `LocallyConvexSpaces.FinestTopology`.
 
 ## Main statements
 
-* `Finsupp.finestLocallyConvexTopology.webbedSpace`; Hausdorffness, the universal property,
-  and the failure of first countability are imported from `LocallyConvexSpaces.FinestTopology`.
+* `Finsupp.finestLocallyConvexTopology.webbedSpace`: for countable `ι` this space is webbed.
 * `Submodule.isClosed_snd_image_of_countable_codimension`,
   `Submodule.exists_nhds_inter_subset_image_of_countable_codimension`,
   `Submodule.exists_nhds_forall_decomposition_of_countable_codimension`,
@@ -94,10 +91,12 @@ variable {𝕜 : Type v} [RCLike 𝕜] {E : Type*} {F : Type u} {ι : Type*} [Co
   [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E]
   [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] [WebbedSpace E]
   [AddCommGroup F] [Module 𝕜 F] [Module ℝ F] [IsScalarTower ℝ 𝕜 F] [TopologicalSpace F]
+  [IsTopologicalAddGroup F] [ContinuousSMul 𝕜 F] [LocallyConvexSpace ℝ F]
   [UltrabornologicalSpace 𝕜 F]
 
 omit [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] [IsTopologicalAddGroup E]
   [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] [WebbedSpace E] in
+omit [UltrabornologicalSpace 𝕜 F] in
 /-- The common part of the statements below: the hypotheses of
 `WebbedSpaces.DeWilde.Kato` hold for the map `c ↦ ∑ c i • v i` on `ι →₀ 𝕜` with its
 finest locally convex topology. -/
@@ -111,9 +110,6 @@ private theorem exists_clm_linearCombination (G : Submodule 𝕜 (E × F)) (v : 
       (∀ y : F, ∃ q ∈ G, ∃ z : ι →₀ 𝕜, y = q.2 + j z) ∧
       (∀ q ∈ G, ∀ z : ι →₀ 𝕜, q.2 = j z → j z = 0) ∧ Injective j ∧
       ∀ c, j c = Finsupp.linearCombination 𝕜 v c := by
-  have : IsTopologicalAddGroup F := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 F
-  have : ContinuousSMul 𝕜 F := UltrabornologicalSpace.continuousSMul 𝕜 F
-  have : LocallyConvexSpace ℝ F := UltrabornologicalSpace.locallyConvexSpace 𝕜 F
   let f := fun i : ι ↦ (Finsupp.lsingle i : 𝕜 →ₗ[𝕜] ι →₀ 𝕜)
   let _ : TopologicalSpace (ι →₀ 𝕜) := Finsupp.finestLocallyConvexTopology 𝕜 ι
   let j : (ι →₀ 𝕜) →L[𝕜] F :=
@@ -155,10 +151,10 @@ theorem Submodule.exists_nhds_inter_subset_image_of_countable_codimension {V : S
     exists_clm_linearCombination G v hsum hindep
   exact G.exists_nhds_inter_subset_image_of_webbed_complement hG j hsum' hdisj hV
 
-/-- Under the hypotheses of `Submodule.isClosed_snd_image_of_countable_codimension`, the coefficients of the component in the complement of a point
-near zero are small for the finest locally convex topology of `ι →₀ 𝕜`: the projection onto
-the complement is continuous and the complement carries its finest locally convex topology,
-Köthe II §35.5.(2). -/
+/-- Under the hypotheses of `Submodule.isClosed_snd_image_of_countable_codimension`, the
+coefficients of the component in the complement of a point near zero are small for the finest
+locally convex topology of `ι →₀ 𝕜`: the projection onto the complement is continuous and the
+complement carries its finest locally convex topology, Köthe II §35.5.(2). -/
 theorem Submodule.exists_nhds_forall_decomposition_of_countable_codimension
     {W : Set (ι →₀ 𝕜)} (hW : W ∈ @nhds _ (Finsupp.finestLocallyConvexTopology 𝕜 ι) 0) :
     ∃ N ∈ 𝓝 (0 : F), ∀ y ∈ N, ∀ q ∈ G, ∀ c : ι →₀ 𝕜,
@@ -172,9 +168,9 @@ theorem Submodule.exists_nhds_forall_decomposition_of_countable_codimension
   obtain ⟨w, hw, hwc⟩ := h y hy q hq c (by rw [hj, hyc])
   exact hinj hwc ▸ hw
 
-/-- Under the hypotheses of `Submodule.isClosed_snd_image_of_countable_codimension`,
-if `F` is first-countable then the complement is finite
-dimensional, since the space `φ` is not metrizable, Köthe II §35.5.(3). -/
+/-- Under the hypotheses of `Submodule.isClosed_snd_image_of_countable_codimension`, if `F` is
+first-countable then the complement is finite dimensional, since the space `φ` is not metrizable,
+Köthe II §35.5.(3). -/
 theorem Submodule.finite_of_countable_codimension_of_firstCountableTopology
     [FirstCountableTopology F] : Finite ι := by
   by_contra hfin
@@ -255,6 +251,7 @@ variable {𝕜 : Type v} [RCLike 𝕜] {E : Type*} {F : Type u} {ι : Type*} [Co
   [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E]
   [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] [WebbedSpace E]
   [AddCommGroup F] [Module 𝕜 F] [Module ℝ F] [IsScalarTower ℝ 𝕜 F] [TopologicalSpace F]
+  [IsTopologicalAddGroup F] [ContinuousSMul 𝕜 F] [LocallyConvexSpace ℝ F]
   [UltrabornologicalSpace 𝕜 F]
 
 /-- **Kato's theorem in De Wilde's form**: a linear map with sequentially closed graph from a
@@ -297,9 +294,6 @@ theorem LinearMap.continuous_projectionOnto_of_basis_isCompl (A : E →ₗ[𝕜]
     (hA : IsSeqClosed (A.graph : Set (E × F))) {K : Submodule 𝕜 F}
     (hK : IsCompl (LinearMap.range A) K) (b : Module.Basis ι 𝕜 K) :
     Continuous (K.projectionOnto (LinearMap.range A) hK.symm) := by
-  have : IsTopologicalAddGroup F := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 F
-  have : ContinuousSMul 𝕜 F := UltrabornologicalSpace.continuousSMul 𝕜 F
-  have : LocallyConvexSpace ℝ F := UltrabornologicalSpace.locallyConvexSpace 𝕜 F
   obtain ⟨hsum, hindep⟩ := A.family_of_basis_isCompl hK b
   let P := K.projectionOnto (LinearMap.range A) hK.symm
   -- The projection of `A x + ∑ c i • b i` is `∑ c i • b i`.
@@ -339,7 +333,6 @@ theorem LinearMap.continuous_of_basis_isCompl_range (A : E →ₗ[𝕜] F)
     [Module 𝕜 X] [Module ℝ X] [IsScalarTower ℝ 𝕜 X] [TopologicalSpace X]
     [IsTopologicalAddGroup X] [ContinuousSMul 𝕜 X] [LocallyConvexSpace ℝ X] (g : K →ₗ[𝕜] X) :
     Continuous g := by
-  have : IsTopologicalAddGroup F := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 F
   obtain ⟨hsum, hindep⟩ := A.family_of_basis_isCompl hK b
   let _ : TopologicalSpace (ι →₀ 𝕜) := Finsupp.finestLocallyConvexTopology 𝕜 ι
   have : IsTopologicalAddGroup (ι →₀ 𝕜) := locallyConvexFinalTopology.isTopologicalAddGroup _
@@ -381,9 +374,11 @@ section Subspace
 
 variable {𝕜 : Type v} [RCLike 𝕜] {E : Type u} {ι : Type*} [Countable ι] [AddCommGroup E]
   [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E]
+  [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E]
   [UltrabornologicalSpace 𝕜 E] [WebbedSpace E] [T2Space E]
 
-omit [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [UltrabornologicalSpace 𝕜 E] [WebbedSpace E] in
+omit [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E]
+  [LocallyConvexSpace ℝ E] [UltrabornologicalSpace 𝕜 E] [WebbedSpace E] in
 /-- The inclusion of a subspace of a Hausdorff space has a sequentially closed graph. -/
 private theorem Submodule.isSeqClosed_graph_subtype (H : Submodule 𝕜 E) :
     IsSeqClosed (H.subtype.graph : Set (H × E)) :=
@@ -393,9 +388,6 @@ private theorem Submodule.isSeqClosed_graph_subtype (H : Submodule 𝕜 E) :
 finite or countable codimension is closed, Köthe II §35.5.(5) b). -/
 theorem Submodule.isClosed_of_isSeqClosed_of_basis_quotient (H : Submodule 𝕜 E)
     (hH : IsSeqClosed (H : Set E)) (b : Module.Basis ι 𝕜 (E ⧸ H)) : IsClosed (H : Set E) := by
-  have : IsTopologicalAddGroup E := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 E
-  have : ContinuousSMul 𝕜 E := UltrabornologicalSpace.continuousSMul 𝕜 E
-  have : LocallyConvexSpace ℝ E := UltrabornologicalSpace.locallyConvexSpace 𝕜 E
   have : LocallyConvexSpace ℝ H :=
     Topology.IsInducing.locallyConvexSpace (f := H.subtype.restrictScalars ℝ) .subtypeVal
   have : WebbedSpace H := WebbedSpace.of_isSeqClosed H hH
@@ -412,9 +404,6 @@ onto it is continuous, Köthe II §35.5.(5) b). -/
 theorem Submodule.continuous_projectionOnto_of_isSeqClosed_of_basis (H : Submodule 𝕜 E)
     (hH : IsSeqClosed (H : Set E)) {K : Submodule 𝕜 E} (hK : IsCompl H K)
     (b : Module.Basis ι 𝕜 K) : Continuous (K.projectionOnto H hK.symm) := by
-  have : IsTopologicalAddGroup E := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 E
-  have : ContinuousSMul 𝕜 E := UltrabornologicalSpace.continuousSMul 𝕜 E
-  have : LocallyConvexSpace ℝ E := UltrabornologicalSpace.locallyConvexSpace 𝕜 E
   have : LocallyConvexSpace ℝ H :=
     Topology.IsInducing.locallyConvexSpace (f := H.subtype.restrictScalars ℝ) .subtypeVal
   have : WebbedSpace H := WebbedSpace.of_isSeqClosed H hH
@@ -432,9 +421,6 @@ codimension, Köthe II §35.5.(3). -/
 theorem Submodule.finite_of_isSeqClosed_of_basis_quotient [FirstCountableTopology E]
     (H : Submodule 𝕜 E) (hH : IsSeqClosed (H : Set E)) (b : Module.Basis ι 𝕜 (E ⧸ H)) :
     Finite ι := by
-  have : IsTopologicalAddGroup E := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 E
-  have : ContinuousSMul 𝕜 E := UltrabornologicalSpace.continuousSMul 𝕜 E
-  have : LocallyConvexSpace ℝ E := UltrabornologicalSpace.locallyConvexSpace 𝕜 E
   have : LocallyConvexSpace ℝ H :=
     Topology.IsInducing.locallyConvexSpace (f := H.subtype.restrictScalars ℝ) .subtypeVal
   have : WebbedSpace H := WebbedSpace.of_isSeqClosed H hH

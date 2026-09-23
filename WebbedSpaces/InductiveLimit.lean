@@ -17,8 +17,8 @@ public import WebbedSpaces.Product
 A space that is spanned by countably many images of webbed spaces under sequentially continuous
 linear maps is webbed, and similarly for strictly webbed spaces. In particular the final locally
 convex topology of a countable spanning family of webbed spaces is webbed; this covers countable
-inductive limits, LF spaces and countable locally convex direct sums,
-[G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.4.(8) and (9).
+inductive limits, LF spaces and countable locally convex direct sums, [G. Köthe, *Topological Vector
+Spaces II*][kothe1979], §35.4.(8) and (9).
 
 The proof combines the two constructions of webs: the product `∀ i, E i` is webbed
 (`Pi.instWebbedSpace`), and the space spanned by the images is the union over the finite sets

@@ -46,7 +46,8 @@ open scoped Topology
 universe u v
 
 variable {𝕜 : Type v} [RCLike 𝕜] {E : Type u} [AddCommGroup E] [Module 𝕜 E] [Module ℝ E]
-  [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] [UltrabornologicalSpace 𝕜 E] [T2Space E]
+  [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E]
+  [LocallyConvexSpace ℝ E] [UltrabornologicalSpace 𝕜 E] [T2Space E]
   {H₁ H₂ : Submodule 𝕜 E}
 
 namespace Submodule
@@ -56,9 +57,6 @@ are webbed for the induced topology. Then the decomposition `x ↦ (x₁, x₂)`
 Köthe II §35.5.(4). -/
 theorem continuous_prodEquivOfIsCompl_symm_of_webbedSpace [WebbedSpace H₁] [WebbedSpace H₂]
     (h : IsCompl H₁ H₂) : Continuous (H₁.prodEquivOfIsCompl H₂ h).symm := by
-  have : IsTopologicalAddGroup E := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 E
-  have : ContinuousSMul 𝕜 E := UltrabornologicalSpace.continuousSMul 𝕜 E
-  have : LocallyConvexSpace ℝ E := UltrabornologicalSpace.locallyConvexSpace 𝕜 E
   have hlc (H : Submodule 𝕜 E) : LocallyConvexSpace ℝ H :=
     Topology.IsInducing.locallyConvexSpace (f := H.subtype.restrictScalars ℝ) .subtypeVal
   have := hlc H₁
@@ -71,7 +69,8 @@ theorem continuous_prodEquivOfIsCompl_symm_of_webbedSpace [WebbedSpace H₁] [We
     rw [he]
     fun_prop
   have hopen : IsOpenMap e :=
-    (⟨e.toLinearMap, hcont⟩ : (H₁ × H₂) →L[𝕜] E).isOpenMap_of_webbedSpace e.surjective
+    (⟨e.toLinearMap, hcont⟩ : (H₁ × H₂) →L[𝕜] E).isOpenMap_of_webbedSpace_of_ultrabornologicalSpace
+      e.surjective
   refine continuous_def.mpr fun U hU ↦ ?_
   rw [← LinearEquiv.image_eq_preimage_symm]
   exact hopen U hU

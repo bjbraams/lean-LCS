@@ -14,15 +14,14 @@ public import TopologicalVectorSpaces.Basic
 /-!
 # Polar topologies on the dual
 
-Let `E` be a topological vector space over a nontrivially normed field `𝕜` and let `𝔖` be a
-family of subsets of `E`. Mathlib equips the continuous dual with the topology of uniform
-convergence on the members of `𝔖` through the type synonym `E →Lᵤ[𝕜, 𝔖] 𝕜`
-(`UniformConvergenceCLM`). In the literature this is the *polar topology* or `𝔖`-topology: if
-`𝔖` is nonempty, directed and stable under multiplication by nonzero scalars, the polars of the
-members
-of `𝔖` form a basis of neighbourhoods of zero. This file proves that description and
-specializes it to the topology of bounded convergence (the strong dual, which is the topology
-carried by `StrongDual 𝕜 E`) and to the topology of compact convergence (`E →L_c[𝕜] 𝕜`).
+Let `E` be a topological vector space over a nontrivially normed field `𝕜` and let `𝔖` be a family
+of subsets of `E`. Mathlib equips the continuous dual with the topology of uniform convergence on
+the members of `𝔖` through the type synonym `E →Lᵤ[𝕜, 𝔖] 𝕜` (`UniformConvergenceCLM`). In the
+literature this is the *polar topology* or `𝔖`-topology: if `𝔖` is nonempty, directed and stable
+under multiplication by nonzero scalars, the polars of the members of `𝔖` form a basis of
+neighbourhoods of zero. This file proves that description and specializes it to the topology of
+bounded convergence (the strong dual, which is the topology carried by `StrongDual 𝕜 E`) and to the
+topology of compact convergence (`E →L_c[𝕜] 𝕜`).
 
 ## Main definitions
 
@@ -97,8 +96,7 @@ theorem polar_mem_nhds_zero (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (�
   (hasBasis_nhds_zero_norm_le h𝔖₁ h𝔖₂).mem_of_mem (i := (S, 1)) ⟨hS, one_pos⟩
 
 /-- If `𝔖` is nonempty, directed and stable under multiplication by nonzero scalars, then the polars
-of
-the members of `𝔖` form a basis of neighbourhoods of zero for the `𝔖`-topology. -/
+of the members of `𝔖` form a basis of neighbourhoods of zero for the `𝔖`-topology. -/
 theorem hasBasis_nhds_zero_polar (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖)
     (h𝔖₃ : ∀ S ∈ 𝔖, ∀ c : 𝕜, c ≠ 0 → c • S ∈ 𝔖) :
     (𝓝 (0 : E →Lᵤ[𝕜, 𝔖] 𝕜)).HasBasis (· ∈ 𝔖) (polar 𝕜 𝔖) := by

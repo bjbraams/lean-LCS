@@ -54,10 +54,9 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module
 
 namespace StrictlyWebbedSpace
 
-/-- In a Hausdorff strictly webbed Baire space there are a family of balanced sets `C`, a
-sequence `σ` and real coefficients `ρ` such that the sets `ρ k • C (res σ (k + 1))` form a basis of
-neighbourhoods of zero and the
-series `∑ ρ k • x k` with `x k ∈ C (res σ (k + 1))` converge. -/
+/-- In a Hausdorff strictly webbed Baire space there are a family of balanced sets `C`, a sequence
+`σ` and real coefficients `ρ` such that the sets `ρ k • C (res σ (k + 1))` form a basis of
+neighbourhoods of zero and the series `∑ ρ k • x k` with `x k ∈ C (res σ (k + 1))` converge. -/
 theorem exists_hasBasis_nhds_zero_of_baireSpace [TopologicalSpace E] [IsTopologicalAddGroup E]
     [ContinuousSMul ℝ E] [T2Space E] [BaireSpace E] [StrictlyWebbedSpace 𝕜 E] :
     ∃ (C : List ℕ → Set E) (σ : ℕ → ℕ) (ρ : ℕ → ℝ), (∀ l, Balanced 𝕜 (C l)) ∧

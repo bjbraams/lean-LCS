@@ -12,15 +12,14 @@ public import WebbedSpaces.Hereditary
 /-!
 # Countable products of webbed spaces
 
-The product of countably many webbed spaces is webbed, and the product of countably many
-strictly webbed spaces is strictly webbed,
-[G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.4.(6).
+The product of countably many webbed spaces is webbed, and the product of countably many strictly
+webbed spaces is strictly webbed, [G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.4.(6).
 
 Let `C j` be a web on `E j`, for `j` in an encodable type `ι`. The web on `∀ j, E j` constrains
 at depth `k` the coordinates `j` with `encode j < k`, the coordinate `j` by a set of depth
 `k - encode j` of `C j`. One index `n` of the product web encodes indices for all coordinate
-webs at once: `WebConstruction.webPiIndex n m` is the index used by the coordinate `j` with `encode
-j = m`.
+webs at once: `WebConstruction.webPiIndex n m` is the index used by the coordinate `j` with
+`encode j = m`.
 
 The explicit web constructions and their calculation lemmas live in the `WebConstruction`
 namespace.
@@ -35,8 +34,8 @@ namespace.
 ## Main statements
 
 * `WebConstruction.isWeb_webPi`, `WebConstruction.isCompletingWeb_webPi`,
-  `WebConstruction.isStrictWeb_webPi`: the product web is a web, and it
-  is completing, respectively strict, if the webs of the factors are.
+  `WebConstruction.isStrictWeb_webPi`: the product web is a web, and it is completing, respectively
+  strict, if the webs of the factors are.
 * `WebConstruction.isWeb_webProd`, `WebConstruction.isCompletingWeb_webProd`,
   `WebConstruction.isStrictWeb_webProd`: the same for `WebConstruction.webProd`.
 * `Pi.instWebbedSpace`, `Pi.instStrictlyWebbedSpace`: countable products of webbed and of strictly
@@ -103,9 +102,6 @@ theorem WebConstruction.webPiList_eq_nil_of_length_le {l : List ℕ} {m : ℕ} (
     WebConstruction.webPiList l m = [] := by
   rw [WebConstruction.webPiList, Nat.sub_eq_zero_of_le hm, List.take_zero, List.map_nil]
 
-/-- Compatibility name for `WebConstruction.webPiList_eq_nil_of_length_le`. -/
-alias WebConstruction.webPiList_of_length_le := WebConstruction.webPiList_eq_nil_of_length_le
-
 /-- The strand of the coordinate at position `m` determined by a strand `σ` of the product
 web. -/
 @[expose]
@@ -129,7 +125,8 @@ theorem WebConstruction.webPiList_res (σ : ℕ → ℕ) (m k : ℕ) :
   rcases le_total m k with h | h
   · obtain ⟨i, rfl⟩ := Nat.exists_eq_add_of_le h
     rw [WebConstruction.webPiList_res_add, Nat.add_sub_cancel_left]
-  · rw [WebConstruction.webPiList_eq_nil_of_length_le (by simpa using h), Nat.sub_eq_zero_of_le h, res_zero]
+  · rw [WebConstruction.webPiList_eq_nil_of_length_le (by simpa using h),
+      Nat.sub_eq_zero_of_le h, res_zero]
 
 end Lists
 
@@ -149,7 +146,8 @@ theorem WebConstruction.mem_webPi {C : ∀ j, List ℕ → Set (E j)} {l : List 
   Iff.rfl
 
 /-- Membership of the sets along a strand of the product web. -/
-theorem WebConstruction.mem_webPi_res {C : ∀ j, List ℕ → Set (E j)} {σ : ℕ → ℕ} {k : ℕ} {x : ∀ j, E j} :
+theorem WebConstruction.mem_webPi_res {C : ∀ j, List ℕ → Set (E j)} {σ : ℕ → ℕ} {k : ℕ}
+    {x : ∀ j, E j} :
     x ∈ WebConstruction.webPi C (res σ k) ↔
       ∀ j, x j ∈ C j (res (WebConstruction.webPiStrand σ (encode j)) (k - encode j)) := by
   simp_rw [WebConstruction.mem_webPi, WebConstruction.webPiList_res]
@@ -242,7 +240,8 @@ theorem WebConstruction.isCompletingWeb_webPi {C : ∀ j, List ℕ → Set (E j)
 
 omit [∀ j, IsScalarTower ℝ 𝕜 (E j)] in
 /-- The product of countably many strict webs is a strict web, Köthe II §35.4.(6). -/
-theorem WebConstruction.isStrictWeb_webPi {C : ∀ j, List ℕ → Set (E j)} (hC : ∀ j, IsStrictWeb 𝕜 (C j)) :
+theorem WebConstruction.isStrictWeb_webPi {C : ∀ j, List ℕ → Set (E j)}
+    (hC : ∀ j, IsStrictWeb 𝕜 (C j)) :
     IsStrictWeb 𝕜 (WebConstruction.webPi C) where
   toIsWeb := WebConstruction.isWeb_webPi fun j ↦ (hC j).toIsWeb
   convex l := fun x hx y hy a b ha hb hab j ↦ (hC j).convex _ (hx j) (hy j) ha hb hab
@@ -251,9 +250,11 @@ theorem WebConstruction.isStrictWeb_webPi {C : ∀ j, List ℕ → Set (E j)} (h
     exact (hC j).balanced _ a ha (smul_mem_smul_set (hx j))
   exists_radius σ := by
     choose r hr h using fun j ↦ (hC j).exists_radius (WebConstruction.webPiStrand σ (encode j))
-    refine ⟨WebConstruction.webPiRadius r, WebConstruction.webPiRadius_pos hr, fun x c hx hc k₀ ↦ ?_⟩
-    have hj (j : ι) : ∃ s ∈ C j (res (WebConstruction.webPiStrand σ (encode j)) (k₀ + 1 - encode j)),
-        Tendsto (fun N ↦ ∑ k ∈ Finset.range N, c (k₀ + k) • x (k₀ + k) j) atTop (𝓝 s) := by
+    refine ⟨WebConstruction.webPiRadius r, WebConstruction.webPiRadius_pos hr,
+      fun x c hx hc k₀ ↦ ?_⟩
+    have hj (j : ι) :
+        ∃ s ∈ C j (res (WebConstruction.webPiStrand σ (encode j)) (k₀ + 1 - encode j)),
+          Tendsto (fun N ↦ ∑ k ∈ Finset.range N, c (k₀ + k) • x (k₀ + k) j) atTop (𝓝 s) := by
       have h' := h j (fun i ↦ x (encode j + i) j) (fun i ↦ c (encode j + i))
         (apply_mem_res hx j) fun i ↦
           ⟨(hc _).1, (hc _).2.trans (WebConstruction.webPiRadius_le r j i)⟩
@@ -328,11 +329,13 @@ variable {E F : Type*}
 /-- The **product of two webs**: an index `n` encodes the pair `Nat.unpair n` of indices of the
 two webs. -/
 @[expose]
-def WebConstruction.webProd (C₁ : List ℕ → Set E) (C₂ : List ℕ → Set F) (l : List ℕ) : Set (E × F) :=
+def WebConstruction.webProd (C₁ : List ℕ → Set E) (C₂ : List ℕ → Set F) (l : List ℕ) :
+    Set (E × F) :=
   C₁ (l.map fun n ↦ (Nat.unpair n).1) ×ˢ C₂ (l.map fun n ↦ (Nat.unpair n).2)
 
 /-- The sets of the product of two webs along a strand. -/
-theorem WebConstruction.webProd_res (C₁ : List ℕ → Set E) (C₂ : List ℕ → Set F) (σ : ℕ → ℕ) (k : ℕ) :
+theorem WebConstruction.webProd_res (C₁ : List ℕ → Set E) (C₂ : List ℕ → Set F) (σ : ℕ → ℕ)
+    (k : ℕ) :
     WebConstruction.webProd C₁ C₂ (res σ k) =
       C₁ (res (fun i ↦ (Nat.unpair (σ i)).1) k) ×ˢ C₂ (res (fun i ↦ (Nat.unpair (σ i)).2) k) := by
   rw [WebConstruction.webProd, res_comp (fun n ↦ (Nat.unpair n).1) σ k,
@@ -373,7 +376,8 @@ theorem WebConstruction.isCompletingWeb_webProd {C₁ : List ℕ → Set E} {C�
 
 /-- The product of two strict webs is a strict web. -/
 theorem WebConstruction.isStrictWeb_webProd {C₁ : List ℕ → Set E} {C₂ : List ℕ → Set F}
-    (h₁ : IsStrictWeb 𝕜 C₁) (h₂ : IsStrictWeb 𝕜 C₂) : IsStrictWeb 𝕜 (WebConstruction.webProd C₁ C₂) where
+    (h₁ : IsStrictWeb 𝕜 C₁) (h₂ : IsStrictWeb 𝕜 C₂) :
+    IsStrictWeb 𝕜 (WebConstruction.webProd C₁ C₂) where
   toIsWeb := WebConstruction.isWeb_webProd h₁.toIsWeb h₂.toIsWeb
   convex l := (h₁.convex _).prod (h₂.convex _)
   balanced l := by

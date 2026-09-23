@@ -106,8 +106,8 @@ sync when adding modules; retain the existing package and Lake root.
 
 Directories determine import paths, not declaration namespaces. Continue to use the natural
 Mathlib namespaces such as `Submodule`, `LinearMap`, `StrongDual`, and `UniformSpace.Completion`.
-Use `inclusionInDoubleDual` for the canonical bidual API, including reflexivity class fields;
-the older `inclusionInBidual` names remain as compatibility aliases and accessors.
+Use `inclusionInDoubleDual` for the canonical bidual API, including reflexivity class fields.
+Do not add compatibility aliases for renamed declarations; the library has no external users.
 Use the Hausdorff convention for the term Fréchet space. State non-Hausdorff extensions as
 results for complete, first-countable locally convex spaces without adding separation assumptions.
 See `PROJECT_ORGANIZATION.md` for the file-move and split map.

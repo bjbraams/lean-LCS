@@ -12,12 +12,12 @@ public import WebbedSpaces.DeWilde.Localization
 /-!
 # The localization theorem for completing webs
 
-For a completing web `C` of convex balanced sets, which need not be strict, the localization
-theorem holds with the closures of the sets of the web
-([G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.6.(4)): for a linear map `A` with
-sequentially closed graph from a first-countable Baire topological vector space `E`, or with
-closed graph from a Baire topological vector space `E`, into a space with such a web there is a
-strand `σ` such that every `A ⁻¹' closure (C (res σ k))` is a neighbourhood of zero in `E`.
+For a completing web `C` of convex balanced sets, which need not be strict, the localization theorem
+holds with the closures of the sets of the web ([G. Köthe, *Topological Vector Spaces
+II*][kothe1979], §35.6.(4)): for a linear map `A` with sequentially closed graph from a
+first-countable Baire topological vector space `E`, or with closed graph from a Baire topological
+vector space `E`, into a space with such a web there is a strand `σ` such that every
+`A ⁻¹' closure (C (res σ k))` is a neighbourhood of zero in `E`.
 
 Köthe leaves the proof to the reader. Here it follows from the cores of the localization
 theorems in `WebbedSpaces.DeWilde.Localization`: with radii `c k ≤ 2⁻ᵏ⁻¹` the partial sums

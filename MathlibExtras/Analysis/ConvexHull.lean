@@ -12,9 +12,13 @@ public import Mathlib.Analysis.RCLike.Lemmas
 /-!
 # Real and scalar convex hulls
 
-`convexHull_RCLike_eq_real` identifies scalar and real convex hulls for compatible
-real/complex module structures. `Balanced.convexHull_real` deduces balancedness of
-the real convex hull from Mathlib's scalar-convexity theorem. No ambient topology is needed.
+No ambient topology is needed.
+
+## Main statements
+
+* `convexHull_RCLike_eq_real`: convex hulls over an `RCLike` field and over the reals agree for
+  a compatible real module structure.
+* `Balanced.convexHull_real`: the real convex hull of a balanced set is balanced.
 -/
 
 public section

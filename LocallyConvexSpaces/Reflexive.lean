@@ -25,8 +25,7 @@ holds if and only if the strong topology is coarser than the Mackey topology `τ
 
 ## Main definitions
 
-* `StrongDual.inclusionInDoubleDual 𝕜 E` (also named `inclusionInBidual`): the canonical linear map
-  of `E` into its bidual.
+* `StrongDual.inclusionInDoubleDual 𝕜 E`: the canonical linear map of `E` into its bidual.
 * `SemiReflexiveSpace 𝕜 E`, `ReflexiveSpace 𝕜 E`.
 
 ## Main statements
@@ -39,7 +38,7 @@ holds if and only if the strong topology is coarser than the Mackey topology `τ
   under reflexivity.
 * `SemiReflexiveSpace.strongDual_of_continuous_inclusionInDoubleDual`: semi-reflexivity and
   continuity of the bidual map imply semi-reflexivity of the strong dual.
-* `semiReflexiveSpace_iff_isCompatible`, `semiReflexiveSpace_iff_mackeyTopology_le`.
+* `semiReflexiveSpace_iff_isCompatibleTopology`, `semiReflexiveSpace_iff_mackeyTopology_le`.
 * `semiReflexiveSpace_iff_forall_isVonNBounded`: a Hausdorff locally convex space is
   semi-reflexive if and only if every bounded set lies in a weakly compact convex balanced set.
 
@@ -82,18 +81,12 @@ def StrongDual.inclusionInDoubleDual : E →ₗ[𝕜] StrongDual 𝕜 (StrongDua
   map_add' x y := ContinuousLinearMap.ext fun φ ↦ map_add φ x y
   map_smul' c x := ContinuousLinearMap.ext fun φ ↦ map_smul φ c x
 
-/-- Compatibility name for `StrongDual.inclusionInDoubleDual`. -/
-abbrev StrongDual.inclusionInBidual := StrongDual.inclusionInDoubleDual 𝕜 E
-
 variable {𝕜 E} in
 /-- The canonical map into the bidual is evaluation. -/
 @[simp]
 theorem StrongDual.inclusionInDoubleDual_apply (x : E) (φ : StrongDual 𝕜 E) :
     StrongDual.inclusionInDoubleDual 𝕜 E x φ = φ x :=
   rfl
-
-/-- Compatibility name for the evaluation formula of the canonical bidual map. -/
-alias StrongDual.inclusionInBidual_apply := StrongDual.inclusionInDoubleDual_apply
 
 /-- The canonical bidual map is injective whenever the continuous dual separates points. -/
 theorem StrongDual.inclusionInDoubleDual_injective_of_separatingDual [SeparatingDual 𝕜 E] :
@@ -116,14 +109,6 @@ class ReflexiveSpace : Prop extends SemiReflexiveSpace 𝕜 E where
 
 /-- A reflexive space is semi-reflexive. -/
 add_decl_doc ReflexiveSpace.toSemiReflexiveSpace
-
-/-- Compatibility accessor for surjectivity of the canonical bidual map. -/
-alias SemiReflexiveSpace.surjective_inclusionInBidual :=
-  SemiReflexiveSpace.surjective_inclusionInDoubleDual
-
-/-- Compatibility accessor for the inducing property of the canonical bidual map. -/
-alias ReflexiveSpace.isInducing_inclusionInBidual :=
-  ReflexiveSpace.isInducing_inclusionInDoubleDual
 
 /-- The canonical map of a reflexive space into its strong bidual is continuous. -/
 theorem ReflexiveSpace.continuous_inclusionInDoubleDual [ReflexiveSpace 𝕜 E] :
@@ -163,13 +148,10 @@ theorem StrongDual.inclusionInDoubleDual_injective [Module ℝ E] [IsScalarTower
   let : SeparatingDual 𝕜 E := SeparatingDual.of_locallyConvexSpace_real 𝕜 E
   exact StrongDual.inclusionInDoubleDual_injective_of_separatingDual 𝕜 E
 
-/-- Compatibility name for injectivity of the bidual map on a Hausdorff locally convex space. -/
-alias StrongDual.inclusionInBidual_injective := StrongDual.inclusionInDoubleDual_injective
-
 /-- A space is semi-reflexive if and only if the strong topology on its dual is compatible with
 the pairing of the dual and the space. -/
-theorem semiReflexiveSpace_iff_isCompatible :
-    SemiReflexiveSpace 𝕜 E ↔ (topDualPairing 𝕜 E).IsCompatible := by
+theorem semiReflexiveSpace_iff_isCompatibleTopology :
+    SemiReflexiveSpace 𝕜 E ↔ (topDualPairing 𝕜 E).IsCompatibleTopology := by
   constructor
   · intro h f
     refine ⟨fun hf ↦ ?_, fun ⟨x, hx⟩ ↦ ?_⟩
@@ -189,7 +171,8 @@ the dual and the space. -/
 theorem semiReflexiveSpace_iff_mackeyTopology_le [Module ℝ E] [IsScalarTower ℝ 𝕜 E] :
     SemiReflexiveSpace 𝕜 E ↔ (topDualPairing 𝕜 E).mackeyTopology ≤
       (inferInstance : TopologicalSpace (StrongDual 𝕜 E)) := by
-  rw [semiReflexiveSpace_iff_isCompatible, LinearMap.isCompatible_iff_mackeyTopology_le]
+  rw [semiReflexiveSpace_iff_isCompatibleTopology,
+    LinearMap.isCompatibleTopology_iff_mackeyTopology_le]
   exact and_iff_right fun x ↦ continuous_eval_const x
 
 section Bounded

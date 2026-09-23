@@ -27,8 +27,8 @@ continuous bidual element.
 
 ## References
 
-These results independently formalize the dual completeness results in Schaefer–Wolff,
-*Topological Vector Spaces*, IV §6.1. The uniform-convergence infrastructure is from Mathlib.
+These are the dual completeness results in Schaefer–Wolff, *Topological Vector Spaces*, IV §6.1. The
+uniform-convergence infrastructure is from Mathlib.
 -/
 
 public noncomputable section
@@ -81,8 +81,15 @@ theorem QuasiBarrelledSpace.quasiCompleteSpace_strongDual [QuasiBarrelledSpace �
     (hlB.trans (principal_mono.mpr hBU))
   exact ⟨φ, hBcl.mem_of_tendsto hφ (le_principal_iff.mp hlB), hφ⟩
 
-/-- The strong dual of a bornological space is complete, without metrizability or completeness
-assumptions on the original space. -/
+end SpaceClasses
+
+section Bornological
+
+variable {𝕜 E : Type*} [NontriviallyNormedField 𝕜] [CompleteSpace 𝕜] [AddCommGroup E] [Module 𝕜 E]
+  [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E]
+
+/-- The strong dual of a bornological space over a complete nontrivially normed field is
+complete, without metrizability or completeness assumptions on the original space. -/
 theorem BornologicalSpace.completeSpace_strongDual [BornologicalSpace 𝕜 E] :
     CompleteSpace (StrongDual 𝕜 E) := by
   let S : Set (Set E) := {s | IsVonNBounded 𝕜 s}
@@ -112,7 +119,7 @@ theorem BornologicalSpace.completeSpace_strongDual [BornologicalSpace 𝕜 E] :
       (add_le_add hd.le (hC _ ⟨x, hx, rfl⟩))
   exact ⟨⟨f, hfc⟩, hf⟩
 
-end SpaceClasses
+end Bornological
 
 section SemiReflexive
 
@@ -121,7 +128,7 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module
   [LocallyConvexSpace ℝ E]
 
 /-- A semi-reflexive locally convex space is quasi-complete, including with the non-Hausdorff
-convention for semi-reflexivity. This independently formalizes Schaefer–Wolff, IV §5.5,
+convention for semi-reflexivity. This is Schaefer–Wolff, IV §5.5,
 Corollary 1: a limit in the completion of a bounded set defines a continuous bidual element. -/
 theorem SemiReflexiveSpace.quasiCompleteSpace [SemiReflexiveSpace 𝕜 E] :
     QuasiCompleteSpace 𝕜 E := by

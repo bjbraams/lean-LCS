@@ -11,11 +11,14 @@ public import TopologicalVectorSpaces.ScalarRestriction
 /-!
 # Real and complex scalar multiplication on test functions
 
-The topology of `𝓓^{n}(Ω, F)` is defined using real locally convex spaces in Mathlib.
-This file proves joint continuity of scalar multiplication over any `RCLike` field,
-including complex scalars, using `RCLike.continuousSMul_of_continuous_smul_I` from
-`TopologicalVectorSpaces.ScalarRestriction`. The imaginary unit acts continuously by
-postcomposition on the target `F`.
+Mathlib defines the topology of `𝓓^{n}(Ω, F)` using real locally convex spaces. The imaginary
+unit acts continuously by postcomposition on the target `F`, so
+`RCLike.continuousSMul_of_continuous_smul_I` gives joint continuity over any `RCLike` field.
+
+## Main statements
+
+* `TestFunction.instContinuousSMulRCLike`: scalar multiplication on test functions is jointly
+  continuous over real or complex scalars.
 -/
 
 public section

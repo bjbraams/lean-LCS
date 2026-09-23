@@ -24,18 +24,9 @@ a seminormed ring by pulling back lower semicontinuous seminorms.
 
 ## Main statements
 
-* Imported from `TopologicalVectorSpaces.Quotient`: `Submodule.Quotient.nhds_zero_hasBasis_image`:
-  the images under the
-  quotient map of a basis of
-  neighbourhoods of zero form a basis of neighbourhoods of zero in the quotient.
 * `Submodule.Quotient.instLocallyConvexSpace`: a quotient of a locally convex space is locally
   convex.
 * `Submodule.Quotient.instBarrelledSpace`: a quotient of a barrelled space is barrelled.
-* Imported from `TopologicalVectorSpaces.QuotientSeminorm`: `Seminorm.quotient p N`: the quotient
-  seminorm on `E ⧸ N`, with
-  `Seminorm.quotient_mk_le`, `Seminorm.exists_lt_of_quotient_lt` and
-  `Seminorm.image_mkQ_ball`: the image of an open `p`-ball is the open ball of the quotient
-  seminorm.
 * `Submodule.Quotient.instPolynormableSpace`: a quotient of a polynormable space is
   polynormable; its topology is defined by the quotients of the continuous seminorms.
 

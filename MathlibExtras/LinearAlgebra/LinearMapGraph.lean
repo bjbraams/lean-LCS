@@ -11,10 +11,20 @@ public import Mathlib.LinearAlgebra.LinearPMap
 /-!
 # Graphs and relational images of linear maps
 
-The graph and transposed graph of a total or partially defined linear map are linear
-subspaces. This module identifies their relational images and coordinate projections.
-`LinearMap.transposedGraph` and `LinearPMap.transposedGraph` are exposed for downstream
-use. Topological consequences are in `TopologicalVectorSpaces.LinearMapGraph`.
+The graph and the transposed graph of a total or partially defined linear map are linear
+subspaces. Topological consequences are in `TopologicalVectorSpaces.LinearMapGraph`.
+
+## Main definitions
+
+* `LinearMap.transposedGraph`, `LinearPMap.transposedGraph`: the transposed graph `{(A x, x)}`.
+
+## Main statements
+
+* `LinearMap.image_transposedGraph`, `LinearPMap.image_transposedGraph`,
+  `LinearMap.image_graph`, `LinearPMap.image_graph`: relational images under graphs.
+* `LinearMap.snd_image_graph`, `LinearPMap.snd_image_graph`,
+  `LinearMap.snd_image_transposedGraph`, `LinearPMap.snd_image_transposedGraph`: coordinate
+  projections of graphs.
 -/
 
 public section

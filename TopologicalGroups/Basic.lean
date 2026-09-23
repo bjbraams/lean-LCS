@@ -39,7 +39,8 @@ open scoped Topology
 
 /-- Two group topologies are comparable as soon as their neighbourhood filters of the identity are.
 -/
-@[to_additive TopologicalSpace.le_of_nhds_zero_le /-- Two group topologies are comparable as soon as their neighbourhood filters of zero are. -/]
+@[to_additive TopologicalSpace.le_of_nhds_zero_le /-- Two group topologies are comparable as soon as
+their neighbourhood filters of zero are. -/]
 theorem TopologicalSpace.le_of_nhds_one_le {G : Type*} [Group G] {t₁ t₂ : TopologicalSpace G}
     (h₁ : @IsTopologicalGroup G t₁ _) (h₂ : @IsTopologicalGroup G t₂ _)
     (h : @nhds G t₁ 1 ≤ @nhds G t₂ 1) : t₁ ≤ t₂ :=
@@ -73,8 +74,8 @@ variable {E : Type*} [Group E] [TopologicalSpace E] [IsTopologicalGroup E]
 
 /-- A non-meagre subset `S` of a topological group contains a point `a` such that the closure
 of the translate `S / a` is a neighbourhood of the identity. -/
-@[to_additive /-- A non-meagre subset `S` of a topological group contains a point `a` such that the closure
-of the translate `S - a` is a neighbourhood of zero. -/]
+@[to_additive /-- A non-meagre subset `S` of a topological group contains a point `a` such that the
+closure of the translate `S - a` is a neighbourhood of zero. -/]
 theorem exists_mem_closure_image_div_mem_nhds_one {S : Set E} (hS : ¬IsMeagre S) :
     ∃ a ∈ S, closure ((fun w ↦ w / a) '' S) ∈ 𝓝 (1 : E) := by
   have hne : (interior (closure S)).Nonempty := by

@@ -12,10 +12,12 @@ public import MathlibExtras.LinearAlgebra.LinearMapFiniteSum
 /-!
 # Sequential continuity of finite coordinate sums
 
-`LinearMap.seqContinuous_finsetSumProj` proves sequential continuity of a finite sum
-of coordinate maps from sequential continuity of each coordinate map. The algebraic
-construction and spanning theorem are imported from
-`MathlibExtras.LinearAlgebra.LinearMapFiniteSum`.
+The algebraic construction is in `MathlibExtras.LinearAlgebra.LinearMapFiniteSum`.
+
+## Main statements
+
+* `LinearMap.seqContinuous_finsetSumProj`: a finite sum of sequentially continuous coordinate
+  maps is sequentially continuous.
 -/
 
 public section

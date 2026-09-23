@@ -87,9 +87,10 @@ theorem isClosed_image_coe_polar {U : Set E} (hU : U ∈ 𝓝 (0 : E)) :
   · exact isClosed_le (continuous_apply x).norm continuous_const
 
 omit [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] in
-/-- Pointwise bounds on a polar follow from scalar containment in the original set, without
-assuming that the set is a neighbourhood. -/
-theorem image_coe_polar_subset_pi_of_mem_smul {U : Set E} {c : E → 𝕜}
+/-- If `x ∈ c x • U` for all `x`, then the image of the polar of `U` under
+`↑ : WeakDual 𝕜 E → (E → 𝕜)` lies in the product of the closed balls of radius `‖c x‖`. The set
+`U` need not be a neighbourhood of zero. -/
+theorem image_coe_polar_subset_pi {U : Set E} {c : E → 𝕜}
     (hc : ∀ x, x ∈ c x • U) :
     ((↑) : WeakDual 𝕜 E → E → 𝕜) '' polar 𝕜 U ⊆
       Set.pi univ fun x ↦ closedBall (0 : 𝕜) ‖c x‖ := by
@@ -99,15 +100,6 @@ theorem image_coe_polar_subset_pi_of_mem_smul {U : Set E} {c : E → 𝕜}
     (congrArg φ hxu).symm.trans (map_smul φ (c x) u)
   rw [mem_closedBall_zero_iff, hxφ, norm_smul]
   exact mul_le_of_le_one_right (norm_nonneg (c x)) (hφ u hu)
-
-omit [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] in
-/-- If `x ∈ c x • U` for all `x`, then the image of the polar of `U` under
-`↑ : WeakDual 𝕜 E → (E → 𝕜)` lies in the product of the closed balls of radius `‖c x‖`. -/
-theorem image_coe_polar_subset_pi {U : Set E} (_hU : U ∈ 𝓝 (0 : E)) {c : E → 𝕜}
-    (hc : ∀ x, x ∈ c x • U) :
-    ((↑) : WeakDual 𝕜 E → E → 𝕜) '' polar 𝕜 U ⊆
-      Set.pi univ fun x ↦ closedBall (0 : 𝕜) ‖c x‖ :=
-  image_coe_polar_subset_pi_of_mem_smul hc
 
 /-- The **Alaoglu–Bourbaki theorem**: the polar of a neighbourhood of zero in a topological
 vector space `E` over a proper nontrivially normed field is a compact subset of `WeakDual 𝕜 E`.
@@ -123,7 +115,7 @@ theorem isCompact_polar_of_mem_nhds [ProperSpace 𝕜] {U : Set E} (hU : U ∈ �
   have hK : IsCompact (Set.pi univ fun x ↦ closedBall (0 : 𝕜) ‖c x‖) :=
     isCompact_univ_pi fun x ↦ ProperSpace.isCompact_closedBall (0 : 𝕜) ‖c x‖
   exact he.isCompact_iff.mpr
-    (hK.of_isClosed_subset (isClosed_image_coe_polar hU) (image_coe_polar_subset_pi hU hc))
+    (hK.of_isClosed_subset (isClosed_image_coe_polar hU) (image_coe_polar_subset_pi hc))
 
 end WeakDual
 

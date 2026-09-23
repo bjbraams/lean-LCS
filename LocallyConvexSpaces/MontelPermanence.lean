@@ -10,16 +10,28 @@ public import Mathlib.Analysis.LocallyConvex.Montel
 /-!
 # Permanence of the Heine–Borel property
 
-Mathlib's `MontelSpace` means that closed von Neumann bounded sets are compact; it does
-not include barrelledness. This property passes to closed subspaces, arbitrary products,
-and continuous linear images when bounded sets lift up to closure. In particular it is
-preserved by continuous linear equivalences and retractions.
+Mathlib's `MontelSpace` means that closed von Neumann bounded sets are compact; it does not
+include barrelledness. This property passes to closed subspaces, arbitrary products, and
+continuous linear images when bounded sets lift up to closure. In particular it is preserved by
+continuous linear equivalences and retractions. Families of maps whose bounded images cover all
+bounded sets of the target also transfer the Montel property.
 
-Families of maps whose bounded images cover all target bounded sets also transfer the
-Montel property. These proofs work over any normed field and use compactness and
-boundedness directly, without local convexity. Retraction inheritance uses the closed
-embedding defined by a continuous section and needs only Hausdorffness of the source
-besides the module structures, topologies, and Montel property.
+These proofs work over any normed field and use compactness and boundedness directly, without
+local convexity. Retraction inheritance uses the closed embedding defined by a continuous
+section and needs only Hausdorffness of the source.
+
+## Main statements
+
+* `MontelSpace.of_isClosedEmbedding`, `MontelSpace.submodule`: closed subspaces.
+* `MontelSpace.of_continuousLinearEquiv`, `MontelSpace.of_rightInverse`: isomorphic spaces and
+  retracts.
+* `MontelSpace.of_bounded_lifting`: images under maps that lift bounded sets up to closure.
+* `MontelSpace.pi`: arbitrary products.
+* `MontelSpace.of_bounded_cover`: families of maps that cover the bounded sets of the target.
+
+## References
+
+* [H. H. Schaefer and M. P. Wolff, *Topological Vector Spaces*][schaefer1999], IV §5.8
 -/
 
 public section

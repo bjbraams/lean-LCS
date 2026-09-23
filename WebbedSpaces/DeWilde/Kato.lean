@@ -12,16 +12,15 @@ public import WebbedSpaces.Product
 /-!
 # De Wilde's generalization of the open mapping theorem to ranges with a webbed complement
 
-Kato proved that a closed operator between Banach spaces whose range has finite codimension has
-a closed range and is open onto its range. De Wilde's version
-([G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.5.(1)) is as follows. Let `E` be a
-webbed locally convex space, `F` an ultrabornological space and `A` a sequentially closed linear
-map from a subspace of `E` into `F`. Suppose that the range of `A` has an algebraic complement
-`H` in `F` that is a webbed space for some locally convex topology finer than the one induced by
-`F`. Then `A` is open onto its range, the finer topology of `H` is the induced one, and the
-projection of `F` onto `H` along the range of `A` is continuous. With the appropriate
-Hausdorff hypotheses the complements are also closed. The formal closed-range theorem assumes
-that `H` is Hausdorff and that its map into `F` is injective.
+Kato proved that a closed operator between Banach spaces whose range has finite codimension has a
+closed range and is open onto its range. De Wilde's version ([G. Köthe, *Topological Vector Spaces
+II*][kothe1979], §35.5.(1)) is as follows. Let `E` be a webbed locally convex space, `F` an
+ultrabornological space and `A` a sequentially closed linear map from a subspace of `E` into `F`.
+Suppose that the range of `A` has an algebraic complement `H` in `F` that is a webbed space for some
+locally convex topology finer than the one induced by `F`. Then `A` is open onto its range, the
+finer topology of `H` is the induced one, and the projection of `F` onto `H` along the range of `A`
+is continuous. With the appropriate Hausdorff hypotheses the complements are also closed. The formal
+closed-range theorem assumes that `H` is Hausdorff and that its map into `F` is injective.
 
 Here the map `A` is represented by its graph `G`, a linear subspace of `E × F`, and the
 complement with its finer topology by a continuous linear map `ι : H → F` from a webbed locally
@@ -61,7 +60,7 @@ variable {𝕜 : Type v} [RCLike 𝕜] {E H : Type*} {F : Type u}
   [AddCommGroup H] [Module 𝕜 H] [Module ℝ H] [IsScalarTower ℝ 𝕜 H] [TopologicalSpace H]
   [IsTopologicalAddGroup H] [ContinuousSMul 𝕜 H] [LocallyConvexSpace ℝ H] [WebbedSpace H]
   [AddCommGroup F] [Module 𝕜 F] [Module ℝ F] [IsScalarTower ℝ 𝕜 F] [TopologicalSpace F]
-  [UltrabornologicalSpace 𝕜 F]
+  [IsTopologicalAddGroup F] [UltrabornologicalSpace 𝕜 F]
 
 namespace Submodule
 
@@ -77,7 +76,6 @@ private theorem image_sumRel_mem_nhds_zero (G : Submodule 𝕜 (E × F))
     (hsum : ∀ y : F, ∃ q ∈ G, ∃ z : H, y = q.2 + ι z) {V : Set (E × H)}
     (hV : V ∈ 𝓝 (0 : E × H)) :
     SetRel.image (sumRel G ι : Set ((E × H) × F)) V ∈ 𝓝 (0 : F) := by
-  have : IsTopologicalAddGroup F := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 F
   refine (sumRel G ι).image_mem_nhds_zero_of_ultrabornologicalSpace ?_ ?_ hV
   · have hcont : Continuous fun p : (E × H) × F ↦ (p.1.1, p.2 - ι p.1.2) :=
       (continuous_fst.comp continuous_fst).prodMk
@@ -130,7 +128,6 @@ theorem exists_nhds_forall_decomposition_of_webbed_complement {W : Set H}
 /-- Under the hypotheses of De Wilde's theorem, if `ι` is injective then the topology of the
 complement `H` is the one induced by `F`, Köthe II §35.5.(1). -/
 theorem isInducing_of_webbed_complement (hι : Injective ι) : Topology.IsInducing ι := by
-  have : IsTopologicalAddGroup F := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 F
   refine ⟨le_antisymm (continuous_iff_le_induced.mp ι.continuous) ?_⟩
   refine TopologicalSpace.le_of_nhds_zero_le (isTopologicalAddGroup_induced ι) inferInstance
     fun W hW ↦ ?_
@@ -144,7 +141,6 @@ theorem isInducing_of_webbed_complement (hι : Injective ι) : Topology.IsInduci
 range of `G` is closed, Köthe II §35.5.(1). -/
 theorem isClosed_snd_image_of_webbed_complement [T1Space H] (hι : Injective ι) :
     IsClosed (Prod.snd '' (G : Set (E × F))) := by
-  have : IsTopologicalAddGroup F := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 F
   refine isClosed_of_closure_subset fun y hy ↦ ?_
   obtain ⟨q, hq, z, hyq⟩ := hsum y
   -- The component `z` of `y` in the complement lies in every neighbourhood of zero.

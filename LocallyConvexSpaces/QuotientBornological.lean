@@ -12,11 +12,11 @@ public import LocallyConvexSpaces.Quotient
 # Quotients of bornological and ultrabornological spaces
 
 For a locally convex space `E`, the quotient topology of `E ⧸ N` is the final locally convex
-topology for the quotient map: it
-is locally convex and it is the finest topology for which the quotient map is continuous. Since
-locally convex hulls of bornological and of ultrabornological spaces are of the same kind, the
-quotients of these spaces are bornological, respectively ultrabornological
-([G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.7.(7), and Köthe I §28.4.(2)).
+topology for the quotient map: it is locally convex and it is the finest topology for which the
+quotient map is continuous. Since locally convex hulls of bornological and of ultrabornological
+spaces are of the same kind, the quotients of these spaces are bornological, respectively
+ultrabornological ([G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.7.(7), and Köthe I
+§28.4.(2)).
 
 ## Main statements
 

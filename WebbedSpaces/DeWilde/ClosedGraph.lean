@@ -16,14 +16,13 @@ public import WebbedSpaces.Frechet
 # De Wilde's closed graph theorem
 
 A linear map with sequentially closed graph from an ultrabornological space to a webbed locally
-convex space is continuous. The same holds for a first-countable Baire domain, and, if the
-graph is closed, for an arbitrary Baire topological vector space and for a locally convex hull
-of such spaces as domain. These are the statements of
-[G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.2.(1)–(5).
+convex space is continuous. The same holds for a first-countable Baire domain, and, if the graph is
+closed, for an arbitrary Baire topological vector space and for a locally convex hull of such spaces
+as domain. These are the statements of [G. Köthe, *Topological Vector Spaces II*][kothe1979],
+§35.2.(1)–(5).
 
 All of them are obtained from De Wilde's theorem for linear relations in
-`WebbedSpaces.DeWilde.Relation`, applied to the transposed graph
-`{(A x, x)}` of the map `A`.
+`WebbedSpaces.DeWilde.Relation`, applied to the transposed graph `{(A x, x)}` of the map `A`.
 
 ## Main statements
 
@@ -149,7 +148,7 @@ section Ultrabornological
 
 variable {𝕜 : Type v} [RCLike 𝕜] {E : Type u} {F : Type*}
   [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E]
-  [UltrabornologicalSpace 𝕜 E]
+  [IsTopologicalAddGroup E] [UltrabornologicalSpace 𝕜 E]
   [AddCommGroup F] [Module 𝕜 F] [Module ℝ F] [IsScalarTower ℝ 𝕜 F] [TopologicalSpace F]
   [IsTopologicalAddGroup F] [ContinuousSMul 𝕜 F] [LocallyConvexSpace ℝ F]
 
@@ -158,7 +157,6 @@ ultrabornological space into a webbed locally convex space is continuous, Köthe
 Banach spaces, Fréchet spaces and LF spaces are ultrabornological. -/
 theorem LinearMap.continuous_of_isSeqClosed_graph_of_ultrabornologicalSpace [WebbedSpace F]
     (A : E →ₗ[𝕜] F) (hA : IsSeqClosed (A.graph : Set (E × F))) : Continuous A := by
-  have : IsTopologicalAddGroup E := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 E
   exact A.continuous_of_forall_image_transposedGraph fun V hV ↦
     A.transposedGraph.image_mem_nhds_zero_of_ultrabornologicalSpace
       (LinearMap.isSeqClosed_transposedGraph hA) A.snd_image_transposedGraph hV
@@ -174,10 +172,10 @@ end Ultrabornological
 
 /-- A linear map with sequentially closed graph from an ultrabornological space to a Fréchet
 space is continuous: Fréchet spaces are strictly webbed
-(`StrictlyWebbedSpace.of_completeSpace_firstCountable`). -/
+(`StrictlyWebbedSpace.of_completeSpace_firstCountableTopology`). -/
 example {𝕜 : Type v} [RCLike 𝕜] {E : Type u} {F : Type*}
     [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E]
-    [UltrabornologicalSpace 𝕜 E]
+    [IsTopologicalAddGroup E] [UltrabornologicalSpace 𝕜 E]
     [AddCommGroup F] [Module 𝕜 F] [Module ℝ F] [IsScalarTower ℝ 𝕜 F] [UniformSpace F]
     [IsUniformAddGroup F] [ContinuousSMul 𝕜 F] [LocallyConvexSpace ℝ F] [CompleteSpace F]
     [FirstCountableTopology F] (A : E →ₗ[𝕜] F) (hA : IsSeqClosed (A.graph : Set (E × F))) :

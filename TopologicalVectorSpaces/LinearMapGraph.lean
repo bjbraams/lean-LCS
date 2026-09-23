@@ -12,10 +12,17 @@ public import MathlibExtras.LinearAlgebra.LinearMapGraph
 /-!
 # Topological consequences of graph identities
 
-Closedness and sequential closedness pass to transposed graphs. Graph images of
-neighbourhoods characterize continuity and openness of linear maps, including partially
-defined maps. Algebraic graph identities are imported from
-`MathlibExtras.LinearAlgebra.LinearMapGraph`; no local convexity or completeness is needed.
+No local convexity or completeness is needed. The algebraic graph identities are in
+`MathlibExtras.LinearAlgebra.LinearMapGraph`.
+
+## Main statements
+
+* `LinearMap.isSeqClosed_transposedGraph`, `LinearMap.isClosed_transposedGraph`: closedness
+  passes to the transposed graph.
+* `LinearMap.continuous_of_forall_image_transposedGraph`: continuity in terms of images of
+  neighbourhoods under the transposed graph.
+* `LinearMap.isOpenMap_of_forall_image_graph`, `LinearPMap.isOpenMap_of_forall_image_graph`:
+  openness in terms of images of neighbourhoods under the graph.
 -/
 
 public section

@@ -6,6 +6,7 @@ Authors: Bastiaan J Braams
 module
 
 public import LocallyConvexSpaces.Bornological
+public import LocallyConvexSpaces.UltrabornologicalBanachDisk
 public import LocallyConvexSpaces.CountableSeminorms
 public import Mathlib.Analysis.Normed.Lp.lpSpace
 public import MathlibExtras.Analysis.SeminormEstimates
@@ -15,29 +16,26 @@ public import MathlibExtras.Analysis.SeminormEstimates
 
 A complete, first-countable, Hausdorff locally convex space `E` over `ℝ` or `ℂ` is
 ultrabornological: its topology is the final locally convex topology for a family of linear
-maps from Banach spaces.
+maps from Banach spaces, which gives the seminorm condition of `UltrabornologicalSpace` through
+`UltrabornologicalSpace.of_eq_locallyConvexFinalTopology_of_completeSpace`.
 
-The Banach spaces used are copies of `ℓ¹(ℕ, 𝕜)`. For every sequence `x` in `E` that tends to
-zero the map `a ↦ ∑' n, a n • x n` is a continuous linear map `ℓ¹(ℕ, 𝕜) → E`
-(`lpOneSum x hx`). If `U` is a convex balanced set whose preimage under each of these maps is a
-neighbourhood of zero, then `U` absorbs every sequence tending to zero, and in a first-countable
-space such a set is a neighbourhood of zero (`mem_nhds_zero_of_forall_absorbs_range`). This
-avoids the normed spaces `E_B` spanned by Banach disks, through which the statement is usually
-proved.
+The Banach spaces used are copies of `ℓ¹(ℕ, 𝕜)`. For every sequence `x` in `E` that tends to zero
+the map `a ↦ ∑' n, a n • x n` is a continuous linear map `ℓ¹(ℕ, 𝕜) → E` (`lp.tsumSMulCLM x hx`). If
+`U` is a convex balanced set whose preimage under each of these maps is a neighbourhood of zero,
+then `U` absorbs every sequence tending to zero, and in a first-countable space such a set is a
+neighbourhood of zero (`mem_nhds_zero_of_forall_absorbs_range`). This avoids the normed spaces `E_B`
+spanned by Banach disks, through which the statement is usually proved.
 
 ## Main definitions
 
-* `lpOneSum x hx`: for a sequence `x` tending to zero in a complete Hausdorff locally convex
+* `lp.tsumSMulCLM x hx`: for a sequence `x` tending to zero in a complete Hausdorff locally convex
   space, the continuous linear map `ℓ¹(ℕ, 𝕜) →L[𝕜] E`, `a ↦ ∑' n, a n • x n`.
 
 ## Main statements
 
-* Imported from `MathlibExtras.Analysis.SeminormEstimates`: `Seminorm.sum_smul_le`: the basic
-  estimate `p (∑ n ∈ t, a n • x
-  n) ≤ C * ∑ n ∈ t, ‖a n‖`.
-* `summable_smul_of_tendsto_zero`: the series `∑ a n • x n` converges for `a ∈ ℓ¹` and `x → 0`.
-* `lpOneSum_single`: the value of `lpOneSum` on a coordinate sequence.
-* `UltrabornologicalSpace.of_completeSpace_firstCountable`: Fréchet spaces are
+* `lp.summable_smul_of_tendsto_zero`: the series `∑ a n • x n` converges for `a ∈ ℓ¹` and `x → 0`.
+* `lp.tsumSMulCLM_single`: the value of `lp.tsumSMulCLM` on a coordinate sequence.
+* `UltrabornologicalSpace.of_completeSpace_firstCountableTopology`: Fréchet spaces are
   ultrabornological.
 
 ## References
@@ -67,7 +65,7 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module
 
 /-- In a complete locally convex space the series `∑ a n • x n` converges for `a ∈ ℓ¹` and a
 sequence `x` that tends to zero. -/
-theorem summable_smul_of_tendsto_zero (a : ℓ¹(ℕ, 𝕜)) {x : ℕ → E}
+theorem lp.summable_smul_of_tendsto_zero (a : ℓ¹(ℕ, 𝕜)) {x : ℕ → E}
     (hx : Tendsto x atTop (𝓝 0)) : Summable fun n ↦ a n • x n := by
   have : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
   rw [summable_iff_vanishing]
@@ -81,7 +79,7 @@ theorem summable_smul_of_tendsto_zero (a : ℓ¹(ℕ, 𝕜)) {x : ℕ → E}
   have h1 : ∑ n ∈ t, ‖a n‖ < 1 / (C + 1) := by
     have := hs t ht
     rwa [Real.norm_of_nonneg (Finset.sum_nonneg fun _ _ ↦ norm_nonneg _)] at this
-  calc p (∑ n ∈ t, a n • x n) ≤ C * ∑ n ∈ t, ‖a n‖ := p.sum_smul_le t _ x hC
+  calc p (∑ n ∈ t, a n • x n) ≤ C * ∑ n ∈ t, ‖a n‖ := p.sum_smul_le_of_le t _ x fun n _ ↦ hC n
     _ ≤ C * (1 / (C + 1)) := mul_le_mul_of_nonneg_left h1.le hC0
     _ < 1 := by
       rw [mul_one_div, div_lt_one (by positivity)]
@@ -92,14 +90,14 @@ variable [T2Space E]
 /-- For a sequence `x` tending to zero in a complete Hausdorff locally convex space, the
 continuous linear map `ℓ¹(ℕ, 𝕜) → E` that sends `a` to `∑' n, a n • x n`. -/
 @[expose]
-noncomputable def lpOneSum (x : ℕ → E) (hx : Tendsto x atTop (𝓝 0)) : ℓ¹(ℕ, 𝕜) →L[𝕜] E where
+noncomputable def lp.tsumSMulCLM (x : ℕ → E) (hx : Tendsto x atTop (𝓝 0)) : ℓ¹(ℕ, 𝕜) →L[𝕜] E where
   toFun a := ∑' n, a n • x n
   map_add' a b := by
-    rw [← (summable_smul_of_tendsto_zero a hx).tsum_add (summable_smul_of_tendsto_zero b hx)]
+    rw [← (lp.summable_smul_of_tendsto_zero a hx).tsum_add (lp.summable_smul_of_tendsto_zero b hx)]
     refine tsum_congr fun n ↦ ?_
     rw [lp.coeFn_add, Pi.add_apply, add_smul]
   map_smul' c a := by
-    rw [RingHom.id_apply, ← (summable_smul_of_tendsto_zero a hx).tsum_const_smul c]
+    rw [RingHom.id_apply, ← (lp.summable_smul_of_tendsto_zero a hx).tsum_const_smul c]
     refine tsum_congr fun n ↦ ?_
     rw [lp.coeFn_smul, Pi.smul_apply, smul_eq_mul, mul_smul]
   cont := by
@@ -107,12 +105,12 @@ noncomputable def lpOneSum (x : ℕ → E) (hx : Tendsto x atTop (𝓝 0)) : ℓ
     let T : ℓ¹(ℕ, 𝕜) →ₗ[𝕜] E :=
       { toFun := fun a ↦ ∑' n, a n • x n
         map_add' := fun a b ↦ by
-          rw [← (summable_smul_of_tendsto_zero a hx).tsum_add
-            (summable_smul_of_tendsto_zero b hx)]
+          rw [← (lp.summable_smul_of_tendsto_zero a hx).tsum_add
+            (lp.summable_smul_of_tendsto_zero b hx)]
           refine tsum_congr fun n ↦ ?_
           rw [lp.coeFn_add, Pi.add_apply, add_smul]
         map_smul' := fun c a ↦ by
-          rw [RingHom.id_apply, ← (summable_smul_of_tendsto_zero a hx).tsum_const_smul c]
+          rw [RingHom.id_apply, ← (lp.summable_smul_of_tendsto_zero a hx).tsum_const_smul c]
           refine tsum_congr fun n ↦ ?_
           rw [lp.coeFn_smul, Pi.smul_apply, smul_eq_mul, mul_smul] }
     have : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
@@ -129,10 +127,10 @@ noncomputable def lpOneSum (x : ℕ → E) (hx : Tendsto x atTop (𝓝 0)) : ℓ
     rw [Seminorm.mem_ball_zero]
     -- Pass to the limit in the estimate for partial sums.
     have hlim : Tendsto (fun t : Finset ℕ ↦ p (∑ n ∈ t, a n • x n)) atTop (𝓝 (p (T a))) :=
-      (hp.tendsto _).comp (summable_smul_of_tendsto_zero a hx).hasSum
+      (hp.tendsto _).comp (lp.summable_smul_of_tendsto_zero a hx).hasSum
     have hle : p (T a) ≤ C * ‖a‖ :=
       le_of_tendsto hlim (Eventually.of_forall fun t ↦
-        (p.sum_smul_le t _ x hC).trans
+        (p.sum_smul_le_of_le t _ x fun n _ ↦ hC n).trans
           (mul_le_mul_of_nonneg_left (lp.sum_norm_le_norm_one a t) hC0))
     calc p (T a) ≤ C * ‖a‖ := hle
       _ ≤ C * (1 / (C + 1)) := mul_le_mul_of_nonneg_left ha.le hC0
@@ -140,15 +138,15 @@ noncomputable def lpOneSum (x : ℕ → E) (hx : Tendsto x atTop (𝓝 0)) : ℓ
         rw [mul_one_div, div_lt_one (by positivity)]
         linarith
 
-/-- The defining formula of `lpOneSum`. -/
-theorem lpOneSum_apply (x : ℕ → E) (hx : Tendsto x atTop (𝓝 0)) (a : ℓ¹(ℕ, 𝕜)) :
-    lpOneSum x hx a = ∑' n, a n • x n :=
+/-- The defining formula of `lp.tsumSMulCLM`. -/
+theorem lp.tsumSMulCLM_apply (x : ℕ → E) (hx : Tendsto x atTop (𝓝 0)) (a : ℓ¹(ℕ, 𝕜)) :
+    lp.tsumSMulCLM x hx a = ∑' n, a n • x n :=
   rfl
 
-/-- The value of `lpOneSum` on a coordinate sequence. -/
-theorem lpOneSum_single (x : ℕ → E) (hx : Tendsto x atTop (𝓝 0)) (n : ℕ) (c : 𝕜) :
-    lpOneSum x hx (lp.single 1 n c) = c • x n := by
-  rw [lpOneSum_apply, tsum_eq_single n]
+/-- The value of `lp.tsumSMulCLM` on a coordinate sequence. -/
+theorem lp.tsumSMulCLM_single (x : ℕ → E) (hx : Tendsto x atTop (𝓝 0)) (n : ℕ) (c : 𝕜) :
+    lp.tsumSMulCLM x hx (lp.single 1 n c) = c • x n := by
+  rw [lp.tsumSMulCLM_apply, tsum_eq_single n]
   · rw [lp.single_apply_self]
   · intro m hm
     rw [lp.single_apply_ne _ _ _ hm, zero_smul]
@@ -163,15 +161,14 @@ variable {𝕜 : Type v} {E : Type u} [RCLike 𝕜] [AddCommGroup E] [Module �
 
 /-- A complete, first-countable, Hausdorff locally convex space (a Fréchet space) is
 ultrabornological: its topology is the final locally convex topology for the maps
-`lpOneSum x hx : ℓ¹(ℕ, 𝕜) → E`, where `x` ranges over the sequences in `E` that tend to zero. -/
-instance (priority := 100) UltrabornologicalSpace.of_completeSpace_firstCountable :
+`lp.tsumSMulCLM x hx : ℓ¹(ℕ, 𝕜) → E`, where `x` ranges over the sequences in `E` that tend to
+zero. -/
+instance (priority := 100) UltrabornologicalSpace.of_completeSpace_firstCountableTopology :
     UltrabornologicalSpace 𝕜 E := by
   have : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
   let ι : Type u := {x : ℕ → E // Tendsto x atTop (𝓝 0)}
-  let f : ∀ _ : ι, ULift.{u} ℓ¹(ℕ, 𝕜) →ₗ[𝕜] E := fun x ↦
-    (lpOneSum x.1 x.2).toLinearMap ∘ₗ (ULift.moduleEquiv : _ ≃ₗ[𝕜] ℓ¹(ℕ, 𝕜)).toLinearMap
-  refine ⟨ι, fun _ ↦ ULift.{u} ℓ¹(ℕ, 𝕜), fun _ ↦ inferInstance, fun _ ↦ inferInstance,
-    fun _ ↦ inferInstance, fun _ ↦ inferInstance, fun _ ↦ inferInstance, f, ?_⟩
+  let f : ∀ _ : ι, ℓ¹(ℕ, 𝕜) →ₗ[𝕜] E := fun x ↦ (lp.tsumSMulCLM x.1 x.2).toLinearMap
+  refine UltrabornologicalSpace.of_eq_locallyConvexFinalTopology_of_completeSpace f ?_
   refine le_antisymm ?_ ?_
   · -- Every neighbourhood of zero for the final topology is one for the given topology.
     have h1 := locallyConvexFinalTopology.isTopologicalAddGroup f
@@ -192,21 +189,20 @@ instance (priority := 100) UltrabornologicalSpace.of_completeSpace_firstCountabl
     obtain ⟨O, hOW, hO, h0O⟩ := (@mem_nhds_iff E (locallyConvexFinalTopology f) 0 W).mp hW
     have hOpen : IsOpen (f ⟨x, hx⟩ ⁻¹' O) :=
       @Continuous.isOpen_preimage _ E _ (locallyConvexFinalTopology f) _ hcont O hO
-    have h0 : (0 : ULift.{u} ℓ¹(ℕ, 𝕜)) ∈ f ⟨x, hx⟩ ⁻¹' O := by
+    have h0 : (0 : ℓ¹(ℕ, 𝕜)) ∈ f ⟨x, hx⟩ ⁻¹' O := by
       rw [mem_preimage, map_zero]
       exact h0O
-    have hpre : f ⟨x, hx⟩ ⁻¹' W ∈ 𝓝 (0 : ULift.{u} ℓ¹(ℕ, 𝕜)) :=
+    have hpre : f ⟨x, hx⟩ ⁻¹' W ∈ 𝓝 (0 : ℓ¹(ℕ, 𝕜)) :=
       mem_of_superset (hOpen.mem_nhds h0) (preimage_mono hOW)
     obtain ⟨δ, hδ, hδW⟩ := Metric.mem_nhds_iff.mp hpre
     have hmem (n : ℕ) : ((δ / 2 : ℝ) : 𝕜) • x n ∈ W := by
-      have hball : (ULift.up (lp.single 1 n ((δ / 2 : ℝ) : 𝕜)) : ULift.{u} ℓ¹(ℕ, 𝕜)) ∈
-          Metric.ball (0 : ULift.{u} ℓ¹(ℕ, 𝕜)) δ := by
-        rw [Metric.mem_ball, dist_zero_right, ULift.norm_up, lp.norm_single one_pos,
+      have hball : lp.single 1 n ((δ / 2 : ℝ) : 𝕜) ∈ Metric.ball (0 : ℓ¹(ℕ, 𝕜)) δ := by
+        rw [Metric.mem_ball, dist_zero_right, lp.norm_single one_pos,
           RCLike.norm_ofReal, abs_of_pos (half_pos hδ)]
         exact half_lt_self hδ
       have h := hδW hball
-      change lpOneSum x hx (lp.single 1 n ((δ / 2 : ℝ) : 𝕜)) ∈ W at h
-      rwa [lpOneSum_single] at h
+      change lp.tsumSMulCLM x hx (lp.single 1 n ((δ / 2 : ℝ) : 𝕜)) ∈ W at h
+      rwa [lp.tsumSMulCLM_single] at h
     have hne : ((δ / 2 : ℝ) : 𝕜) ≠ 0 := by
       rw [Ne, RCLike.ofReal_eq_zero]
       exact (half_pos hδ).ne'
@@ -225,7 +221,6 @@ instance (priority := 100) UltrabornologicalSpace.of_completeSpace_firstCountabl
       _ = 1 := by
           rw [inv_inv]
           exact mul_inv_cancel₀ (half_pos hδ).ne'
-  · exact (locallyConvexFinalTopology.le_iff f).mpr fun x ↦
-      (lpOneSum x.1 x.2).continuous.comp continuous_uliftDown
+  · exact (locallyConvexFinalTopology.le_iff f).mpr fun x ↦ (lp.tsumSMulCLM x.1 x.2).continuous
 
 end Frechet

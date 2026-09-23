@@ -16,10 +16,10 @@ public import WebbedSpaces.DeWilde.Relation
 A linear map with sequentially closed graph from a webbed locally convex space onto an
 ultrabornological space is open. The same holds for a map onto a non-meagre subspace of a
 first-countable topological vector space, which is then the whole space; and, if the graph is
-closed, for a map onto a non-meagre subspace of any topological vector space and for a map onto
-a locally convex hull of Baire spaces. The map may be defined on a subspace of the webbed
-space only (`LinearPMap`). These are the statements of
-[G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.3.(1)–(6).
+closed, for a map onto a non-meagre subspace of any topological vector space and for a map onto a
+locally convex hull of Baire spaces. The map may be defined on a subspace of the webbed space only
+(`LinearPMap`). These are the statements of [G. Köthe, *Topological Vector Spaces II*][kothe1979],
+§35.3.(1)–(6).
 
 All of them are obtained from De Wilde's theorem for linear relations in
 `WebbedSpaces.DeWilde.Relation`, applied to the graph of the map. No quotient by the
@@ -29,20 +29,20 @@ kernel of the map is needed.
 
 For a partially defined map `A : F →ₗ.[𝕜] E` on a webbed locally convex space `F`:
 
-* `LinearPMap.isOpenMap_of_isSeqClosed_graph_of_firstCountable`,
-  `LinearPMap.range_eq_top_of_isSeqClosed_graph_of_firstCountable`: §35.3.(4).
+* `LinearPMap.isOpenMap_of_isSeqClosed_graph_of_firstCountableTopology`,
+  `LinearPMap.range_eq_top_of_isSeqClosed_graph_of_firstCountableTopology`: §35.3.(4).
 * `LinearPMap.isOpenMap_of_isClosed_graph`, `LinearPMap.range_eq_top_of_isClosed_graph`:
   §35.3.(2).
 * `LinearPMap.isOpenMap_of_isSeqClosed_graph_of_ultrabornologicalSpace`: §35.3.(6).
 
 For a map `A : F →ₗ[𝕜] E` defined on all of `F`:
 
-* `LinearMap.isOpenMap_of_isSeqClosed_graph_of_webbedSpace`: **De Wilde's open mapping
-  theorem**, §35.3.(5), and its consequence `ContinuousLinearMap.isOpenMap_of_webbedSpace`,
-  §35.3.(1).
-* `LinearMap.isOpenMap_of_isSeqClosed_graph_of_firstCountable`,
+* `LinearMap.isOpenMap_of_isSeqClosed_graph_of_ultrabornologicalSpace`: **De Wilde's open mapping
+  theorem**, §35.3.(5), and its consequence
+  `ContinuousLinearMap.isOpenMap_of_webbedSpace_of_ultrabornologicalSpace`, §35.3.(1).
+* `LinearMap.isOpenMap_of_isSeqClosed_graph_of_firstCountableTopology`,
   `LinearMap.isOpenMap_of_isClosed_graph_of_not_isMeagre`, and the versions
-  `ContinuousLinearMap.isOpenMap_of_webbedSpace_of_firstCountable`,
+  `ContinuousLinearMap.isOpenMap_of_webbedSpace_of_firstCountableTopology`,
   `ContinuousLinearMap.isOpenMap_of_webbedSpace_of_baireSpace` for continuous maps onto
   Hausdorff Baire spaces.
 * `LinearMap.isOpenMap_of_isClosed_graph_of_locallyConvexFinalTopology`: a map onto a locally convex
@@ -87,8 +87,8 @@ private theorem eq_top_of_mem_nhds_zero {S : Submodule 𝕜 E} {U : Set E} (hU :
 /-- A partially defined linear map with sequentially closed graph from a webbed locally convex
 space onto a non-meagre subspace of a first-countable topological vector space is open,
 Köthe II §35.3.(4). -/
-theorem LinearPMap.isOpenMap_of_isSeqClosed_graph_of_firstCountable [FirstCountableTopology E]
-    (A : F →ₗ.[𝕜] E) (hA : IsSeqClosed (A.graph : Set (F × E)))
+theorem LinearPMap.isOpenMap_of_isSeqClosed_graph_of_firstCountableTopology
+    [FirstCountableTopology E] (A : F →ₗ.[𝕜] E) (hA : IsSeqClosed (A.graph : Set (F × E)))
     (hne : ¬IsMeagre (Set.range A)) : IsOpenMap A :=
   A.isOpenMap_of_forall_image_graph fun _ hV ↦
     A.graph.image_mem_nhds_zero_of_isSeqClosed hA (by rwa [A.snd_image_graph]) hV
@@ -96,7 +96,7 @@ theorem LinearPMap.isOpenMap_of_isSeqClosed_graph_of_firstCountable [FirstCounta
 /-- A partially defined linear map with sequentially closed graph from a webbed locally convex
 space onto a non-meagre subspace of a first-countable topological vector space is surjective,
 Köthe II §35.3.(4). -/
-theorem LinearPMap.range_eq_top_of_isSeqClosed_graph_of_firstCountable
+theorem LinearPMap.range_eq_top_of_isSeqClosed_graph_of_firstCountableTopology
     [FirstCountableTopology E] (A : F →ₗ.[𝕜] E) (hA : IsSeqClosed (A.graph : Set (F × E)))
     (hne : ¬IsMeagre (Set.range A)) : LinearMap.range A.toFun = ⊤ := by
   have h := A.graph.image_mem_nhds_zero_of_isSeqClosed hA (by rwa [A.snd_image_graph])
@@ -123,9 +123,9 @@ theorem LinearPMap.range_eq_top_of_isClosed_graph (A : F →ₗ.[𝕜] E)
 
 /-- A linear map with sequentially closed graph from a webbed locally convex space onto a
 non-meagre subspace of a first-countable topological vector space is open. -/
-theorem LinearMap.isOpenMap_of_isSeqClosed_graph_of_firstCountable [FirstCountableTopology E]
-    (A : F →ₗ[𝕜] E) (hA : IsSeqClosed (A.graph : Set (F × E))) (hne : ¬IsMeagre (Set.range A)) :
-    IsOpenMap A :=
+theorem LinearMap.isOpenMap_of_isSeqClosed_graph_of_firstCountableTopology
+    [FirstCountableTopology E] (A : F →ₗ[𝕜] E) (hA : IsSeqClosed (A.graph : Set (F × E)))
+    (hne : ¬IsMeagre (Set.range A)) : IsOpenMap A :=
   A.isOpenMap_of_forall_image_graph fun _ hV ↦
     A.graph.image_mem_nhds_zero_of_isSeqClosed hA (by rwa [A.snd_image_graph]) hV
 
@@ -138,11 +138,11 @@ theorem LinearMap.isOpenMap_of_isClosed_graph_of_not_isMeagre (A : F →ₗ[𝕜
 
 /-- A continuous linear map from a webbed locally convex space onto a Hausdorff first-countable
 Baire topological vector space is open. -/
-theorem ContinuousLinearMap.isOpenMap_of_webbedSpace_of_firstCountable [BaireSpace E]
+theorem ContinuousLinearMap.isOpenMap_of_webbedSpace_of_firstCountableTopology [BaireSpace E]
     [FirstCountableTopology E] [T2Space E] (A : F →L[𝕜] E) (hsurj : Surjective A) :
     IsOpenMap A := by
   have : Nonempty E := ⟨0⟩
-  refine A.toLinearMap.isOpenMap_of_isSeqClosed_graph_of_firstCountable
+  refine A.toLinearMap.isOpenMap_of_isSeqClosed_graph_of_firstCountableTopology
     A.isClosed_graph.isSeqClosed ?_
   have hr : Set.range A.toLinearMap = univ := hsurj.range_eq
   rw [hr]
@@ -204,7 +204,7 @@ section Ultrabornological
 
 variable {𝕜 : Type v} [RCLike 𝕜] {E : Type u} {F : Type*}
   [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E]
-  [UltrabornologicalSpace 𝕜 E]
+  [IsTopologicalAddGroup E] [UltrabornologicalSpace 𝕜 E]
   [AddCommGroup F] [Module 𝕜 F] [Module ℝ F] [IsScalarTower ℝ 𝕜 F] [TopologicalSpace F]
   [IsTopologicalAddGroup F] [ContinuousSMul 𝕜 F] [LocallyConvexSpace ℝ F] [WebbedSpace F]
 
@@ -212,24 +212,23 @@ variable {𝕜 : Type v} [RCLike 𝕜] {E : Type u} {F : Type*}
 space onto an ultrabornological space is open, Köthe II §35.3.(6). -/
 theorem LinearPMap.isOpenMap_of_isSeqClosed_graph_of_ultrabornologicalSpace (A : F →ₗ.[𝕜] E)
     (hA : IsSeqClosed (A.graph : Set (F × E))) (hsurj : Surjective A) : IsOpenMap A := by
-  have : IsTopologicalAddGroup E := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 E
   exact A.isOpenMap_of_forall_image_graph fun _ hV ↦
     A.graph.image_mem_nhds_zero_of_ultrabornologicalSpace hA
       (by rw [A.snd_image_graph, hsurj.range_eq]) hV
 
 /-- **De Wilde's open mapping theorem**: a linear map with sequentially closed graph from a
 webbed locally convex space onto an ultrabornological space is open, Köthe II §35.3.(5). -/
-theorem LinearMap.isOpenMap_of_isSeqClosed_graph_of_webbedSpace (A : F →ₗ[𝕜] E)
+theorem LinearMap.isOpenMap_of_isSeqClosed_graph_of_ultrabornologicalSpace (A : F →ₗ[𝕜] E)
     (hA : IsSeqClosed (A.graph : Set (F × E))) (hsurj : Surjective A) : IsOpenMap A := by
-  have : IsTopologicalAddGroup E := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 E
   exact A.isOpenMap_of_forall_image_graph fun _ hV ↦
     A.graph.image_mem_nhds_zero_of_ultrabornologicalSpace hA
       (by rw [A.snd_image_graph, hsurj.range_eq]) hV
 
 /-- A continuous linear map from a webbed locally convex space onto a Hausdorff ultrabornological
 space is open, Köthe II §35.3.(1). -/
-theorem ContinuousLinearMap.isOpenMap_of_webbedSpace [T2Space E] (A : F →L[𝕜] E)
-    (hsurj : Surjective A) : IsOpenMap A :=
-  A.toLinearMap.isOpenMap_of_isSeqClosed_graph_of_webbedSpace A.isClosed_graph.isSeqClosed hsurj
+theorem ContinuousLinearMap.isOpenMap_of_webbedSpace_of_ultrabornologicalSpace [T2Space E]
+    (A : F →L[𝕜] E) (hsurj : Surjective A) : IsOpenMap A :=
+  A.toLinearMap.isOpenMap_of_isSeqClosed_graph_of_ultrabornologicalSpace
+    A.isClosed_graph.isSeqClosed hsurj
 
 end Ultrabornological

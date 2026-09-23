@@ -15,12 +15,15 @@ import Mathlib.Tactic.Ring
 /-!
 # Compactness of convex unions
 
-`IsCompact.convexJoin` proves compactness of the convex join of any two compact sets.
-`IsCompact.convexHull_union` deduces that the convex hull of the union of two compact
-convex sets is compact, by expressing it as a continuous image of a product with `[0, 1]`.
-The ambient real module needs continuous addition and scalar multiplication, without
-local convexity or separation assumptions.
-`Set.Finite.isCompact_convexHull_biUnion` extends the result to finite unions.
+The ambient real module needs continuous addition and scalar multiplication, without local
+convexity or separation assumptions.
+
+## Main statements
+
+* `IsCompact.convexJoin`: the convex join of two compact sets is compact.
+* `IsCompact.convexHull_union`: the convex hull of the union of two compact convex sets is
+  compact.
+* `Set.Finite.isCompact_convexHull_biUnion`: the same for finite unions.
 -/
 
 public section

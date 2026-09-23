@@ -14,15 +14,25 @@ public import TopologicalVectorSpaces.TestFunction
 # Bornological test-function spaces and complete strong duals
 
 For every open subset `Ω` of a real normed space, every real normed target `F`, and every
-smoothness order `n : ℕ∞`, the test-function space `𝓓^{n}(Ω, F)` is bornological. Its topology
-is final for the inclusions of the first-countable spaces with fixed compact support.
-Thus bounded linear maps out of test-function space are continuous, and its real or
-complex strong dual is complete for uniform convergence on bounded sets (with a compatible
-scalar action on `F`).
+smoothness order `n : ℕ∞`, the test-function space `𝓓^{n}(Ω, F)` is bornological: its topology
+is final for the inclusions of the first-countable spaces of functions with fixed compact
+support. Hence bounded linear maps out of test-function space are continuous, and its real or
+complex strong dual is complete for uniform convergence on bounded sets.
 
-These conclusions require neither completeness of `F` nor finite-dimensionality of the
-domain. They do not assert completeness of the test-function space itself.
-All test-function notation comes from Mathlib's `Distributions` scope.
+These conclusions require neither completeness of `F` nor finite-dimensionality of the domain.
+They do not assert completeness of the test-function space itself. The notation is from
+Mathlib's `Distributions` scope.
+
+## Main statements
+
+* `TestFunction.instBornologicalSpace`: test-function spaces are bornological.
+* `TestFunction.instCompleteSpaceStrongDual`: their strong duals are complete.
+* `TestFunction.continuous_iff_forall_isVonNBounded_image`: a linear map out of test-function
+  space is continuous if and only if it maps bounded sets to bounded sets.
+
+## References
+
+* [H. H. Schaefer and M. P. Wolff, *Topological Vector Spaces*][schaefer1999], II §8, IV §6.1
 -/
 
 public section
@@ -56,6 +66,7 @@ theorem continuous_iff_forall_isVonNBounded_image {G : Type*} [AddCommGroup G] [
     [TopologicalSpace G] [IsTopologicalAddGroup G] [ContinuousSMul 𝕜 G]
     [LocallyConvexSpace ℝ G] (f : 𝓓^{n}(Ω, F) →ₗ[𝕜] G) :
     Continuous f ↔ ∀ B, IsVonNBounded 𝕜 B → IsVonNBounded 𝕜 (f '' B) := by
+  have := PolynormableSpace.of_locallyConvexSpace_real 𝕜 G
   exact ⟨fun h _ hB ↦ hB.image (⟨f, h⟩ : 𝓓^{n}(Ω, F) →L[𝕜] G),
     f.continuous_of_forall_isVonNBounded_image⟩
 

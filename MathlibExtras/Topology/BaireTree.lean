@@ -11,9 +11,12 @@ public import MathlibExtras.Topology.Sequences
 /-!
 # Non-meagre strands in a tree of sets
 
-`exists_forall_not_isMeagre_res` selects a strand of non-meagre sets from a tree with
-countably many successors at each vertex and a non-meagre root. Finite restrictions use
-`PiNat.res`, with the newest entry at the head.
+Finite restrictions of sequences use `PiNat.res`, with the newest entry at the head.
+
+## Main statements
+
+* `exists_forall_not_isMeagre_res`: a tree of sets with countably many successors at each vertex
+  and a non-meagre root has a strand of non-meagre sets.
 -/
 
 public section

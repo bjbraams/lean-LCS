@@ -21,10 +21,9 @@ public import MathlibExtras.Topology.UniformConvergence
 /-!
 # General additions to Mathlib
 
-This umbrella imports the general analysis, linear algebra, and topology additions used
-by this project. They are independent of its topological-group, topological-vector-space,
-and locally-convex-space modules. The subdirectories organize results by mathematical
-subject, and individual files can be imported separately.
-The test-function helper gives first countability for fixed compact support, using
-Mathlib's distribution spaces.
+This umbrella imports the general analysis, linear algebra, and topology additions used by this
+project. They are independent of its topological-group, topological-vector-space, and
+locally-convex-space modules. The subdirectories organize results by mathematical subject, and
+individual files can be imported separately. The test-function helper gives first countability for
+fixed compact support, using Mathlib's distribution spaces.
 -/

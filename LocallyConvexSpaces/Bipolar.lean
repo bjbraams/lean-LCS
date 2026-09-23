@@ -29,21 +29,17 @@ The theorem is given in two settings.
 * For a bilinear pairing `B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜`, with closedness referring to the weak
   topology `WeakBilin B` on `E`.
 
-Both rest on one separation lemma,
-`StrongDual.exists_mem_polar_one_lt_norm`. The weak-* dual of a
-topological vector space `E` is covered by the second setting, with `B := topDualPairing 𝕜 E`,
-for which `WeakBilin B` unfolds to `WeakDual 𝕜 E`.
+Both rest on one separation lemma, `StrongDual.exists_mem_polar_one_lt_norm`. The weak-* dual of a
+topological vector space `E` is covered by the second setting, with `B := topDualPairing 𝕜 E`, for
+which `WeakBilin B` unfolds to `WeakDual 𝕜 E`.
 
 ## Main statements
 
 * `StrongDual.exists_mem_polar_one_lt_norm`: a point outside a nonempty, closed, convex,
   balanced subset `s` of a locally convex space is separated from it by a functional `φ` in the
   polar of `s` with `1 < ‖φ x‖`.
-* Imported from `PolarCalculus`: `LinearMap.convex_polar`, `LinearMap.balanced_polar`: polars are
-  convex and balanced.
 * `LinearMap.eq_zero_of_forall_norm_le_one`: a linear functional bounded by one on a submodule
-  vanishes on it. The balancedness lemma `Submodule.balanced` is imported from
-  `TopologicalVectorSpaces.Basic`.
+  vanishes on it.
 * `StrongDual.bipolar_subset`, `StrongDual.bipolar_eq_self`: the bipolar theorem for a locally
   convex space and its continuous dual.
 * `LinearMap.flip_polar_polar_subset`, `LinearMap.flip_polar_polar_eq_self`: the bipolar theorem
@@ -68,18 +64,17 @@ equality, in the same way as in `LinearMap.polar_isClosed` of Mathlib.
 ## Relation to work outside Mathlib
 
 Mathlib PR #26345 (C. Hoskin, "Bipolar theorem"), new file
-`Mathlib/Analysis/LocallyConvex/Bipolar.lean`, proves the bipolar theorem for a bilinear pairing
-in the form `LinearMap.pairing_flip_polar_polar`:
-`(pairing B).flip.polar ((pairing B).polar s) = closedAbsConvexHull 𝕜 s` for a nonempty subset
-`s` of `WeakBilin B`, where `WeakBilin.pairing` is introduced in the same PR. That is the same
-mathematical content as `LinearMap.flip_polar_polar_subset` below, in a different formulation.
-The present file was written after reading that PR. The proof here is organized differently,
-through the separation lemma for an arbitrary locally convex space, but the central steps are
-the same classical ones as in the PR: strict separation of a point from a closed convex set,
-rotation of the scalar to pass from the real part to the norm, rescaling of the functional, and
-the representation of weakly continuous functionals (`LinearMap.dualEmbedding_surjective`).
-When that PR is in the pinned Mathlib, the pairing version here should be restated in terms of
-it or removed.
+`Mathlib/Analysis/LocallyConvex/Bipolar.lean`, proves the bipolar theorem for a bilinear pairing in
+the form `LinearMap.pairing_flip_polar_polar`:
+`(pairing B).flip.polar ((pairing B).polar s) = closedAbsConvexHull 𝕜 s` for a nonempty subset `s`
+of `WeakBilin B`, where `WeakBilin.pairing` is introduced in the same PR. That is the same
+mathematical content as `LinearMap.flip_polar_polar_subset` below, in a different formulation. The
+present file was written after reading that PR. The proof here is organized differently, through the
+separation lemma for an arbitrary locally convex space, but the central steps are the same classical
+ones as in the PR: strict separation of a point from a closed convex set, rotation of the scalar to
+pass from the real part to the norm, rescaling of the functional, and the representation of weakly
+continuous functionals (`LinearMap.dualEmbedding_surjective`). When that PR is in the pinned
+Mathlib, the pairing version here should be restated in terms of it or removed.
 
 ## References
 

@@ -12,16 +12,40 @@ public import LocallyConvexSpaces.PolarTopology
 /-!
 # Topological duality for quotients, subspaces, and completions
 
-Transposition of a surjective continuous linear map is an embedding of weak-* duals.
-For the strong topologies, a sufficient condition is that every bounded target set is
-contained in the closure of the image of a bounded source set. This condition yields the
-strong-dual identification for quotients and for completions. Complemented subspaces admit
-continuous extension operators on their duals.
+Transposition of a surjective continuous linear map is an embedding of weak-* duals. For the
+strong topologies, a sufficient condition is that every bounded target set is contained in the
+closure of the image of a bounded source set. This condition yields the strong-dual
+identification for quotients and for completions. Complemented subspaces admit continuous
+extension operators on their duals.
 
-The statements refine the algebraic identifications in `Transpose` and `Completion`.
-An algebraic dual identification alone does not assert a weak-* or strong homeomorphism.
-The polar proofs here are independent consequences of the definitions of uniform convergence
-and the classical duality constructions (Schaefer–Wolff, IV §1).
+The statements refine the algebraic identifications in `LocallyConvexSpaces.Transpose` and
+`TopologicalVectorSpaces.Completion`. An algebraic identification of duals alone does not assert
+a weak-* or strong homeomorphism.
+
+## Main definitions
+
+* `ContinuousLinearMap.weakTranspose`: the transpose between weak-* duals.
+* `Submodule.weakAnnihilator`: the annihilator of a subspace, inside the weak-* dual.
+* `Submodule.weakDualQuotientEquiv`: the weak-* dual of `E ⧸ M` is the annihilator of `M`.
+* `Submodule.strongDualQuotientEquivL`: the same for strong duals, under bounded lifting.
+* `Submodule.strongDualSubmoduleEquivL`, `Submodule.weakDualSubmoduleEquiv`: the strong and
+  weak-* duals of a complemented subspace `M` are quotients of the dual of `E`.
+* `UniformSpace.Completion.strongDualEquivL`: the strong duals of a space and of its completion
+  agree under bounded lifting.
+
+## Main statements
+
+* `ContinuousLinearMap.isEmbedding_weakTranspose`: the weak-* transpose of a surjection is a
+  topological embedding.
+* `ContinuousLinearMap.isInducing_transpose_of_bounded_lifting`,
+  `ContinuousLinearMap.isInducing_transpose_of_rightInverse`: sufficient conditions for the
+  strong transpose to be inducing.
+* `UniformSpace.Completion.continuous_strongDualEquiv_weakDual`: restriction from the
+  completion is weak-* continuous.
+
+## References
+
+* [H. H. Schaefer and M. P. Wolff, *Topological Vector Spaces*][schaefer1999], IV §1, IV §2
 -/
 
 @[expose] public noncomputable section
@@ -122,10 +146,10 @@ def weakDualQuotientEquiv : WeakDual 𝕜 (E ⧸ M) ≃L[𝕜] M.weakAnnihilator
   have hs : Surjective f := by
     intro φ
     refine ⟨StrongDual.toWeakDual
-      (M.strongDualMkQEquiv.symm ⟨WeakDual.toStrongDual φ.val, φ.property⟩), ?_⟩
+      (M.strongDualQuotientEquiv.symm ⟨WeakDual.toStrongDual φ.val, φ.property⟩), ?_⟩
     apply Subtype.ext
     apply WeakDual.toStrongDual.injective
-    exact congrArg Subtype.val (M.strongDualMkQEquiv.apply_symm_apply
+    exact congrArg Subtype.val (M.strongDualQuotientEquiv.apply_symm_apply
       ⟨WeakDual.toStrongDual φ.val, φ.property⟩)
   let e := LinearEquiv.ofBijective f ⟨hi.injective, hs⟩
   let t := e.toEquiv.toHomeomorphOfIsInducing hi
@@ -138,22 +162,22 @@ omit [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] in
 
 /-- Bounded lifting up to closure makes the quotient-dual identification a strong
 topological isomorphism onto the annihilator. -/
-def strongDualQuotientAnnihilatorEquiv
+def strongDualQuotientEquivL
     (h : ∀ S : Set (E ⧸ M), IsVonNBounded 𝕜 S →
       ∃ B : Set E, IsVonNBounded 𝕜 B ∧ S ⊆ closure (M.mkQ '' B)) :
     StrongDual 𝕜 (E ⧸ M) ≃L[𝕜] StrongDual.polarSubmodule 𝕜 M := by
-  have hi : Topology.IsInducing M.strongDualMkQEquiv :=
+  have hi : Topology.IsInducing M.strongDualQuotientEquiv :=
     Topology.IsInducing.subtypeVal.of_comp_iff.mp
       (M.mkQL.isInducing_transpose_of_bounded_lifting h)
-  let e := M.strongDualMkQEquiv.toEquiv.toHomeomorphOfIsInducing hi
-  exact { M.strongDualMkQEquiv with
+  let e := M.strongDualQuotientEquiv.toEquiv.toHomeomorphOfIsInducing hi
+  exact { M.strongDualQuotientEquiv with
     continuous_toFun := e.continuous
     continuous_invFun := e.symm.continuous }
 
 
 /-- A continuous projection onto a subspace gives the strong dual of that subspace the
 quotient topology from the ambient strong dual. -/
-def strongDualSubspaceEquiv (P : E →L[𝕜] M) (hP : ∀ x : M, P x = x) :
+def strongDualSubmoduleEquivL (P : E →L[𝕜] M) (hP : ∀ x : M, P x = x) :
     (StrongDual 𝕜 E ⧸ StrongDual.polarSubmodule 𝕜 M) ≃L[𝕜] StrongDual 𝕜 M := by
   let N := StrongDual.polarSubmodule 𝕜 M
   have hk : N ≤ M.subtypeL.transpose.ker := by
@@ -178,7 +202,7 @@ def strongDualSubspaceEquiv (P : E →L[𝕜] M) (hP : ∀ x : M, P x = x) :
 
 /-- A continuous projection onto a subspace also identifies its weak-* dual with the
 quotient of the ambient weak-* dual by the annihilator. -/
-def weakDualSubspaceEquiv (P : E →L[𝕜] M) (hP : ∀ x : M, P x = x) :
+def weakDualSubmoduleEquiv (P : E →L[𝕜] M) (hP : ∀ x : M, P x = x) :
     (WeakDual 𝕜 E ⧸ M.weakAnnihilator) ≃L[𝕜] WeakDual 𝕜 M := by
   let N := M.weakAnnihilator
   have hk : N ≤ M.subtypeL.weakTranspose.ker := by
@@ -208,28 +232,28 @@ def weakDualSubspaceEquiv (P : E →L[𝕜] M) (hP : ∀ x : M, P x = x) :
 
 omit [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] in
 /-- The strong subspace-dual identification sends a class to restriction. -/
-@[simp] theorem strongDualSubspaceEquiv_mk (P : E →L[𝕜] M) (hP : ∀ x : M, P x = x)
+@[simp] theorem strongDualSubmoduleEquivL_mk (P : E →L[𝕜] M) (hP : ∀ x : M, P x = x)
     (φ : StrongDual 𝕜 E) (x : M) :
-    M.strongDualSubspaceEquiv P hP (Submodule.Quotient.mk φ) x = φ x := rfl
+    M.strongDualSubmoduleEquivL P hP (Submodule.Quotient.mk φ) x = φ x := rfl
 
 omit [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] in
 /-- The inverse strong identification is the class of the extension along the projection. -/
-@[simp] theorem strongDualSubspaceEquiv_symm_apply (P : E →L[𝕜] M)
+@[simp] theorem strongDualSubmoduleEquivL_symm_apply (P : E →L[𝕜] M)
     (hP : ∀ x : M, P x = x) (φ : StrongDual 𝕜 M) :
-    (M.strongDualSubspaceEquiv P hP).symm φ =
+    (M.strongDualSubmoduleEquivL P hP).symm φ =
       (StrongDual.polarSubmodule 𝕜 M).mkQ (P.transpose φ) := rfl
 
 omit [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] in
 /-- The weak-* subspace-dual identification sends a class to restriction. -/
-@[simp] theorem weakDualSubspaceEquiv_mk (P : E →L[𝕜] M) (hP : ∀ x : M, P x = x)
+@[simp] theorem weakDualSubmoduleEquiv_mk (P : E →L[𝕜] M) (hP : ∀ x : M, P x = x)
     (φ : WeakDual 𝕜 E) (x : M) :
-    M.weakDualSubspaceEquiv P hP (Submodule.Quotient.mk φ) x = φ x := rfl
+    M.weakDualSubmoduleEquiv P hP (Submodule.Quotient.mk φ) x = φ x := rfl
 
 omit [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] in
 /-- The inverse weak-* identification is the class of the extension along the projection. -/
-@[simp] theorem weakDualSubspaceEquiv_symm_apply (P : E →L[𝕜] M)
+@[simp] theorem weakDualSubmoduleEquiv_symm_apply (P : E →L[𝕜] M)
     (hP : ∀ x : M, P x = x) (φ : WeakDual 𝕜 M) :
-    (M.weakDualSubspaceEquiv P hP).symm φ = M.weakAnnihilator.mkQ (P.weakTranspose φ) := rfl
+    (M.weakDualSubmoduleEquiv P hP).symm φ = M.weakAnnihilator.mkQ (P.weakTranspose φ) := rfl
 
 end Submodule
 
@@ -247,7 +271,7 @@ theorem continuous_strongDualEquiv_weakDual : Continuous fun φ : WeakDual 𝕜 
 
 /-- Restriction identifies the strong duals when every bounded completion set is contained
 in the closure of the image of a bounded original set. -/
-def strongDualContinuousLinearEquiv
+def strongDualEquivL
     (h : ∀ S : Set (Completion E), IsVonNBounded 𝕜 S →
       ∃ B : Set E, IsVonNBounded 𝕜 B ∧ S ⊆ closure (coeCLM 𝕜 E '' B)) :
     StrongDual 𝕜 (Completion E) ≃L[𝕜] StrongDual 𝕜 E := by

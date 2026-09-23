@@ -88,16 +88,12 @@ theorem IsBanachDisk.exists_mem_compactDisks_of_tendsto_zero {B : Set E}
       hK'bal.image (DiskSpace.incl 𝕜 B), ⟨_, 0, hK'0, rfl⟩⟩,
     fun n ↦ ⟨y n, hyK' (mem_insert_of_mem _ (mem_range_self n)), rfl⟩⟩
 
-omit [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] in
 /-- **An ultrabornological space is the locally convex hull of the spaces `E_K` spanned by its
 compact disks**, Köthe II §35.7.(2). -/
 theorem UltrabornologicalSpace.eq_locallyConvexFinalTopology_compactDisks
     [UltrabornologicalSpace 𝕜 E] :
     (inferInstance : TopologicalSpace E) =
       locallyConvexFinalTopology fun K : compactDisks 𝕜 E ↦ DiskSpace.incl 𝕜 K.1 := by
-  have : IsTopologicalAddGroup E := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 E
-  have : ContinuousSMul 𝕜 E := UltrabornologicalSpace.continuousSMul 𝕜 E
-  have : LocallyConvexSpace ℝ E := UltrabornologicalSpace.locallyConvexSpace 𝕜 E
   have heq := UltrabornologicalSpace.eq_locallyConvexFinalTopology_banachDisks (𝕜 := 𝕜) (E := E)
   let gB := fun B : banachDisks 𝕜 E ↦ DiskSpace.incl 𝕜 B.1
   let gK := fun K : compactDisks 𝕜 E ↦ DiskSpace.incl 𝕜 K.1
@@ -135,7 +131,6 @@ theorem UltrabornologicalSpace.eq_locallyConvexFinalTopology_compactDisks
   rw [map_smul, ← hwa', inv_smul_smul₀ ha0]
   exact hw
 
-omit [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] in
 /-- **A linear map from an ultrabornological space into a locally convex space that is bounded
 on every compact disk is continuous**; for linear functionals this is Köthe II §35.7.(5) b). -/
 theorem LinearMap.continuous_of_forall_isVonNBounded_image_compactDisk

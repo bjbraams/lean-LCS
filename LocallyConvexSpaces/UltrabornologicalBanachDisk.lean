@@ -12,16 +12,17 @@ public import Mathlib.Analysis.SpecificLimits.Basic
 /-!
 # Ultrabornological spaces and Banach disks
 
-A Hausdorff locally convex space is ultrabornological if and only if it is the locally convex hull
-of the
-Banach spaces `E_B`, where `B` runs through the Banach disks of `E`
-([G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.7.(1)). Consequently a linear map
-from an ultrabornological space into a locally convex space is continuous as soon as it is
-bounded on every Banach disk (§35.7.(5) a) for linear functionals).
+A locally convex space is ultrabornological if and only if every seminorm that is bounded on the
+Banach disks is continuous, and if and only if it is the locally convex hull of the complete
+seminormed spaces `E_B`, where `B` runs through the Banach disks of `E` ([G. Köthe, *Topological
+Vector Spaces II*][kothe1979], §35.7.(1)). No separation is needed. Consequently a linear map from
+an ultrabornological space into a locally convex space is continuous as soon as it is bounded on
+every Banach disk (§35.7.(5) a) for linear functionals).
 
-The main step is that the image of the closed unit ball of a Banach space under a continuous
-linear map is a Banach disk. The completeness of the space spanned by the image is purely
-algebraic: it holds for every linear map from a Banach space into a vector space.
+The main step is that the image of the closed unit ball of a complete seminormed space under a
+continuous linear map is a Banach disk, and that the map factors through the space spanned by
+that disk. The completeness of this space is purely algebraic: it holds for every linear map from
+a complete seminormed space into a vector space.
 
 ## Main definitions
 
@@ -29,7 +30,14 @@ algebraic: it holds for every linear map from a Banach space into a vector space
 
 ## Main statements
 
-* `DiskSpace.completeSpace_image_closedBall`, `IsBanachDisk.image_closedBall`.
+* `DiskSpace.completeSpace_image_closedBall`, `IsBanachDisk.image_closedBall`,
+  `ContinuousLinearMap.isBanachDisk_image_closedBall`,
+  `ContinuousLinearMap.exists_diskSpace_comp_eq`.
+* `UltrabornologicalSpace.continuous_of_forall_bddAbove`,
+  `UltrabornologicalSpace.of_forall_bddAbove`, `ultrabornologicalSpace_iff_forall_bddAbove`:
+  seminorms bounded on the Banach disks.
+* `UltrabornologicalSpace.of_eq_locallyConvexFinalTopology_of_completeSpace`: final locally
+  convex topologies of complete seminormed spaces in arbitrary universes.
 * `UltrabornologicalSpace.eq_locallyConvexFinalTopology_banachDisks`,
   `UltrabornologicalSpace.of_eq_locallyConvexFinalTopology_banachDisks`,
   `ultrabornologicalSpace_iff_eq_locallyConvexFinalTopology_banachDisks`: Köthe II §35.7.(1).
@@ -57,7 +65,7 @@ universe u v
 section Image
 
 variable {𝕜 : Type*} [RCLike 𝕜] {E X : Type*} [AddCommGroup E] [Module 𝕜 E] [Module ℝ E]
-  [IsScalarTower ℝ 𝕜 E] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [NormedSpace ℝ X]
+  [IsScalarTower ℝ 𝕜 E] [SeminormedAddCommGroup X] [NormedSpace 𝕜 X] [NormedSpace ℝ X]
   [IsScalarTower ℝ 𝕜 X] (f : X →ₗ[𝕜] E)
 
 /-- The image of the closed unit ball under a linear map is convex. -/
@@ -176,6 +184,43 @@ theorem IsBanachDisk.image_closedBall [CompleteSpace X] [TopologicalSpace E]
 
 end Image
 
+section Factor
+
+variable {𝕜 : Type*} [RCLike 𝕜] {E X : Type*} [AddCommGroup E] [Module 𝕜 E] [Module ℝ E]
+  [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] [SeminormedAddCommGroup X] [NormedSpace 𝕜 X]
+  [CompleteSpace X] (f : X →L[𝕜] E)
+
+/-- The image of the closed unit ball of a complete seminormed space under a continuous linear
+map is a Banach disk. Unlike `IsBanachDisk.image_closedBall`, no real structure on `X` is
+assumed. -/
+theorem ContinuousLinearMap.isBanachDisk_image_closedBall :
+    IsBanachDisk 𝕜 (f '' Metric.closedBall (0 : X) 1) :=
+  letI : NormedSpace ℝ X := NormedSpace.restrictScalars ℝ 𝕜 X
+  haveI : IsScalarTower ℝ 𝕜 X := IsScalarTower.restrictScalars ℝ 𝕜 X
+  IsBanachDisk.image_closedBall f.toLinearMap f.continuous
+
+omit [CompleteSpace X] in
+/-- A continuous linear map from a complete seminormed space into `E` factors through a
+continuous linear map into the space `E_B` spanned by the Banach disk `B = f '' closedBall 0 1`,
+of norm at most one. -/
+theorem ContinuousLinearMap.exists_diskSpace_comp_eq :
+    ∃ φ : X →L[𝕜] DiskSpace 𝕜 (f '' Metric.closedBall (0 : X) 1),
+      (∀ x, DiskSpace.incl 𝕜 _ (φ x) = f x) ∧ ∀ x, ‖φ x‖ ≤ ‖x‖ := by
+  let : NormedSpace ℝ X := NormedSpace.restrictScalars ℝ 𝕜 X
+  have : IsScalarTower ℝ 𝕜 X := IsScalarTower.restrictScalars ℝ 𝕜 X
+  let φ : X →ₗ[𝕜] DiskSpace 𝕜 (f '' Metric.closedBall (0 : X) 1) :=
+    LinearMap.codRestrict (Submodule.span 𝕜 _) f.toLinearMap
+      f.toLinearMap.apply_mem_span_image_closedBall
+  have hφ (x : X) : ‖φ x‖ ≤ ‖x‖ := by
+    refine le_of_forall_pos_le_add fun ε hε ↦ ?_
+    exact DiskSpace.norm_le_of_incl_eq_map f.toLinearMap (by positivity)
+      (le_add_of_nonneg_right hε.le) rfl
+  refine ⟨⟨φ, AddMonoidHomClass.continuous_of_bound φ 1 fun x ↦ ?_⟩, fun _ ↦ rfl, hφ⟩
+  rw [one_mul]
+  exact hφ x
+
+end Factor
+
 section DiskSpace
 
 variable {𝕜 : Type*} [RCLike 𝕜] {E : Type*} [AddCommGroup E] [Module 𝕜 E] [Module ℝ E]
@@ -217,6 +262,7 @@ theorem DiskSpace.continuous_comp_incl_of_isVonNBounded_image {S : Set E} (hc : 
     [ContinuousSMul 𝕜 F] [LocallyConvexSpace ℝ F] (A : E →ₗ[𝕜] F)
     (hA : IsVonNBounded 𝕜 (A '' S)) : Continuous (A ∘ₗ DiskSpace.incl 𝕜 S) := by
   have hhull : diskHull 𝕜 S = S := diskHull_eq_self hc hb hne
+  have := PolynormableSpace.of_locallyConvexSpace_real 𝕜 F
   refine LinearMap.continuous_of_forall_isVonNBounded_image _ fun T hT ↦ ?_
   obtain ⟨C, hC⟩ := isBounded_iff_forall_norm_le.mp ((NormedSpace.isVonNBounded_iff 𝕜).mp hT)
   have hr : (0 : ℝ) < max C 0 + 1 := by positivity
@@ -247,80 +293,130 @@ def banachDisks : Set (Set E) :=
 
 variable {𝕜 E}
 
-/-- **An ultrabornological space is the locally convex hull of the Banach spaces `E_B` spanned
-by its Banach disks**, Köthe II §35.7.(1). -/
-theorem UltrabornologicalSpace.eq_locallyConvexFinalTopology_banachDisks
-    [UltrabornologicalSpace 𝕜 E] :
+/-- A seminorm on an ultrabornological space that is bounded on every Banach disk is
+continuous. -/
+theorem UltrabornologicalSpace.continuous_of_forall_bddAbove [UltrabornologicalSpace 𝕜 E]
+    (p : Seminorm 𝕜 E) (h : ∀ B : Set E, IsBanachDisk 𝕜 B → BddAbove (p '' B)) :
+    Continuous p :=
+  UltrabornologicalSpace.continuous_of_forall_continuous_comp p fun X _ _ _ f ↦ by
+    obtain ⟨C, hC⟩ := h _ f.isBanachDisk_image_closedBall
+    exact (p.comp f.toLinearMap).continuous_of_bddAbove_closedBall
+      ⟨C, by rintro _ ⟨x, hx, rfl⟩; exact hC ⟨f x, ⟨x, hx, rfl⟩, rfl⟩⟩
+
+omit [TopologicalSpace E] in
+/-- A seminorm `p` whose composition with the inclusion of the space `E_B` spanned by a set
+`B` is continuous is bounded on `B`. -/
+theorem DiskSpace.bddAbove_image_of_continuous (p : Seminorm 𝕜 E) {B : Set E}
+    (hp : Continuous fun y : DiskSpace 𝕜 B ↦ p (DiskSpace.incl 𝕜 B y)) : BddAbove (p '' B) := by
+  obtain ⟨C, hC⟩ := (p.comp (DiskSpace.incl 𝕜 B)).bddAbove_image_closedBall_of_continuous hp
+  refine ⟨C, ?_⟩
+  rintro _ ⟨b, hb, rfl⟩
+  obtain ⟨y, hy⟩ := DiskSpace.exists_incl_eq (𝕜 := 𝕜) (Submodule.subset_span hb)
+  have hy1 : ‖y‖ ≤ 1 := DiskSpace.norm_le_of_incl_mem_smul_diskHull zero_le_one
+    (by rw [one_smul, hy]; exact subset_diskHull B hb)
+  rw [← hy]
+  exact hC ⟨y, mem_closedBall_zero_iff.mpr hy1, rfl⟩
+
+/-- A real or complex locally convex space in which every seminorm that is bounded on the
+Banach disks is continuous is ultrabornological. No separation is needed. -/
+theorem UltrabornologicalSpace.of_forall_bddAbove [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E]
+    [LocallyConvexSpace ℝ E]
+    (h : ∀ p : Seminorm 𝕜 E, (∀ B : Set E, IsBanachDisk 𝕜 B → BddAbove (p '' B)) →
+      Continuous p) :
+    UltrabornologicalSpace 𝕜 E :=
+  ⟨fun p hp ↦ h p fun B hB ↦ by
+    have : CompleteSpace (DiskSpace 𝕜 B) := hB.completeSpace
+    exact DiskSpace.bddAbove_image_of_continuous p
+      (hp (DiskSpace 𝕜 B) ⟨DiskSpace.incl 𝕜 B, DiskSpace.continuous_incl hB.isVonNBounded⟩)⟩
+
+/-- **A real or complex locally convex space is ultrabornological if and only if every seminorm
+that is bounded on the Banach disks is continuous**; compare Köthe II §35.7.(1). -/
+theorem ultrabornologicalSpace_iff_forall_bddAbove [IsTopologicalAddGroup E]
+    [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] :
+    UltrabornologicalSpace 𝕜 E ↔ ∀ p : Seminorm 𝕜 E,
+      (∀ B : Set E, IsBanachDisk 𝕜 B → BddAbove (p '' B)) → Continuous p :=
+  ⟨fun _ ↦ UltrabornologicalSpace.continuous_of_forall_bddAbove,
+    UltrabornologicalSpace.of_forall_bddAbove⟩
+
+/-- A space whose topology is the final locally convex topology for a family of linear maps
+from complete seminormed spaces, in arbitrary universes, is ultrabornological. The maps are
+tested through the spaces `E_B` of the Banach disks `B = f i '' closedBall 0 1`. -/
+theorem UltrabornologicalSpace.of_eq_locallyConvexFinalTopology_of_completeSpace {ι : Type*}
+    {X : ι → Type*} [∀ i, SeminormedAddCommGroup (X i)] [∀ i, NormedSpace 𝕜 (X i)]
+    [∀ i, CompleteSpace (X i)] (f : ∀ i, X i →ₗ[𝕜] E)
+    (h : (inferInstance : TopologicalSpace E) = locallyConvexFinalTopology f) :
+    UltrabornologicalSpace 𝕜 E := by
+  have : IsTopologicalAddGroup E := by
+    have h1 := locallyConvexFinalTopology.isTopologicalAddGroup f
+    rwa [← h] at h1
+  have : ContinuousSMul 𝕜 E := by
+    have h1 := locallyConvexFinalTopology.continuousSMul f
+    rwa [← h] at h1
+  have : LocallyConvexSpace ℝ E := by
+    have h1 := locallyConvexFinalTopology.locallyConvexSpace f
+    rwa [← h] at h1
+  have hfi (i : ι) : Continuous (f i) := by
+    have h1 := locallyConvexFinalTopology.continuous_apply f i
+    rwa [← h] at h1
+  refine UltrabornologicalSpace.of_forall_bddAbove fun p hp ↦ ?_
+  have key := locallyConvexFinalTopology.continuous_seminorm f p fun i ↦ by
+    obtain ⟨C, hC⟩ := hp _ (ContinuousLinearMap.isBanachDisk_image_closedBall ⟨f i, hfi i⟩)
+    exact (p.comp (f i)).continuous_of_bddAbove_closedBall
+      ⟨C, by rintro _ ⟨x, hx, rfl⟩; exact hC ⟨f i x, ⟨x, hx, rfl⟩, rfl⟩⟩
+  rwa [← h] at key
+
+/-- **An ultrabornological locally convex space is the locally convex hull of the Banach spaces
+`E_B` spanned by its Banach disks**, Köthe II §35.7.(1). No separation is needed. -/
+theorem UltrabornologicalSpace.eq_locallyConvexFinalTopology_banachDisks [IsTopologicalAddGroup E]
+    [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] [UltrabornologicalSpace 𝕜 E] :
     (inferInstance : TopologicalSpace E) =
       locallyConvexFinalTopology fun B : banachDisks 𝕜 E ↦ DiskSpace.incl 𝕜 B.1 := by
-  have : IsTopologicalAddGroup E := UltrabornologicalSpace.isTopologicalAddGroup 𝕜 E
-  have : ContinuousSMul 𝕜 E := UltrabornologicalSpace.continuousSMul 𝕜 E
-  have : LocallyConvexSpace ℝ E := UltrabornologicalSpace.locallyConvexSpace 𝕜 E
   let g := fun B : banachDisks 𝕜 E ↦ DiskSpace.incl 𝕜 B.1
-  obtain ⟨ι, X, _, _, _, _, _, f, hf⟩ := UltrabornologicalSpace.exists_family (𝕜 := 𝕜) (E := E)
-  refine le_antisymm (hf.le.trans ?_) ?_
-  · -- Every `f i` factors through the Banach disk `f i '' closedBall 0 1`.
-    have _i1 := locallyConvexFinalTopology.isTopologicalAddGroup g
-    have _i2 := locallyConvexFinalTopology.continuousSMul g
-    have _i3 := locallyConvexFinalTopology.locallyConvexSpace g
-    refine (locallyConvexFinalTopology.le_iff (t := locallyConvexFinalTopology g) f).mpr
-      fun i ↦ ?_
-    have hfi : Continuous (f i) := by
-      have h := locallyConvexFinalTopology.continuous_apply f i
-      rwa [← hf] at h
-    let B : banachDisks 𝕜 E :=
-      ⟨f i '' Metric.closedBall (0 : X i) 1, IsBanachDisk.image_closedBall (f i) hfi⟩
-    let φ : X i →ₗ[𝕜] DiskSpace 𝕜 B.1 :=
-      LinearMap.codRestrict (Submodule.span 𝕜 B.1) (f i)
-        (f i).apply_mem_span_image_closedBall
-    have hφ : Continuous φ := by
-      refine AddMonoidHomClass.continuous_of_bound φ 1 fun x ↦ ?_
-      rw [one_mul]
-      refine le_of_forall_pos_le_add fun ε hε ↦ ?_
-      exact DiskSpace.norm_le_of_incl_eq_map (f i) (by positivity)
-        (le_add_of_nonneg_right hε.le) rfl
-    exact @Continuous.comp (X i) (DiskSpace 𝕜 B.1) E _ _ (locallyConvexFinalTopology g) _ _
-      (locallyConvexFinalTopology.continuous_apply g B) hφ
-  · exact (locallyConvexFinalTopology.le_iff g).mpr fun B ↦
-      DiskSpace.continuous_incl B.2.isVonNBounded
+  refine le_antisymm ?_ ((locallyConvexFinalTopology.le_iff g).mpr fun B ↦
+    DiskSpace.continuous_incl B.2.isVonNBounded)
+  -- A convex balanced neighbourhood of zero for the hull topology is a neighbourhood of zero.
+  refine TopologicalSpace.le_of_nhds_zero_le inferInstance
+    (locallyConvexFinalTopology.isTopologicalAddGroup g) fun U hU ↦ ?_
+  obtain ⟨W, ⟨hW, hWc, hWb⟩, hWU⟩ :=
+    (@nhds_zero_hasBasis_convex_balanced 𝕜 E _ _ _ _ _ (locallyConvexFinalTopology g)
+      (locallyConvexFinalTopology.continuousSMul g)
+      (locallyConvexFinalTopology.locallyConvexSpace g)).mem_iff.mp hU
+  have habs : Absorbent 𝕜 W :=
+    @absorbent_nhds_zero 𝕜 E _ _ _ W (locallyConvexFinalTopology g)
+      (locallyConvexFinalTopology.continuousSMul g) hW
+  refine mem_of_superset (UltrabornologicalSpace.mem_nhds_zero hWc hWb habs fun X _ _ _ f ↦ ?_)
+    hWU
+  -- A map from a complete seminormed space factors through the space of a Banach disk.
+  obtain ⟨φ, hφ, -⟩ := f.exists_diskSpace_comp_eq
+  have hpre := locallyConvexFinalTopology.preimage_mem_nhds_zero g
+    ⟨_, f.isBanachDisk_image_closedBall⟩ hW
+  have h1 := φ.continuous.continuousAt.preimage_mem_nhds (x := 0) (by rw [map_zero]; exact hpre)
+  convert h1 using 1
+  ext x
+  simp only [mem_preimage, g, hφ]
 
-/-- A Hausdorff space that is the locally convex hull of the spaces `E_B` for a family of Banach
-disks `B` is ultrabornological. -/
-theorem UltrabornologicalSpace.of_eq_locallyConvexFinalTopology_diskSpace [T1Space E]
-    {𝔖 : Set (Set E)} (h𝔖 : ∀ B ∈ 𝔖, IsBanachDisk 𝕜 B)
+/-- A space that is the locally convex hull of the spaces `E_B` for a family of Banach disks
+`B` is ultrabornological. -/
+theorem UltrabornologicalSpace.of_eq_locallyConvexFinalTopology_diskSpace {𝔖 : Set (Set E)}
+    (h𝔖 : ∀ B ∈ 𝔖, IsBanachDisk 𝕜 B)
     (h : (inferInstance : TopologicalSpace E) =
       locallyConvexFinalTopology fun B : 𝔖 ↦ DiskSpace.incl 𝕜 B.1) :
     UltrabornologicalSpace 𝕜 E := by
-  have : IsTopologicalAddGroup E := by
-    have h1 := locallyConvexFinalTopology.isTopologicalAddGroup
-      fun B : 𝔖 ↦ DiskSpace.incl 𝕜 B.1
-    rwa [← h] at h1
-  have : ContinuousSMul 𝕜 E := by
-    have h1 := locallyConvexFinalTopology.continuousSMul fun B : 𝔖 ↦ DiskSpace.incl 𝕜 B.1
-    rwa [← h] at h1
-  have : LocallyConvexSpace ℝ E := by
-    have h1 := locallyConvexFinalTopology.locallyConvexSpace
-      fun B : 𝔖 ↦ DiskSpace.incl 𝕜 B.1
-    rwa [← h] at h1
-  have hX (B : 𝔖) : UltrabornologicalSpace 𝕜 (DiskSpace 𝕜 B.1) := by
-    let _ := DiskSpace.normedAddCommGroup (𝕜 := 𝕜) (h𝔖 B.1 B.2).isVonNBounded
-    have : CompleteSpace (DiskSpace 𝕜 B.1) := (h𝔖 B.1 B.2).completeSpace
-    infer_instance
-  have key := locallyConvexFinalTopology.ultrabornologicalSpace (𝕜 := 𝕜)
-    fun B : 𝔖 ↦ DiskSpace.incl 𝕜 B.1
-  rwa [← h] at key
+  have (B : 𝔖) : CompleteSpace (DiskSpace 𝕜 B.1) := (h𝔖 B.1 B.2).completeSpace
+  exact UltrabornologicalSpace.of_eq_locallyConvexFinalTopology _ h
 
-/-- **A Hausdorff space that is the locally convex hull of the Banach spaces spanned by its
-Banach disks is ultrabornological**, Köthe II §35.7.(1). -/
-theorem UltrabornologicalSpace.of_eq_locallyConvexFinalTopology_banachDisks [T1Space E]
+/-- **A space that is the locally convex hull of the Banach spaces spanned by its Banach disks
+is ultrabornological**, Köthe II §35.7.(1). -/
+theorem UltrabornologicalSpace.of_eq_locallyConvexFinalTopology_banachDisks
     (h : (inferInstance : TopologicalSpace E) =
       locallyConvexFinalTopology fun B : banachDisks 𝕜 E ↦ DiskSpace.incl 𝕜 B.1) :
     UltrabornologicalSpace 𝕜 E :=
   UltrabornologicalSpace.of_eq_locallyConvexFinalTopology_diskSpace (fun _ hB ↦ hB) h
 
-/-- A Hausdorff topological vector space is ultrabornological if and only if it is the locally
-convex hull of the Banach spaces spanned by its Banach disks, Köthe II §35.7.(1). -/
-theorem ultrabornologicalSpace_iff_eq_locallyConvexFinalTopology_banachDisks [T1Space E] :
+/-- A locally convex space is ultrabornological if and only if it is the locally convex hull
+of the Banach spaces spanned by its Banach disks, Köthe II §35.7.(1). -/
+theorem ultrabornologicalSpace_iff_eq_locallyConvexFinalTopology_banachDisks
+    [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] :
     UltrabornologicalSpace 𝕜 E ↔ (inferInstance : TopologicalSpace E) =
       locallyConvexFinalTopology fun B : banachDisks 𝕜 E ↦ DiskSpace.incl 𝕜 B.1 :=
   ⟨fun _ ↦ UltrabornologicalSpace.eq_locallyConvexFinalTopology_banachDisks,
@@ -328,8 +424,9 @@ theorem ultrabornologicalSpace_iff_eq_locallyConvexFinalTopology_banachDisks [T1
 
 /-- **A linear map from an ultrabornological space into a locally convex space that is bounded
 on every Banach disk is continuous**; for linear functionals this is Köthe II §35.7.(5) a). -/
-theorem LinearMap.continuous_of_forall_isVonNBounded_image_banachDisk
-    [UltrabornologicalSpace 𝕜 E] {F : Type*} [AddCommGroup F] [Module 𝕜 F] [Module ℝ F]
+theorem LinearMap.continuous_of_forall_isVonNBounded_image_banachDisk [IsTopologicalAddGroup E]
+    [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] [UltrabornologicalSpace 𝕜 E] {F : Type*}
+    [AddCommGroup F] [Module 𝕜 F] [Module ℝ F]
     [IsScalarTower ℝ 𝕜 F] [TopologicalSpace F] [IsTopologicalAddGroup F] [ContinuousSMul 𝕜 F]
     [LocallyConvexSpace ℝ F] (A : E →ₗ[𝕜] F)
     (hA : ∀ B : Set E, IsBanachDisk 𝕜 B → IsVonNBounded 𝕜 (A '' B)) : Continuous A := by

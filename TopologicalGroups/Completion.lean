@@ -10,11 +10,17 @@ public import Mathlib.Topology.Algebra.GroupCompletion
 /-!
 # Neighbourhoods in group completions
 
-`UniformSpace.Completion.hasBasis_nhds_zero_closure_image` describes the neighbourhoods
-of zero in a completion by closures of images of neighbourhoods in the original space.
-It specializes Mathlib's neighbourhood-basis theorem for dense-inducing maps.
-The scalar-action and continuous-dual constructions are in
-`TopologicalVectorSpaces.Completion`.
+This specializes Mathlib's neighbourhood-basis theorem for dense inducing maps. The
+scalar-action and continuous-dual constructions are in `TopologicalVectorSpaces.Completion`.
+
+## Main statements
+
+* `UniformSpace.Completion.hasBasis_nhds_zero_closure_image`: the closures of the images of the
+  neighbourhoods of zero form a basis of neighbourhoods of zero in the completion.
+
+## References
+
+* [N. Bourbaki, *Topological Vector Spaces*][bourbaki1987], I §1.5
 -/
 
 public section

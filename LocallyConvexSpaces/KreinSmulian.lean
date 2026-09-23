@@ -18,13 +18,12 @@ Since polars of neighbourhoods of zero are weak-\* compact (Alaoglu–Bourbaki) 
 equicontinuous set lies in such a polar, this says that `C` meets every equicontinuous weak-\*
 closed set in a weak-\* closed set.
 
-The **Krein–Šmulian theorem** says that in the dual of a Fréchet space every almost weak-\*
-closed *convex* set is weak-\* closed. Applied to linear subspaces, this implies that Fréchet
-spaces are `B`-complete (Pták spaces), which is what is needed to apply Pták's open mapping and
-closed graph theorems to
-Fréchet spaces. It follows from the **Banach–Dieudonné theorem**: in the dual of a metrizable
-space, if the complement of `W` is almost weak-\* closed and `0 ∈ W`, then `W` contains the polar
-of a compact set; in other words the finest topology on `E'` that agrees with the weak-\*
+The **Krein–Šmulian theorem** says that in the dual of a Fréchet space every almost weak-\* closed
+*convex* set is weak-\* closed. Applied to linear subspaces, this implies that Fréchet spaces are
+`B`-complete (Pták spaces), which is what is needed to apply Pták's open mapping and closed graph
+theorems to Fréchet spaces. It follows from the **Banach–Dieudonné theorem**: in the dual of a
+metrizable space, if the complement of `W` is almost weak-\* closed and `0 ∈ W`, then `W` contains
+the polar of a compact set; in other words the finest topology on `E'` that agrees with the weak-\*
 topology on equicontinuous sets is coarser than the topology of compact convergence at zero.
 
 ## Main definitions
