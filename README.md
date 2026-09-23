@@ -1,5 +1,7 @@
 # lean-LCS
 
+[![CI](https://github.com/bjbraams/lean-LCS/actions/workflows/ci.yml/badge.svg)](https://github.com/bjbraams/lean-LCS/actions/workflows/ci.yml)
+
 A Lean 4 formalization of locally convex topological vector spaces, their duality and
 completeness theory, and closed graph and open mapping theorems, built on Mathlib.
 The project develops results and interfaces intended for contribution to Mathlib.
@@ -11,8 +13,33 @@ LCS development; the project does not aim to cover those subjects comprehensivel
 Banach-space theory is used from Mathlib, and specialized non-archimedean theory is
 outside the scope.
 
-The library contains proved declarations throughout, with no `sorry` placeholders or
-project-specific axioms.
+The library contains no `sorry` placeholders and no project-specific axioms. Continuous
+integration builds it on every push with warnings treated as errors, which includes Lean's
+warning for a `sorry`.
+
+## Main results
+
+A selection of headline theorems, with their Lean names. Spaces are real or complex
+locally convex spaces unless stated otherwise.
+
+| Result | Lean name | File |
+| --- | --- | --- |
+| Barrelled spaces: every barrel is a neighbourhood of zero | `barrelledSpace_iff_forall_isBarrel_mem_nhds` | [Barrel](LocallyConvexSpaces/Barrel.lean) |
+| Closed graph theorem, barrelled domain and complete first-countable codomain | `LinearMap.continuous_of_isClosed_graph_of_barrelledSpace` | [ClosedGraph](LocallyConvexSpaces/ClosedGraph.lean) |
+| Open mapping theorem, complete first-countable domain and barrelled codomain | `ContinuousLinearMap.isOpenMap_of_barrelledSpace` | [OpenMapping](LocallyConvexSpaces/OpenMapping.lean) |
+| Pták's closed graph and open mapping theorems | `LinearMap.continuous_of_isClosed_graph_of_infraPtakSpace`, `ContinuousLinearMap.isOpenMap_of_ptakSpace` | [Ptak](LocallyConvexSpaces/Ptak.lean) |
+| De Wilde's closed graph and open mapping theorems | `LinearMap.continuous_of_isSeqClosed_graph_of_ultrabornologicalSpace`, `LinearMap.isOpenMap_of_isSeqClosed_graph_of_ultrabornologicalSpace` | [DeWilde](WebbedSpaces/DeWilde) |
+| Bipolar theorem | `StrongDual.bipolar_eq_self` | [Bipolar](LocallyConvexSpaces/Bipolar.lean) |
+| Alaoglu–Bourbaki theorem | `WeakDual.isCompact_polar_of_mem_nhds` | [AlaogluBourbaki](LocallyConvexSpaces/AlaogluBourbaki.lean) |
+| Mackey's theorem: weakly bounded sets are bounded | `Bornology.isVonNBounded_iff_forall_strongDual` | [MackeyBounded](LocallyConvexSpaces/MackeyBounded.lean) |
+| Mackey–Arens theorem | `LinearMap.isCompatibleTopology_iff_mackeyTopology_le` | [MackeyArens](LocallyConvexSpaces/MackeyArens.lean) |
+| Krein–Šmulian theorem | `StrongDual.isClosed_of_isAlmostWeakStarClosed` | [KreinSmulian](LocallyConvexSpaces/KreinSmulian.lean) |
+| Grothendieck's completeness theorem | `StrongDual.completeSpace_iff_forall_exists_eq_apply` | [GrothendieckCompleteness](LocallyConvexSpaces/GrothendieckCompleteness.lean) |
+| Reflexive if and only if semi-reflexive and barrelled | `reflexiveSpace_iff_semiReflexiveSpace_and_barrelledSpace` | [QuasiBarrelled](LocallyConvexSpaces/QuasiBarrelled.lean) |
+| The strong dual of a bornological space is complete | `BornologicalSpace.completeSpace_strongDual` | [DualCompleteness](LocallyConvexSpaces/DualCompleteness.lean) |
+| Dieudonné–Schwartz theorem; completeness of strict inductive limits | `IsStrictInductiveLimit.exists_subset_range_of_isVonNBounded`, `IsStrictInductiveLimit.completeSpace` | [StrictInductiveLimit](LocallyConvexSpaces/StrictInductiveLimit.lean) |
+| Milman's converse to the Krein–Milman theorem (real spaces) | `IsCompact.extremePoints_closure_convexHull_subset_closure` | [Milman](LocallyConvexSpaces/Milman.lean) |
+| Fréchet spaces are ultrabornological and strictly webbed | `UltrabornologicalSpace.of_completeSpace_firstCountableTopology`, `StrictlyWebbedSpace.of_completeSpace_firstCountableTopology` | [FrechetUltrabornological](LocallyConvexSpaces/FrechetUltrabornological.lean), [Frechet](WebbedSpaces/Frechet.lean) |
 
 ## Mathematical content
 
@@ -164,6 +191,26 @@ actual prerequisites and do not impose local convexity merely by their location.
 Directories determine import paths. Declarations use mathematical namespaces such as
 `Seminorm`, `Submodule`, `StrongDual`, and `UniformSpace.Completion`.
 
+## Building
+
+The project pins **Lean 4.34.0** in [lean-toolchain](lean-toolchain) and **Mathlib
+v4.34.0** in [lakefile.toml](lakefile.toml), with resolved dependencies recorded in
+[lake-manifest.json](lake-manifest.json). Install Lean through
+[elan](https://github.com/leanprover/elan), which selects the pinned toolchain
+automatically. Then:
+
+```sh
+git clone https://github.com/bjbraams/lean-LCS.git
+cd lean-LCS
+lake exe cache get   # download precompiled Mathlib files
+lake build           # build the complete project
+```
+
+The first build of the project itself takes several minutes; afterwards `lake build`
+rebuilds only what changed. A single module and its prerequisites can be built with, for
+example, `lake build LocallyConvexSpaces.Reflexive`. The same build, with warnings treated
+as errors (`lake build --wfail`), runs in continuous integration on every push.
+
 ## Using the library
 
 Import the LCS core and its supporting layers with:
@@ -190,51 +237,32 @@ Each source file has a module docstring describing its scope and principal resul
 declaration docstrings describe the individual interfaces. The subject umbrella files
 linked above provide broader indexes.
 
-## Building
+### In another project
 
-The project pins **Lean 4.34.0** in [lean-toolchain](lean-toolchain) and **Mathlib
-v4.34.0** in [lakefile.toml](lakefile.toml), with resolved dependencies recorded in
-[lake-manifest.json](lake-manifest.json). Use the pinned Lean toolchain through `elan`.
+Add the repository as a dependency in the other project's `lakefile.toml`. The Lake package
+is named `Main`:
 
-Run commands from the project root, the directory containing `lakefile.toml`.
-To obtain Mathlib's precompiled dependencies and build the complete project:
-
-```sh
-lake exe cache get
-lake build
+```toml
+[[require]]
+name = "Main"
+git = "https://github.com/bjbraams/lean-LCS.git"
+rev = "main"
 ```
 
-For subsequent builds, `lake build` is sufficient. To build a particular module and
-its prerequisites:
+The other project must use the same Lean and Mathlib versions.
 
-```sh
-lake build LocallyConvexSpaces.Reflexive
-```
+## Conventions for contributions
 
-For work in the maintained NFS workspace, `.lake` is intentionally a symlink to local
-scratch storage. Preserve that symlink and follow the workspace-specific instructions
-in [AGENTS.md](AGENTS.md).
+The code follows Mathlib's naming, documentation and style conventions. Every file is a
+module with a module docstring, every definition, theorem and structure field has a
+docstring, and lines are at most 100 characters. General supporting lemmas belong in the
+lowest layer that can state them, and assumptions are stated at the appropriate
+mathematical generality. Statements that duplicate material in an open Mathlib pull
+request carry a note beside the declaration naming the pull request.
 
-## Development
-
-Reuse existing Mathlib results and place general supporting lemmas in the appropriate
-upstream layer. State assumptions at the appropriate mathematical generality and
-document definitions, theorems, structures, and structure fields. Library files use
-Lean's module system with `module`, `public import`, and public sections.
-
-After Lean changes, run the full root build. Check each changed file after rebuilding
-its imports, and check whitespace:
-
-```sh
-lake build > /tmp/SCV-build.log 2>&1
-lake env lean path/to/ChangedFile.lean
-git diff --check
-```
-
-Detailed project instructions are in [AGENTS.md](AGENTS.md). Module headers cite the
-mathematical literature; [references.bib](references.bib) contains project bibliography
-entries. Sources include Bourbaki, Schaefer–Wolff, Köthe, Narici–Beckenstein, Casselman,
-and De Wilde.
+Module headers cite the mathematical literature by keys in [references.bib](references.bib).
+Sources include Bourbaki, Schaefer–Wolff, Köthe, Narici–Beckenstein, Casselman, and
+De Wilde.
 
 ## License
 
