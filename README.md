@@ -41,6 +41,10 @@ locally convex spaces unless stated otherwise.
 | Milman's converse to the Krein–Milman theorem (real spaces) | `IsCompact.extremePoints_closure_convexHull_subset_closure` | [Milman](LocallyConvexSpaces/Milman.lean) |
 | Fréchet spaces are ultrabornological and strictly webbed | `UltrabornologicalSpace.of_completeSpace_firstCountableTopology`, `StrictlyWebbedSpace.of_completeSpace_firstCountableTopology` | [FrechetUltrabornological](LocallyConvexSpaces/FrechetUltrabornological.lean), [Frechet](WebbedSpaces/Frechet.lean) |
 
+[MainResults.lean](MainResults.lean) lists these theorems with an axiom report: each depends
+only on Lean's standard axioms `propext`, `Classical.choice` and `Quot.sound`. The report is
+checked by `#guard_msgs`, so continuous integration fails if it ever changes.
+
 ## Mathematical content
 
 ### Constructions and classes of spaces

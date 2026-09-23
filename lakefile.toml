@@ -9,7 +9,7 @@ roots = [
   "LocallyConvexSpaces", "WebbedSpaces",
 ]
 globs = [
-  "Main",
+  "Main", "MainResults",
   "MathlibExtras", "MathlibExtras.+",
   "TopologicalGroups", "TopologicalGroups.+",
   "TopologicalVectorSpaces", "TopologicalVectorSpaces.+",

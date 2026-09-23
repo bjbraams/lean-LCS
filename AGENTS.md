@@ -101,7 +101,9 @@ Import specific prerequisites in implementation files, rather than entire subjec
 `MathlibExtras.lean`, `TopologicalGroups.lean`, and `TopologicalVectorSpaces.lean` are subject
 umbrellas. `LocallyConvexSpaces.lean` imports the LCS core and its general prerequisites;
 `WebbedSpaces.lean` imports the webbed-space and De Wilde extension. `Main.lean` imports both
-and is the complete-project Lake entry module. Keep the umbrellas and Lake roots/globs in
+and is the complete-project Lake entry module. `MainResults.lean` imports `Main` and checks the axioms of the
+headline theorems listed in the README; keep its list in sync with the README's *Main results*
+table, and update its expected output only if a change of axioms is intended. Keep the umbrellas and Lake roots/globs in
 sync when adding modules; retain the existing package and Lake root.
 
 Directories determine import paths, not declaration namespaces. Continue to use the natural
