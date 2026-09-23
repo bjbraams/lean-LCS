@@ -1,7 +1,7 @@
 # Build the API documentation with doc-gen4 and publish it on GitHub Pages.
 #
-# `docgen-action` builds the project with `lean-action`, runs doc-gen4 on it, and deploys the
-# HTML to GitHub Pages; the site appears at https://bjbraams.github.io/lean-LCS/docs/.
+# `lean-action` installs Lean and builds the project; `docgen-action` then runs doc-gen4 and
+# deploys the HTML to GitHub Pages. The site appears at https://bjbraams.github.io/lean-LCS/docs/.
 # Citations `[..][key]` in docstrings are resolved against `references.bib`.
 #
 # This is kept separate from `ci.yml` so that the build check keeps read-only permissions and
@@ -35,9 +35,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      # `docgen-action` expects Lean to be installed and the project built by this step.
+      - name: Build the project with Lean and the Mathlib cache
+        uses: leanprover/lean-action@v1
+        with:
+          build-args: "--wfail"
+
       - name: Build the API documentation and deploy it to GitHub Pages
         uses: leanprover-community/docgen-action@main
         with:
-          build-args: "--wfail"
           build-page: false
           references: references.bib
