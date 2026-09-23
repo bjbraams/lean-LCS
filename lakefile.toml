@@ -1,0 +1,23 @@
+name = "Main"
+version = "0.1.0"
+defaultTargets = ["Main"]
+
+[[lean_lib]]
+name = "Main"
+roots = [
+  "Main", "MathlibExtras", "TopologicalGroups", "TopologicalVectorSpaces",
+  "LocallyConvexSpaces", "WebbedSpaces",
+]
+globs = [
+  "Main",
+  "MathlibExtras", "MathlibExtras.+",
+  "TopologicalGroups", "TopologicalGroups.+",
+  "TopologicalVectorSpaces", "TopologicalVectorSpaces.+",
+  "LocallyConvexSpaces", "LocallyConvexSpaces.+",
+  "WebbedSpaces", "WebbedSpaces.+",
+]
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.34.0"
