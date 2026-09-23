@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this library, please cite it as below."
+type: software
+title: "lean-LCS: locally convex spaces in Lean 4 and Mathlib"
+abstract: >-
+  A Lean 4 formalization of locally convex topological vector spaces, their duality
+  and completeness theory, and closed graph and open mapping theorems, built on Mathlib.
+  It includes barrelled, bornological, ultrabornological, reflexive, Montel and Pták
+  spaces, the bipolar, Alaoglu–Bourbaki, Mackey–Arens, Krein–Šmulian and Grothendieck
+  theorems, strict inductive limits, and webbed spaces with De Wilde's theorems.
+authors:
+  - family-names: Braams
+    given-names: Bastiaan J.
+version: 0.1.0
+date-released: 2026-09-23
+license: Apache-2.0
+repository-code: "https://github.com/bjbraams/lean-LCS"
+keywords:
+  - Lean 4
+  - Mathlib
+  - formalization
+  - locally convex spaces
+  - topological vector spaces
+  - functional analysis
