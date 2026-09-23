@@ -1,0 +1,30 @@
+# Build the library on every push to `main` and on every pull request.
+#
+# `lean-action` installs the toolchain named in `lean-toolchain`, downloads the prebuilt Mathlib
+# files for the Mathlib version pinned in `lake-manifest.json` (`lake exe cache get`), and runs
+# `lake build`. The flag `--wfail` makes any warning fail the build; this includes the warning
+# "declaration uses 'sorry'", so the check also enforces that the library has no `sorry`.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Build with Lean and the Mathlib cache
+        uses: leanprover/lean-action@v1
+        with:
+          build-args: "--wfail"
