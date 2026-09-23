@@ -1,0 +1,43 @@
+# Build the API documentation with doc-gen4 and publish it on GitHub Pages.
+#
+# `docgen-action` builds the project with `lean-action`, runs doc-gen4 on it, and deploys the
+# HTML to GitHub Pages; the site appears at https://bjbraams.github.io/lean-LCS/docs/.
+# Citations `[..][key]` in docstrings are resolved against `references.bib`.
+#
+# This is kept separate from `ci.yml` so that the build check keeps read-only permissions and
+# a documentation failure does not affect the build badge. Deployment requires Settings >
+# Pages > Build and deployment > Source to be set to "GitHub Actions".
+
+name: Documentation
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  pages: write
+
+# Let a newer run replace an older one, but never cancel a deployment in progress.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  docs:
+    name: Build and deploy documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build the API documentation and deploy it to GitHub Pages
+        uses: leanprover-community/docgen-action@main
+        with:
+          build-args: "--wfail"
+          build-page: false
+          references: references.bib
