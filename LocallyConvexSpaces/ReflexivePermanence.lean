@@ -29,8 +29,8 @@ semi-reflexive.
   `BarrelledSpace.of_rightInverse`: continuous linear retracts.
 * `SemiReflexiveSpace.submodule`, `ReflexiveSpace.submodule_of_quasiBarrelledSpace`: closed
   subspaces.
-* `SemiReflexiveSpace.of_bounded_lifting`, `ReflexiveSpace.of_bounded_lifting`,
-  `ReflexiveSpace.quotient_of_bounded_lifting`: images that lift bounded sets up to closure.
+* `SemiReflexiveSpace.of_liftsBoundedSets`, `ReflexiveSpace.of_liftsBoundedSets`,
+  `ReflexiveSpace.quotient_of_liftsBoundedSets`: images that lift bounded sets up to closure.
 * `SemiReflexiveSpace.pi`, `ReflexiveSpace.pi`: arbitrary products.
 
 ## References
@@ -166,10 +166,9 @@ variable {𝕜 E F : Type*} [RCLike 𝕜]
 
 /-- A bounded-lifting image of a Hausdorff semi-reflexive locally convex space is semi-reflexive.
 Bounded sets need only lift up to closure. -/
-theorem SemiReflexiveSpace.of_bounded_lifting [T2Space E] [T2Space F]
+theorem SemiReflexiveSpace.of_liftsBoundedSets [T2Space E] [T2Space F]
     [SemiReflexiveSpace 𝕜 E] (f : E →L[𝕜] F)
-    (h : ∀ S : Set F, IsVonNBounded 𝕜 S →
-      ∃ B : Set E, IsVonNBounded 𝕜 B ∧ S ⊆ closure (f '' B)) : SemiReflexiveSpace 𝕜 F := by
+    (h : LiftsBoundedSets 𝕜 f) : SemiReflexiveSpace 𝕜 F := by
   let : SeparatingDual 𝕜 F := SeparatingDual.of_locallyConvexSpace_real 𝕜 F
   apply SemiReflexiveSpace.of_forall_isVonNBounded 𝕜 F
   intro S hS
@@ -187,22 +186,20 @@ theorem SemiReflexiveSpace.of_bounded_lifting [T2Space E] [T2Space F]
   exact ⟨toWeakSpace 𝕜 E x, hBK ⟨x, hx, rfl⟩, rfl⟩
 
 /-- A quasi-barrelled bounded-lifting image of a semi-reflexive space is reflexive. -/
-theorem ReflexiveSpace.of_bounded_lifting [T2Space E] [T2Space F]
+theorem ReflexiveSpace.of_liftsBoundedSets [T2Space E] [T2Space F]
     [SemiReflexiveSpace 𝕜 E] [QuasiBarrelledSpace 𝕜 F] (f : E →L[𝕜] F)
-    (h : ∀ S : Set F, IsVonNBounded 𝕜 S →
-      ∃ B : Set E, IsVonNBounded 𝕜 B ∧ S ⊆ closure (f '' B)) : ReflexiveSpace 𝕜 F :=
+    (h : LiftsBoundedSets 𝕜 f) : ReflexiveSpace 𝕜 F :=
   reflexiveSpace_iff_semiReflexiveSpace_and_quasiBarrelledSpace.mpr
-    ⟨SemiReflexiveSpace.of_bounded_lifting f h, inferInstance⟩
+    ⟨SemiReflexiveSpace.of_liftsBoundedSets f h, inferInstance⟩
 
 /-- A Hausdorff bounded-lifting quotient of a reflexive space is reflexive. -/
-theorem ReflexiveSpace.quotient_of_bounded_lifting [T2Space E] [ReflexiveSpace 𝕜 E]
+theorem ReflexiveSpace.quotient_of_liftsBoundedSets [T2Space E] [ReflexiveSpace 𝕜 E]
     (M : Submodule 𝕜 E) [T2Space (E ⧸ M)]
-    (h : ∀ S : Set (E ⧸ M), IsVonNBounded 𝕜 S →
-      ∃ B : Set E, IsVonNBounded 𝕜 B ∧ S ⊆ closure (M.mkQ '' B)) :
+    (h : LiftsBoundedSets 𝕜 M.mkQ) :
     ReflexiveSpace 𝕜 (E ⧸ M) := by
   let : BarrelledSpace 𝕜 E :=
     (reflexiveSpace_iff_semiReflexiveSpace_and_barrelledSpace.mp inferInstance).2
-  exact ReflexiveSpace.of_bounded_lifting M.mkQL h
+  exact ReflexiveSpace.of_liftsBoundedSets M.mkQL h
 
 end Images
 

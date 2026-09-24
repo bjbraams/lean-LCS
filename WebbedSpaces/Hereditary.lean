@@ -25,12 +25,11 @@ topologies), (8) (inductive limits of sequences) and, together with countable pr
 (countable locally convex hulls). No topology on the union is prescribed: all that is used is
 that the maps are sequentially continuous.
 
-The explicit web constructions and their calculation lemmas live in the `WebConstruction`
-namespace.
+The explicit web constructions and their calculation lemmas live in the `IsWeb` namespace.
 
 ## Main definitions
 
-* `WebConstruction.webUnionImage f C`: for linear maps `f n : E n → F` and webs `C n` on `E n`, the
+* `IsWeb.unionImage f C`: for linear maps `f n : E n → F` and webs `C n` on `E n`, the
   web on `F` whose first index selects `n` and whose further indices select an image under `f n` of
   a set of the web `C n`.
 
@@ -39,7 +38,7 @@ namespace.
 * `IsCompletingWeb.preimage_of_isInducing`, `IsStrictWeb.preimage_of_isInducing`: the preimage
   of a web under an inducing linear map with sequentially closed range.
 * `WebbedSpace.of_isInducing`, `StrictlyWebbedSpace.of_isInducing`.
-* `WebConstruction.isCompletingWeb_webUnionImage`, `WebConstruction.isStrictWeb_webUnionImage`.
+* `IsWeb.isCompletingWeb_unionImage`, `IsWeb.isStrictWeb_unionImage`.
 * `WebbedSpace.of_isSeqClosed`, `StrictlyWebbedSpace.of_isSeqClosed`.
 * `WebbedSpace.of_iUnion_range`, `StrictlyWebbedSpace.of_iUnion_range`.
 * `WebbedSpace.of_surjective`, `StrictlyWebbedSpace.of_surjective`.
@@ -168,52 +167,52 @@ index `n` selects the map `f n` and whose further indices select the image under
 set of the web `C n`. As the newest index of a web is at the head of the list, the first index
 is the last entry of the list. -/
 @[expose]
-def WebConstruction.webUnionImage (f : ∀ n, E n → F) (C : ∀ n, List ℕ → Set (E n))
+def IsWeb.unionImage (f : ∀ n, E n → F) (C : ∀ n, List ℕ → Set (E n))
     (l : List ℕ) : Set F :=
   match l.reverse with
   | [] => univ
   | n :: l' => f n '' C n l'.reverse
 
-/-- The root of `WebConstruction.webUnionImage` is the whole space. -/
+/-- The root of `IsWeb.unionImage` is the whole space. -/
 @[simp]
-theorem WebConstruction.webUnionImage_nil (f : ∀ n, E n → F) (C : ∀ n, List ℕ → Set (E n)) :
-    WebConstruction.webUnionImage f C [] = univ :=
+theorem IsWeb.unionImage_nil (f : ∀ n, E n → F) (C : ∀ n, List ℕ → Set (E n)) :
+    IsWeb.unionImage f C [] = univ :=
   rfl
 
-/-- The set of `WebConstruction.webUnionImage` for a list with first index `n`. -/
+/-- The set of `IsWeb.unionImage` for a list with first index `n`. -/
 @[simp]
-theorem WebConstruction.webUnionImage_append_singleton (f : ∀ n, E n → F)
+theorem IsWeb.unionImage_append_singleton (f : ∀ n, E n → F)
     (C : ∀ n, List ℕ → Set (E n)) (l : List ℕ) (n : ℕ) :
-    WebConstruction.webUnionImage f C (l ++ [n]) = f n '' C n l := by
-  simp [WebConstruction.webUnionImage]
+    IsWeb.unionImage f C (l ++ [n]) = f n '' C n l := by
+  simp [IsWeb.unionImage]
 
-/-- The sets of `WebConstruction.webUnionImage` along a strand `σ`: the first index `σ 0` selects
+/-- The sets of `IsWeb.unionImage` along a strand `σ`: the first index `σ 0` selects
 the map; the remaining indices form a strand of the web `C (σ 0)`. -/
-theorem WebConstruction.webUnionImage_res_succ (f : ∀ n, E n → F) (C : ∀ n, List ℕ → Set (E n))
+theorem IsWeb.unionImage_res_succ (f : ∀ n, E n → F) (C : ∀ n, List ℕ → Set (E n))
     (σ : ℕ → ℕ) (k : ℕ) :
-    WebConstruction.webUnionImage f C (res σ (k + 1)) =
+    IsWeb.unionImage f C (res σ (k + 1)) =
       f (σ 0) '' C (σ 0) (res (fun i ↦ σ (i + 1)) k) := by
-  rw [res_succ_eq_res_append, WebConstruction.webUnionImage_append_singleton]
+  rw [res_succ_eq_res_append, IsWeb.unionImage_append_singleton]
 
 /-- If the ranges of the maps `f n` cover `F` and every `C n` is a web, then
-`WebConstruction.webUnionImage f C` is a web. -/
-theorem WebConstruction.isWeb_webUnionImage {f : ∀ n, E n → F} {C : ∀ n, List ℕ → Set (E n)}
+`IsWeb.unionImage f C` is a web. -/
+theorem IsWeb.isWeb_unionImage {f : ∀ n, E n → F} {C : ∀ n, List ℕ → Set (E n)}
     (hf : ⋃ n, range (f n) = univ) (hC : ∀ n, IsWeb (C n)) :
-    IsWeb (WebConstruction.webUnionImage f C) where
+    IsWeb (IsWeb.unionImage f C) where
   nil := rfl
   iUnion_cons l := by
     rcases List.eq_nil_or_concat l with rfl | ⟨L, b, rfl⟩
-    · rw [WebConstruction.webUnionImage_nil, ← hf]
+    · rw [IsWeb.unionImage_nil, ← hf]
       refine iUnion_congr fun n ↦ ?_
-      have h := WebConstruction.webUnionImage_append_singleton f C [] n
+      have h := IsWeb.unionImage_append_singleton f C [] n
       rw [List.nil_append] at h
       rw [h, (hC n).nil, image_univ]
     · simp only [List.concat_eq_append]
       have h (n : ℕ) :
-          WebConstruction.webUnionImage f C (n :: (L ++ [b])) = f b '' C b (n :: L) := by
-        rw [← List.cons_append, WebConstruction.webUnionImage_append_singleton]
+          IsWeb.unionImage f C (n :: (L ++ [b])) = f b '' C b (n :: L) := by
+        rw [← List.cons_append, IsWeb.unionImage_append_singleton]
       simp_rw [h]
-      rw [WebConstruction.webUnionImage_append_singleton, ← image_iUnion, (hC b).iUnion_cons]
+      rw [IsWeb.unionImage_append_singleton, ← image_iUnion, (hC b).iUnion_cons]
 
 end UnionImageDef
 
@@ -224,7 +223,7 @@ variable {𝕜 : Type*} [RCLike 𝕜] {E : ℕ → Type*} {F : Type*}
   [∀ n, IsScalarTower ℝ 𝕜 (E n)] [∀ n, TopologicalSpace (E n)]
   [AddCommGroup F] [Module 𝕜 F] [Module ℝ F] [IsScalarTower ℝ 𝕜 F] [TopologicalSpace F]
 
-/-- The series argument for `WebConstruction.webUnionImage`: from convergence of the tails of
+/-- The series argument for `IsWeb.unionImage`: from convergence of the tails of
 `∑ c k • w k` with indices `1 + k` in the domain of a sequentially continuous linear map `g` to
 convergence of the tails of `∑ c k • g (w k)`. -/
 private theorem tendsto_sum_smul_map {G : Type*} [AddCommGroup G] [Module ℝ G]
@@ -242,14 +241,14 @@ private theorem tendsto_sum_smul_map {G : Type*} [AddCommGroup G] [Module ℝ G]
 variable [ContinuousAdd F]
 
 /-- If `F` is the union of the ranges of sequentially continuous linear maps `f n : E n → F`
-and every `C n` is a completing web on `E n`, then `WebConstruction.webUnionImage f C` is a
+and every `C n` is a completing web on `E n`, then `IsWeb.unionImage f C` is a
 completing web on `F`. -/
-theorem WebConstruction.isCompletingWeb_webUnionImage {f : ∀ n, E n →ₗ[ℝ] F}
+theorem IsWeb.isCompletingWeb_unionImage {f : ∀ n, E n →ₗ[ℝ] F}
     {C : ∀ n, List ℕ → Set (E n)}
     (hf : ∀ n, SeqContinuous (f n)) (hsurj : ⋃ n, range (f n) = univ)
     (hC : ∀ n, IsCompletingWeb (C n)) :
-    IsCompletingWeb (WebConstruction.webUnionImage (fun n ↦ ⇑(f n)) C) where
-  toIsWeb := WebConstruction.isWeb_webUnionImage hsurj fun n ↦ (hC n).toIsWeb
+    IsCompletingWeb (IsWeb.unionImage (fun n ↦ ⇑(f n)) C) where
+  toIsWeb := IsWeb.isWeb_unionImage hsurj fun n ↦ (hC n).toIsWeb
   exists_radius σ := by
     obtain ⟨ρ, hρ, h⟩ := (hC (σ 0)).exists_radius fun i ↦ σ (i + 1)
     refine ⟨fun k ↦ Nat.casesOn k 1 ρ, fun k ↦ ?_, fun x c hx hc ↦ ?_⟩
@@ -259,7 +258,7 @@ theorem WebConstruction.isCompletingWeb_webUnionImage {f : ∀ n, E n →ₗ[ℝ
     -- Lift the terms `x (1 + i)` to `E (σ 0)`.
     have hw (i : ℕ) : ∃ w ∈ C (σ 0) (res (fun i ↦ σ (i + 1)) (i + 1)), f (σ 0) w = x (1 + i) := by
       have h1 := hx (1 + i)
-      rw [WebConstruction.webUnionImage_res_succ, Nat.add_comm 1 i] at h1
+      rw [IsWeb.unionImage_res_succ, Nat.add_comm 1 i] at h1
       rw [Nat.add_comm 1 i]
       exact h1
     choose w hwC hwx using hw
@@ -275,23 +274,23 @@ theorem WebConstruction.isCompletingWeb_webUnionImage {f : ∀ n, E n →ₗ[ℝ
     exact ⟨_, tendsto_sum_range_of_tendsto_sum_range_add (a := fun k ↦ c k • x k) h2⟩
 
 /-- If `F` is the union of the ranges of sequentially continuous linear maps `f n : E n → F`
-and every `C n` is a strict web on `E n`, then `WebConstruction.webUnionImage f C` is a strict web
+and every `C n` is a strict web on `E n`, then `IsWeb.unionImage f C` is a strict web
 on `F`. -/
-theorem WebConstruction.isStrictWeb_webUnionImage {f : ∀ n, E n →ₗ[𝕜] F} {C : ∀ n, List ℕ → Set (E
+theorem IsWeb.isStrictWeb_unionImage {f : ∀ n, E n →ₗ[𝕜] F} {C : ∀ n, List ℕ → Set (E
     n)}
     (hf : ∀ n, SeqContinuous (f n)) (hsurj : ⋃ n, range (f n) = univ)
     (hC : ∀ n, IsStrictWeb 𝕜 (C n)) :
-    IsStrictWeb 𝕜 (WebConstruction.webUnionImage (fun n ↦ ⇑(f n)) C) where
-  toIsWeb := WebConstruction.isWeb_webUnionImage hsurj fun n ↦ (hC n).toIsWeb
+    IsStrictWeb 𝕜 (IsWeb.unionImage (fun n ↦ ⇑(f n)) C) where
+  toIsWeb := IsWeb.isWeb_unionImage hsurj fun n ↦ (hC n).toIsWeb
   convex l := by
     rcases List.eq_nil_or_concat l with rfl | ⟨L, b, rfl⟩
     · exact convex_univ
-    · rw [List.concat_eq_append, WebConstruction.webUnionImage_append_singleton]
+    · rw [List.concat_eq_append, IsWeb.unionImage_append_singleton]
       exact ((hC b).convex L).is_linear_image ((f b).restrictScalars ℝ).isLinear
   balanced l := by
     rcases List.eq_nil_or_concat l with rfl | ⟨L, b, rfl⟩
     · exact balanced_univ
-    · rw [List.concat_eq_append, WebConstruction.webUnionImage_append_singleton]
+    · rw [List.concat_eq_append, IsWeb.unionImage_append_singleton]
       exact ((hC b).balanced L).image (f b)
   exists_radius σ := by
     obtain ⟨ρ, hρ, h⟩ := (hC (σ 0)).exists_radius fun i ↦ σ (i + 1)
@@ -302,7 +301,7 @@ theorem WebConstruction.isStrictWeb_webUnionImage {f : ∀ n, E n →ₗ[𝕜] F
     -- Lift all terms to `E (σ 0)`.
     have hw (i : ℕ) : ∃ w ∈ C (σ 0) (res (fun i ↦ σ (i + 1)) (i + 1)), f (σ 0) w = x (1 + i) := by
       have h1 := hx (1 + i)
-      rw [WebConstruction.webUnionImage_res_succ, Nat.add_comm 1 i] at h1
+      rw [IsWeb.unionImage_res_succ, Nat.add_comm 1 i] at h1
       rw [Nat.add_comm 1 i]
       exact h1
     choose w hwC hwx using hw
@@ -329,11 +328,11 @@ theorem WebConstruction.isStrictWeb_webUnionImage {f : ∀ n, E n →ₗ[𝕜] F
       obtain ⟨s, -, hs⟩ := key 0
       obtain ⟨w₀, -, hw₀⟩ : x 0 ∈ f (σ 0) '' C (σ 0) (res (fun i ↦ σ (i + 1)) 0) := by
         have h1 := hx 0
-        rwa [WebConstruction.webUnionImage_res_succ] at h1
+        rwa [IsWeb.unionImage_res_succ] at h1
       have h4 := tendsto_sum_range_of_tendsto_sum_range_add (a := fun k ↦ c k • x k) (m := 1)
         (by simpa [Nat.add_comm] using hs)
       refine ⟨f (σ 0) (c 0 • w₀ + s), ?_, ?_⟩
-      · rw [WebConstruction.webUnionImage_res_succ, res_zero, ((hC (σ 0)).nil), image_univ]
+      · rw [IsWeb.unionImage_res_succ, res_zero, ((hC (σ 0)).nil), image_univ]
         exact mem_range_self _
       · simp only [zero_add]
         have h5 : f (σ 0) (c 0 • w₀ + s) = ∑ k ∈ Finset.range 1, c k • x k + f (σ 0) s := by
@@ -343,7 +342,7 @@ theorem WebConstruction.isStrictWeb_webUnionImage {f : ∀ n, E n →ₗ[𝕜] F
     | succ m =>
       obtain ⟨s, hsC, hs⟩ := key m
       refine ⟨f (σ 0) s, ?_, hs⟩
-      rw [WebConstruction.webUnionImage_res_succ]
+      rw [IsWeb.unionImage_res_succ]
       exact mem_image_of_mem _ hsC
 
 end UnionImage
@@ -366,7 +365,7 @@ theorem WebbedSpace.of_iUnion_range [∀ i, WebbedSpace (E i)] (f : ∀ i, E i �
     exact ⟨i⟩
   obtain ⟨g, hg⟩ := exists_surjective_nat ι
   choose C hC using fun i ↦ WebbedSpace.exists_isCompletingWeb (E := E i)
-  refine ⟨_, WebConstruction.isCompletingWeb_webUnionImage (E := fun n ↦ E (g n))
+  refine ⟨_, IsWeb.isCompletingWeb_unionImage (E := fun n ↦ E (g n))
     (f := fun n ↦ f (g n))
     (C := fun n ↦ C (g n)) (fun n ↦ hf _) ?_ (fun n ↦ hC _)⟩
   rw [← hsurj]
@@ -382,7 +381,7 @@ theorem StrictlyWebbedSpace.of_iUnion_range [∀ i, StrictlyWebbedSpace 𝕜 (E 
     exact ⟨i⟩
   obtain ⟨g, hg⟩ := exists_surjective_nat ι
   choose C hC using fun i ↦ StrictlyWebbedSpace.exists_isStrictWeb (𝕜 := 𝕜) (F := E i)
-  refine ⟨_, WebConstruction.isStrictWeb_webUnionImage (E := fun n ↦ E (g n)) (f := fun n ↦ f (g n))
+  refine ⟨_, IsWeb.isStrictWeb_unionImage (E := fun n ↦ E (g n)) (f := fun n ↦ f (g n))
     (C := fun n ↦ C (g n)) (fun n ↦ hf _) ?_ (fun n ↦ hC _)⟩
   rw [← hsurj]
   exact hg.iUnion_comp fun i ↦ range (f i)

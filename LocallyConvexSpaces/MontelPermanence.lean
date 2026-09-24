@@ -6,6 +6,7 @@ Authors: Bastiaan J Braams
 module
 
 public import Mathlib.Analysis.LocallyConvex.Montel
+public import TopologicalVectorSpaces.Basic
 
 /-!
 # Permanence of the Heine–Borel property
@@ -25,9 +26,9 @@ section and needs only Hausdorffness of the source.
 * `MontelSpace.of_isClosedEmbedding`, `MontelSpace.submodule`: closed subspaces.
 * `MontelSpace.of_continuousLinearEquiv`, `MontelSpace.of_rightInverse`: isomorphic spaces and
   retracts.
-* `MontelSpace.of_bounded_lifting`: images under maps that lift bounded sets up to closure.
+* `MontelSpace.of_liftsBoundedSets`: images under maps that lift bounded sets up to closure.
 * `MontelSpace.pi`: arbitrary products.
-* `MontelSpace.of_bounded_cover`: families of maps that cover the bounded sets of the target.
+* `MontelSpace.of_coversBoundedSets`: families of maps that cover the bounded sets of the target.
 
 ## References
 
@@ -64,10 +65,9 @@ theorem of_continuousLinearEquiv [MontelSpace 𝕜 E] (e : E ≃L[𝕜] F) : Mon
   of_isClosedEmbedding e.symm.toContinuousLinearMap e.symm.toHomeomorph.isClosedEmbedding
 
 /-- A bounded-lifting image of a Montel space is Montel. Lifting up to closure suffices. -/
-theorem of_bounded_lifting [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E]
+theorem of_liftsBoundedSets [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E]
     [MontelSpace 𝕜 E] [T2Space E] [T2Space F] (f : E →L[𝕜] F)
-    (h : ∀ S : Set F, IsVonNBounded 𝕜 S →
-      ∃ B : Set E, IsVonNBounded 𝕜 B ∧ S ⊆ closure (f '' B)) : MontelSpace 𝕜 F := by
+    (h : LiftsBoundedSets 𝕜 f) : MontelSpace 𝕜 F := by
   constructor
   intro S hS hSb
   obtain ⟨B, hB, hSB⟩ := h S hSb
@@ -99,7 +99,7 @@ instance pi {ι : Type*} {G : ι → Type*} [∀ i, AddCommGroup (G i)]
 
 end Permanence
 
-section BoundedCover
+section CoversBoundedSets
 
 variable {𝕜 ι F : Type*} [NormedField 𝕜] {E : ι → Type*}
   [∀ i, AddCommGroup (E i)] [∀ i, Module 𝕜 (E i)] [∀ i, TopologicalSpace (E i)]
@@ -107,10 +107,9 @@ variable {𝕜 ι F : Type*} [NormedField 𝕜] {E : ι → Type*}
   [∀ i, T2Space (E i)] [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F]
 
 /-- The Montel property passes through a family whose bounded images cover target bounded sets. -/
-theorem of_bounded_cover [∀ i, MontelSpace 𝕜 (E i)]
+theorem of_coversBoundedSets [∀ i, MontelSpace 𝕜 (E i)]
     (f : ∀ i, E i →L[𝕜] F)
-    (h : ∀ S : Set F, IsVonNBounded 𝕜 S →
-      ∃ i, ∃ B : Set (E i), IsVonNBounded 𝕜 B ∧ S ⊆ f i '' B) : MontelSpace 𝕜 F := by
+    (h : CoversBoundedSets 𝕜 fun i ↦ f i) : MontelSpace 𝕜 F := by
   constructor
   intro S hS hSb
   obtain ⟨i, B, hB, hSB⟩ := h S hSb
@@ -118,6 +117,6 @@ theorem of_bounded_cover [∀ i, MontelSpace 𝕜 (E i)]
     isClosed_closure hB.closure).image (f i).continuous
   exact hK.of_isClosed_subset hS (hSB.trans (image_mono subset_closure))
 
-end BoundedCover
+end CoversBoundedSets
 
 end MontelSpace

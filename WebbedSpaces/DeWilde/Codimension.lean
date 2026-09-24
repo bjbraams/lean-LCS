@@ -54,6 +54,16 @@ defined in `LocallyConvexSpaces.FinestTopology`.
   `Submodule.finite_of_isSeqClosed_of_basis_quotient`: a sequentially closed subspace of
   countable codimension of a webbed ultrabornological space is closed and topologically
   complemented, §35.5.(5) b).
+* The corresponding statements with the codimension, or the dimension of the complement, bounded
+  by `Module.rank … ≤ ℵ₀`: `LinearMap.isClosed_range_of_rank_quotient_le_aleph0`,
+  `LinearMap.exists_nhds_inter_range_subset_image_of_rank_quotient_le_aleph0`,
+  `LinearMap.finiteDimensional_quotient_range_of_rank_le_aleph0`,
+  `LinearMap.continuous_projectionOnto_of_rank_le_aleph0_isCompl`,
+  `LinearMap.continuous_of_rank_le_aleph0_isCompl_range`,
+  `LinearMap.isClosed_of_rank_le_aleph0_isCompl_range`,
+  `Submodule.isClosed_of_isSeqClosed_of_rank_quotient_le_aleph0`,
+  `Submodule.continuous_projectionOnto_of_isSeqClosed_of_rank_le_aleph0`,
+  `Submodule.finiteDimensional_quotient_of_isSeqClosed_of_rank_le_aleph0`.
 
 ## References
 
@@ -68,7 +78,7 @@ public section
 
 open Set Filter Function
 
-open scoped Topology
+open scoped Topology Cardinal
 
 universe u v
 
@@ -243,6 +253,11 @@ private theorem LinearMap.family_of_basis_isCompl (A : E →ₗ[𝕜] F) {K : Su
     have h1 : Finsupp.linearCombination 𝕜 b c = 0 := Subtype.ext h0
     rw [← b.repr_linearCombination c, h1, map_zero]
 
+/-- A vector space of at most countable dimension has a basis with a countable index type. -/
+private theorem countable_ofVectorSpaceIndex {K V : Type*} [DivisionRing K] [AddCommGroup V]
+    [Module K V] (hr : Module.rank K V ≤ ℵ₀) : Countable (Module.Basis.ofVectorSpaceIndex K V) :=
+  Cardinal.mk_le_aleph0_iff.mp ((Module.Basis.ofVectorSpace K V).mk_eq_rank'' ▸ hr)
+
 end Family
 
 section LinearMap
@@ -265,6 +280,15 @@ theorem LinearMap.isClosed_range_of_basis_quotient (A : E →ₗ[𝕜] F)
   have hclosed := A.graph.isClosed_snd_image_of_countable_codimension hA v hsum hindep
   rwa [A.snd_image_graph] at hclosed
 
+/-- `LinearMap.isClosed_range_of_basis_quotient` with the codimension expressed by
+`Module.rank`: a linear map with sequentially closed graph from a webbed locally convex space into
+an ultrabornological space whose range has at most countable codimension has a closed range. -/
+theorem LinearMap.isClosed_range_of_rank_quotient_le_aleph0 (A : E →ₗ[𝕜] F)
+    (hA : IsSeqClosed (A.graph : Set (E × F)))
+    (hr : Module.rank 𝕜 (F ⧸ LinearMap.range A) ≤ ℵ₀) : IsClosed (Set.range A) := by
+  have := countable_ofVectorSpaceIndex hr
+  exact A.isClosed_range_of_basis_quotient hA (.ofVectorSpace 𝕜 _)
+
 /-- A linear map with sequentially closed graph from a webbed locally convex space into an
 ultrabornological space whose range has finite or countable codimension is open onto its range,
 Köthe II §35.5.(2). -/
@@ -276,6 +300,15 @@ theorem LinearMap.exists_nhds_inter_range_subset_image_of_basis_quotient (A : E 
   have h := A.graph.exists_nhds_inter_subset_image_of_countable_codimension hA v hsum hindep hV
   rwa [A.snd_image_graph, A.image_graph] at h
 
+/-- `LinearMap.exists_nhds_inter_range_subset_image_of_basis_quotient` with the codimension
+expressed by `Module.rank`. -/
+theorem LinearMap.exists_nhds_inter_range_subset_image_of_rank_quotient_le_aleph0
+    (A : E →ₗ[𝕜] F) (hA : IsSeqClosed (A.graph : Set (E × F)))
+    (hr : Module.rank 𝕜 (F ⧸ LinearMap.range A) ≤ ℵ₀) {V : Set E} (hV : V ∈ 𝓝 (0 : E)) :
+    ∃ N ∈ 𝓝 (0 : F), N ∩ Set.range A ⊆ A '' V := by
+  have := countable_ofVectorSpaceIndex hr
+  exact A.exists_nhds_inter_range_subset_image_of_basis_quotient hA (.ofVectorSpace 𝕜 _) hV
+
 /-- A linear map with sequentially closed graph from a webbed locally convex space into a
 first-countable ultrabornological space, for instance a Fréchet space, whose range has at most
 countable codimension has a range of finite codimension, Köthe II §35.5.(3). -/
@@ -285,6 +318,17 @@ theorem LinearMap.finite_of_basis_quotient_of_firstCountableTopology
     (b : Module.Basis ι 𝕜 (F ⧸ LinearMap.range A)) : Finite ι := by
   obtain ⟨v, hsum, hindep⟩ := A.exists_family_of_basis_quotient b
   exact A.graph.finite_of_countable_codimension_of_firstCountableTopology hA v hsum hindep
+
+/-- `LinearMap.finite_of_basis_quotient_of_firstCountableTopology` with the codimension expressed
+by `Module.rank`: if `F` is first-countable, a range of at most countable codimension has finite
+codimension, Köthe II §35.5.(3). -/
+theorem LinearMap.finiteDimensional_quotient_range_of_rank_le_aleph0
+    [FirstCountableTopology F] (A : E →ₗ[𝕜] F) (hA : IsSeqClosed (A.graph : Set (E × F)))
+    (hr : Module.rank 𝕜 (F ⧸ LinearMap.range A) ≤ ℵ₀) :
+    FiniteDimensional 𝕜 (F ⧸ LinearMap.range A) := by
+  have := countable_ofVectorSpaceIndex hr
+  have := A.finite_of_basis_quotient_of_firstCountableTopology hA (.ofVectorSpace 𝕜 _)
+  exact Module.Finite.of_basis (Module.Basis.ofVectorSpace 𝕜 _)
 
 /-- Let `A` be a linear map with sequentially closed graph from a webbed locally convex space
 into an ultrabornological space. Every algebraic complement of the range of `A` that has a
@@ -324,6 +368,15 @@ theorem LinearMap.continuous_projectionOnto_of_basis_isCompl (A : E →ₗ[𝕜]
   rw [hyc, hP q hq c, mem_preimage, ← linearCombination_coe_basis]
   exact hc
 
+/-- `LinearMap.continuous_projectionOnto_of_basis_isCompl` with the dimension of the complement
+expressed by `Module.rank`. -/
+theorem LinearMap.continuous_projectionOnto_of_rank_le_aleph0_isCompl (A : E →ₗ[𝕜] F)
+    (hA : IsSeqClosed (A.graph : Set (E × F))) {K : Submodule 𝕜 F}
+    (hK : IsCompl (LinearMap.range A) K) (hr : Module.rank 𝕜 K ≤ ℵ₀) :
+    Continuous (K.projectionOnto (LinearMap.range A) hK.symm) := by
+  have := countable_ofVectorSpaceIndex hr
+  exact A.continuous_projectionOnto_of_basis_isCompl hA hK (.ofVectorSpace 𝕜 K)
+
 /-- Under the hypotheses of `LinearMap.continuous_projectionOnto_of_basis_isCompl` an algebraic
 complement of the range with a countable basis carries its finest locally convex topology: every
 linear map from it into a locally convex space is continuous, Köthe II §35.5.(2). -/
@@ -353,6 +406,17 @@ theorem LinearMap.continuous_of_basis_isCompl_range (A : E →ₗ[𝕜] F)
   refine h (k : F) hk 0 (Submodule.zero_mem _) (b.repr k) ?_
   rw [linearCombination_coe_basis, b.linearCombination_repr, Prod.snd_zero, zero_add]
 
+/-- `LinearMap.continuous_of_basis_isCompl_range` with the dimension of the complement expressed
+by `Module.rank`. -/
+theorem LinearMap.continuous_of_rank_le_aleph0_isCompl_range (A : E →ₗ[𝕜] F)
+    (hA : IsSeqClosed (A.graph : Set (E × F))) {K : Submodule 𝕜 F}
+    (hK : IsCompl (LinearMap.range A) K) (hr : Module.rank 𝕜 K ≤ ℵ₀) {X : Type*}
+    [AddCommGroup X] [Module 𝕜 X] [Module ℝ X] [IsScalarTower ℝ 𝕜 X] [TopologicalSpace X]
+    [IsTopologicalAddGroup X] [ContinuousSMul 𝕜 X] [LocallyConvexSpace ℝ X] (g : K →ₗ[𝕜] X) :
+    Continuous g := by
+  have := countable_ofVectorSpaceIndex hr
+  exact A.continuous_of_basis_isCompl_range hA hK (.ofVectorSpace 𝕜 K) g
+
 /-- Under the hypotheses of `LinearMap.continuous_projectionOnto_of_basis_isCompl`, if `F` is
 Hausdorff then the complement is closed. -/
 theorem LinearMap.isClosed_of_basis_isCompl_range [T2Space F] (A : E →ₗ[𝕜] F)
@@ -367,6 +431,15 @@ theorem LinearMap.isClosed_of_basis_isCompl_range [T2Space F] (A : E →ₗ[𝕜
       exact hy' ▸ Subtype.coe_prop _
   rw [h]
   exact isClosed_eq (continuous_subtype_val.comp hc) continuous_id
+
+/-- `LinearMap.isClosed_of_basis_isCompl_range` with the dimension of the complement expressed by
+`Module.rank`. -/
+theorem LinearMap.isClosed_of_rank_le_aleph0_isCompl_range [T2Space F] (A : E →ₗ[𝕜] F)
+    (hA : IsSeqClosed (A.graph : Set (E × F))) {K : Submodule 𝕜 F}
+    (hK : IsCompl (LinearMap.range A) K) (hr : Module.rank 𝕜 K ≤ ℵ₀) :
+    IsClosed (K : Set F) := by
+  have := countable_ofVectorSpaceIndex hr
+  exact A.isClosed_of_basis_isCompl_range hA hK (.ofVectorSpace 𝕜 K)
 
 end LinearMap
 
@@ -398,6 +471,14 @@ theorem Submodule.isClosed_of_isSeqClosed_of_basis_quotient (H : Submodule 𝕜 
     exact ⟨fun ⟨y, hy⟩ ↦ hy ▸ y.2, fun hx ↦ ⟨⟨x, hx⟩, rfl⟩⟩
   rwa [hset] at h
 
+/-- `Submodule.isClosed_of_isSeqClosed_of_basis_quotient` with the codimension expressed by
+`Module.rank`, Köthe II §35.5.(5) b). -/
+theorem Submodule.isClosed_of_isSeqClosed_of_rank_quotient_le_aleph0 (H : Submodule 𝕜 E)
+    (hH : IsSeqClosed (H : Set E)) (hr : Module.rank 𝕜 (E ⧸ H) ≤ ℵ₀) :
+    IsClosed (H : Set E) := by
+  have := countable_ofVectorSpaceIndex hr
+  exact H.isClosed_of_isSeqClosed_of_basis_quotient hH (.ofVectorSpace 𝕜 _)
+
 /-- In a Hausdorff space that is webbed and ultrabornological, every algebraic complement with a
 countable basis of a sequentially closed subspace is a topological complement: the projection
 onto it is continuous, Köthe II §35.5.(5) b). -/
@@ -415,6 +496,14 @@ theorem Submodule.continuous_projectionOnto_of_isSeqClosed_of_basis (H : Submodu
   exact key _ H.range_subtype hK'
     (H.subtype.continuous_projectionOnto_of_basis_isCompl H.isSeqClosed_graph_subtype hK' b)
 
+/-- `Submodule.continuous_projectionOnto_of_isSeqClosed_of_basis` with the dimension of the
+complement expressed by `Module.rank`, Köthe II §35.5.(5) b). -/
+theorem Submodule.continuous_projectionOnto_of_isSeqClosed_of_rank_le_aleph0
+    (H : Submodule 𝕜 E) (hH : IsSeqClosed (H : Set E)) {K : Submodule 𝕜 E} (hK : IsCompl H K)
+    (hr : Module.rank 𝕜 K ≤ ℵ₀) : Continuous (K.projectionOnto H hK.symm) := by
+  have := countable_ofVectorSpaceIndex hr
+  exact H.continuous_projectionOnto_of_isSeqClosed_of_basis hH hK (.ofVectorSpace 𝕜 K)
+
 /-- In a Hausdorff first-countable space that is webbed and ultrabornological, for instance in a
 Fréchet space, a sequentially closed subspace of at most countable codimension has finite
 codimension, Köthe II §35.5.(3). -/
@@ -426,5 +515,15 @@ theorem Submodule.finite_of_isSeqClosed_of_basis_quotient [FirstCountableTopolog
   have : WebbedSpace H := WebbedSpace.of_isSeqClosed H hH
   exact H.subtype.finite_of_basis_quotient_of_firstCountableTopology H.isSeqClosed_graph_subtype
     (b.map (Submodule.quotEquivOfEq _ _ H.range_subtype.symm))
+
+/-- `Submodule.finite_of_isSeqClosed_of_basis_quotient` with the codimension expressed by
+`Module.rank`: in a Hausdorff first-countable webbed ultrabornological space, a sequentially
+closed subspace of at most countable codimension has finite codimension, Köthe II §35.5.(3). -/
+theorem Submodule.finiteDimensional_quotient_of_isSeqClosed_of_rank_le_aleph0
+    [FirstCountableTopology E] (H : Submodule 𝕜 E) (hH : IsSeqClosed (H : Set E))
+    (hr : Module.rank 𝕜 (E ⧸ H) ≤ ℵ₀) : FiniteDimensional 𝕜 (E ⧸ H) := by
+  have := countable_ofVectorSpaceIndex hr
+  have := H.finite_of_isSeqClosed_of_basis_quotient hH (.ofVectorSpace 𝕜 _)
+  exact Module.Finite.of_basis (Module.Basis.ofVectorSpace 𝕜 _)
 
 end Subspace

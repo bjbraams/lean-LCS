@@ -37,7 +37,7 @@ a weak-* or strong homeomorphism.
 
 * `ContinuousLinearMap.isEmbedding_weakTranspose`: the weak-* transpose of a surjection is a
   topological embedding.
-* `ContinuousLinearMap.isInducing_transpose_of_bounded_lifting`,
+* `ContinuousLinearMap.isInducing_transpose_of_liftsBoundedSets`,
   `ContinuousLinearMap.isInducing_transpose_of_rightInverse`: sufficient conditions for the
   strong transpose to be inducing.
 * `UniformSpace.Completion.continuous_strongDualEquiv_weakDual`: restriction from the
@@ -90,9 +90,8 @@ variable [ContinuousConstSMul 𝕜 E] [ContinuousConstSMul 𝕜 F]
 
 /-- If bounded target sets lift up to closure to bounded source sets, transposition induces
 the strong dual topology. No surjectivity is needed for this topology statement. -/
-theorem isInducing_transpose_of_bounded_lifting (f : E →L[𝕜] F)
-    (h : ∀ S : Set F, IsVonNBounded 𝕜 S →
-      ∃ B : Set E, IsVonNBounded 𝕜 B ∧ S ⊆ closure (f '' B)) :
+theorem isInducing_transpose_of_liftsBoundedSets (f : E →L[𝕜] F)
+    (h : LiftsBoundedSets 𝕜 f) :
     Topology.IsInducing f.transpose := by
   rw [IsTopologicalAddGroup.isInducing_iff_nhds_zero]
   apply le_antisymm
@@ -114,7 +113,7 @@ theorem isInducing_transpose_of_bounded_lifting (f : E →L[𝕜] F)
 the strong dual topology. -/
 theorem isInducing_transpose_of_rightInverse (f : E →L[𝕜] F) (s : F →L[𝕜] E)
     (h : RightInverse s f) : Topology.IsInducing f.transpose := by
-  apply f.isInducing_transpose_of_bounded_lifting
+  apply f.isInducing_transpose_of_liftsBoundedSets
   intro S hS
   refine ⟨s '' S, hS.image s, ?_⟩
   intro y hy
@@ -163,12 +162,11 @@ omit [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] in
 /-- Bounded lifting up to closure makes the quotient-dual identification a strong
 topological isomorphism onto the annihilator. -/
 def strongDualQuotientEquivL
-    (h : ∀ S : Set (E ⧸ M), IsVonNBounded 𝕜 S →
-      ∃ B : Set E, IsVonNBounded 𝕜 B ∧ S ⊆ closure (M.mkQ '' B)) :
+    (h : LiftsBoundedSets 𝕜 M.mkQ) :
     StrongDual 𝕜 (E ⧸ M) ≃L[𝕜] StrongDual.polarSubmodule 𝕜 M := by
   have hi : Topology.IsInducing M.strongDualQuotientEquiv :=
     Topology.IsInducing.subtypeVal.of_comp_iff.mp
-      (M.mkQL.isInducing_transpose_of_bounded_lifting h)
+      (M.mkQL.isInducing_transpose_of_liftsBoundedSets h)
   let e := M.strongDualQuotientEquiv.toEquiv.toHomeomorphOfIsInducing hi
   exact { M.strongDualQuotientEquiv with
     continuous_toFun := e.continuous
@@ -272,11 +270,10 @@ theorem continuous_strongDualEquiv_weakDual : Continuous fun φ : WeakDual 𝕜 
 /-- Restriction identifies the strong duals when every bounded completion set is contained
 in the closure of the image of a bounded original set. -/
 def strongDualEquivL
-    (h : ∀ S : Set (Completion E), IsVonNBounded 𝕜 S →
-      ∃ B : Set E, IsVonNBounded 𝕜 B ∧ S ⊆ closure (coeCLM 𝕜 E '' B)) :
+    (h : LiftsBoundedSets 𝕜 (coeCLM 𝕜 E)) :
     StrongDual 𝕜 (Completion E) ≃L[𝕜] StrongDual 𝕜 E := by
   have hi : Topology.IsInducing (strongDualEquiv 𝕜 E) :=
-    (coeCLM 𝕜 E).isInducing_transpose_of_bounded_lifting h
+    (coeCLM 𝕜 E).isInducing_transpose_of_liftsBoundedSets h
   let e := (strongDualEquiv 𝕜 E).toEquiv.toHomeomorphOfIsInducing hi
   exact { strongDualEquiv 𝕜 E with
     continuous_toFun := e.continuous

@@ -378,11 +378,11 @@ theorem LinearMap.exists_range_le_range_of_isSeqClosed_graph (f : ∀ n, X n →
     ∃ n, LinearMap.range A ≤ LinearMap.range (f n) := by
   choose C hC using fun n ↦ StrictlyWebbedSpace.exists_isStrictWeb (𝕜 := 𝕜) (F := X n)
   obtain ⟨σ, hσ⟩ := A.exists_forall_preimage_res_mem_nhds_zero
-    (WebConstruction.isStrictWeb_webUnionImage hf hsurj hC) hA
+    (IsWeb.isStrictWeb_unionImage hf hsurj hC) hA
   refine ⟨σ 0, ?_⟩
   -- The preimage of the range of `f (σ 0)` is a subspace and a neighbourhood of zero.
   have h1 := hσ 1
-  rw [WebConstruction.webUnionImage_res_succ] at h1
+  rw [IsWeb.unionImage_res_succ] at h1
   have htop : ((LinearMap.range (f (σ 0))).comap A).restrictScalars ℝ = ⊤ :=
     (((LinearMap.range (f (σ 0))).comap A).restrictScalars ℝ).eq_top_of_nonempty_interior'
       ⟨0, mem_interior_iff_mem_nhds.mpr (mem_of_superset h1 fun x hx ↦ by

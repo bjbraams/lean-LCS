@@ -27,7 +27,14 @@ spaces and that belong with existing files of Mathlib: images and preimages of a
 absorbing and balanced sets under linear maps, scalar multiples and balanced hulls of bounded
 sets, a criterion for neighbourhoods of zero in first-countable spaces, convex combinations with
 total weight at most one, the closed graph of a continuous linear map, and non-meagre convex
-sets.
+sets. It also defines the lifting of bounded sets along a map or a family of maps.
+
+## Main definitions
+
+* `Bornology.LiftsBoundedSets 𝕜 f`: every von Neumann bounded set of the codomain lies in the
+  closure of the image of a von Neumann bounded set of the domain.
+* `Bornology.CoversBoundedSets 𝕜 f`: every von Neumann bounded set of the common codomain of a
+  family of maps lies in the image of a von Neumann bounded set of one of the domains.
 
 ## Main statements
 
@@ -347,3 +354,25 @@ theorem Bornology.IsVonNBounded.preimage_of_isInducing {B : Set F} (hB : IsVonNB
   exact ((hB hV).mono_right (image_preimage_subset f B)).preimage_linearMap.mono_left hVU
 
 end BoundedPreimage
+
+section LiftsBoundedSets
+
+/-- A map `f : E → F` lifts von Neumann bounded sets (up to closure) if every von Neumann bounded
+subset of `F` lies in the closure of the image of a von Neumann bounded subset of `E`. This is the
+hypothesis under which reflexivity, the Montel property and strong-dual identifications pass
+from `E` to `F`. -/
+@[expose] def Bornology.LiftsBoundedSets (𝕜 : Type*) {E F : Type*} [SeminormedRing 𝕜]
+    [Zero E] [SMul 𝕜 E] [TopologicalSpace E] [Zero F] [SMul 𝕜 F] [TopologicalSpace F]
+    (f : E → F) : Prop :=
+  ∀ S : Set F, IsVonNBounded 𝕜 S → ∃ B : Set E, IsVonNBounded 𝕜 B ∧ S ⊆ closure (f '' B)
+
+/-- A family of maps `f i : E i → F` covers the von Neumann bounded sets of `F` if every von
+Neumann bounded subset of `F` lies in the image of a von Neumann bounded subset of some `E i`.
+This is the hypothesis under which semi-reflexivity and the Montel property pass to `F`, for
+instance to a strict inductive limit. -/
+@[expose] def Bornology.CoversBoundedSets (𝕜 : Type*) {ι F : Type*} {E : ι → Type*}
+    [SeminormedRing 𝕜] [∀ i, Zero (E i)] [∀ i, SMul 𝕜 (E i)] [∀ i, TopologicalSpace (E i)]
+    [Zero F] [SMul 𝕜 F] [TopologicalSpace F] (f : ∀ i, E i → F) : Prop :=
+  ∀ S : Set F, IsVonNBounded 𝕜 S → ∃ i, ∃ B : Set (E i), IsVonNBounded 𝕜 B ∧ S ⊆ f i '' B
+
+end LiftsBoundedSets

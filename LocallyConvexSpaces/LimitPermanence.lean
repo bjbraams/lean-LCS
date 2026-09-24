@@ -18,12 +18,12 @@ every bounded set in the target is contained in the image of a bounded set in on
 This applies to countable strict inductive limits with closed transition ranges. Reflexivity
 additionally uses barrelledness of the final locally convex topology. Closed subspaces of
 products give semi-reflexive projective limits. The Montel bounded-cover theorem
-`MontelSpace.of_bounded_cover` is in `LocallyConvexSpaces.MontelPermanence` and works over any
+`MontelSpace.of_coversBoundedSets` is in `LocallyConvexSpaces.MontelPermanence` and works over any
 normed field. Mathlib's Montel convention omits barrelledness.
 
 ## Main statements
 
-* `SemiReflexiveSpace.of_bounded_cover`: semi-reflexivity passes through a family of maps that
+* `SemiReflexiveSpace.of_coversBoundedSets`: semi-reflexivity passes through a family of maps that
   covers the bounded sets of the target.
 * `IsStrictInductiveLimit.semiReflexiveSpace`, `IsStrictInductiveLimit.reflexiveSpace`,
   `IsStrictInductiveLimit.montelSpace`: countable strict inductive limits with closed
@@ -41,7 +41,7 @@ public section
 
 open Set Function Bornology
 
-section BoundedCover
+section CoversBoundedSets
 
 variable {𝕜 ι F : Type*} [RCLike 𝕜] {E : ι → Type*}
   [∀ i, AddCommGroup (E i)] [∀ i, Module 𝕜 (E i)] [∀ i, Module ℝ (E i)]
@@ -53,10 +53,9 @@ variable {𝕜 ι F : Type*} [RCLike 𝕜] {E : ι → Type*}
 
 /-- Semi-reflexivity passes through a family of maps covering target bounded sets by images
 of bounded sets in semi-reflexive source spaces. -/
-theorem SemiReflexiveSpace.of_bounded_cover [∀ i, SemiReflexiveSpace 𝕜 (E i)]
+theorem SemiReflexiveSpace.of_coversBoundedSets [∀ i, SemiReflexiveSpace 𝕜 (E i)]
     (f : ∀ i, E i →L[𝕜] F)
-    (h : ∀ S : Set F, IsVonNBounded 𝕜 S →
-      ∃ i, ∃ B : Set (E i), IsVonNBounded 𝕜 B ∧ S ⊆ f i '' B) : SemiReflexiveSpace 𝕜 F := by
+    (h : CoversBoundedSets 𝕜 fun i ↦ f i) : SemiReflexiveSpace 𝕜 F := by
   apply SemiReflexiveSpace.of_forall_isVonNBounded 𝕜 F
   intro S hS
   obtain ⟨i, B, hB, hSB⟩ := h S hS
@@ -68,7 +67,7 @@ theorem SemiReflexiveSpace.of_bounded_cover [∀ i, SemiReflexiveSpace 𝕜 (E i
   obtain ⟨x, hx, rfl⟩ := hSB hy
   exact ⟨toWeakSpace 𝕜 (E i) x, hBK ⟨x, hx, rfl⟩, rfl⟩
 
-end BoundedCover
+end CoversBoundedSets
 
 namespace IsStrictInductiveLimit
 
@@ -89,7 +88,7 @@ with closed transition ranges are semi-reflexive. -/
 theorem semiReflexiveSpace [∀ n, SemiReflexiveSpace 𝕜 (E n)] : SemiReflexiveSpace 𝕜 F := by
   let g (n : ℕ) : E n →L[𝕜] F :=
     ⟨f n, htop.symm ▸ locallyConvexFinalTopology.continuous_apply f n⟩
-  apply SemiReflexiveSpace.of_bounded_cover g
+  apply SemiReflexiveSpace.of_coversBoundedSets g
   intro S hS
   obtain ⟨n, hn, hSn⟩ := h.exists_subset_range_and_isVonNBounded_preimage
     hjcl (htop ▸ hS)
@@ -116,7 +115,7 @@ closed transition ranges have the Montel property. -/
 theorem montelSpace [∀ n, MontelSpace 𝕜 (E n)] : MontelSpace 𝕜 F := by
   let g (n : ℕ) : E n →L[𝕜] F :=
     ⟨f n, htop.symm ▸ locallyConvexFinalTopology.continuous_apply f n⟩
-  apply MontelSpace.of_bounded_cover g
+  apply MontelSpace.of_coversBoundedSets g
   intro S hS
   obtain ⟨n, hn, hSn⟩ := h.exists_subset_range_and_isVonNBounded_preimage
     hjcl (htop ▸ hS)
