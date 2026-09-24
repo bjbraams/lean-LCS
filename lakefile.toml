@@ -17,6 +17,16 @@ globs = [
   "WebbedSpaces", "WebbedSpaces.+",
 ]
 
+# The Palomar statement surface (imports Mathlib only, with deliberate `sorry`s) and its proofs.
+# They are not default targets, so that `lake build --wfail` is not affected by the `sorry`s.
+[[lean_lib]]
+name = "Challenge"
+roots = ["Challenge"]
+
+[[lean_lib]]
+name = "Solution"
+roots = ["Solution"]
+
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"

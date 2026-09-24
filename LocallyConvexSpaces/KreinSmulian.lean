@@ -72,6 +72,11 @@ is evaluation at a point `x` of `E`. These two steps are
 `CompactConvergenceCLM.exists_pos_le_re_apply` in `LocallyConvexSpaces.CompactConvergenceDual`.
 Hence `C` lies in a weak-\* closed half-space that does not contain `0`.
 
+## Relation to work outside Mathlib
+
+Mathlib PR #26339 (C. Hoskin, draft) works towards the Banach–Dieudonné lemma for normed spaces;
+see the docstring of `StrongDual.exists_isCompact_polar_subset`.
+
 ## References
 
 * [H. H. Schaefer and M. P. Wolff, *Topological Vector Spaces*][schaefer1999], IV §6
@@ -220,7 +225,14 @@ theorem exists_finset_polar_union_inter_subset {W : Set (StrongDual 𝕜 E)}
 
 /-- The **Banach–Dieudonné theorem**. Let `E` be a first-countable topological vector space and
 let `W` be a set of continuous linear functionals that contains zero and whose complement is
-almost weak-\* closed. Then `W` contains the polar of a compact subset of `E`. -/
+almost weak-\* closed. Then `W` contains the polar of a compact subset of `E`.
+
+Mathlib PR #26339 (C. Hoskin, draft, "Banach Dieudonné Lemma"), file
+`Mathlib/Analysis/Normed/Module/WeakDual.lean`, works towards the Banach–Dieudonné lemma for
+normed spaces; as of 2026-09-24 its main statement is not yet stated and its supporting lemma
+`exists_seq_finite_subsets` is incomplete. The statement here is more general (first-countable
+topological vector spaces) and the proof was obtained independently. If that PR is merged into
+the pinned Mathlib, retain this theorem as the generalization. -/
 theorem exists_isCompact_polar_subset {W : Set (StrongDual 𝕜 E)} (hW0 : (0 : StrongDual 𝕜 E) ∈ W)
     (hW : IsAlmostWeakStarClosed Wᶜ) : ∃ S : Set E, IsCompact S ∧ polar 𝕜 S ⊆ W := by
   classical

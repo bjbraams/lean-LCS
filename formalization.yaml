@@ -1,0 +1,298 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+# formalization.yaml v0.4 for the Palomar submission of lean-LCS.
+# Values that only the author can supply still carry the marker "TEMPLATE:"; Palomar's
+# validator (scripts/validate-formalization.rb in the PalomarTemplate repository) reports every
+# remaining marker.
+version: "v0.4"
+
+project:
+  name: "lean-LCS: locally convex spaces, duality, and closed graph theorems in Lean 4"
+  description: >-
+    A Lean 4 formalization, built on Mathlib, of the basic theory of locally convex
+    topological vector spaces over the real or complex numbers. It covers barrelled,
+    quasi-barrelled, bornological and ultrabornological spaces; the closed graph and open
+    mapping theorems for barrelled spaces, and Pták's closed graph and open mapping theorems;
+    duality theory with the bipolar, Alaoglu–Bourbaki, Mackey, Mackey–Arens, Banach–Dieudonné
+    and Krein–Šmulian theorems and Grothendieck's completeness theorem; semi-reflexive,
+    reflexive and Montel spaces with their permanence properties; completeness of strong
+    duals; countable strict inductive limits, with the Dieudonné–Schwartz theorem; Milman's
+    converse to the Krein–Milman theorem; and webbed spaces with De Wilde's closed graph and
+    open mapping theorems. The Palomar entry compares 58 theorems from these areas; their
+    statements and the notions they use are in Challenge.lean. The results are classical
+    textbook and research results; the formalization proves them without sorry and without
+    additional axioms.
+  authors:
+    - "Bastiaan J. Braams"
+  license: "Apache-2.0"
+  responsible_maintainers:
+    - "Bastiaan J. Braams"
+
+classification:
+  arxiv: ["math.FA"]
+  msc2020: ["46A03", "46A08", "46A30", "46A20", "46A25", "46A13", "46A04", "03B35"]
+
+sources:
+  # The Lean module headers record the chapters and sections used for each file.
+  - title: "Topological Vector Spaces (second edition)"
+    authors:
+      - "Helmut H. Schaefer"
+      - "Manfred P. Wolff"
+    id: "doi:10.1007/978-1-4612-1468-7"
+    type: "book"
+    location: "Graduate Texts in Mathematics 3, Springer, 1999"
+    relationship: "formalizes"
+    note: >-
+      Chapters II–IV: barrelled and bornological spaces, strict inductive limits, Milman's
+      theorem, duality, reflexivity, Montel spaces, completeness of duals, Pták theory.
+  - title: "Topological Vector Spaces I"
+    authors:
+      - "Gottfried Köthe"
+    id: "doi:10.1007/978-3-642-64988-2"
+    type: "book"
+    location: "Grundlehren der mathematischen Wissenschaften 159, Springer, 1983"
+    relationship: "formalizes"
+    note: "Duality, the Mackey topology, completeness and barrelled spaces, as cited in the module headers."
+  - title: "Topological Vector Spaces II"
+    authors:
+      - "Gottfried Köthe"
+    id: "doi:10.1007/978-1-4684-9409-9"
+    type: "book"
+    location: "Grundlehren der mathematischen Wissenschaften 237, Springer, 1979"
+    relationship: "formalizes"
+    note: >-
+      §34 (Pták theory, closed graph and open mapping theorems) and §35 (webbed spaces and De
+      Wilde's theorems, localization, codimension results, ultrabornological spaces).
+  - title: "Topological Vector Spaces, Chapters 1–5"
+    authors:
+      - "N. Bourbaki"
+    id: "doi:10.1007/978-3-642-61715-7"
+    type: "book"
+    location: "Elements of Mathematics, Springer, 1987"
+    relationship: "formalizes"
+    note: "Chapters II–IV: bipolar theorem, barrels, duality, Alaoglu–Bourbaki, completeness."
+  - title: "Topological Vector Spaces (second edition)"
+    authors:
+      - "Lawrence Narici"
+      - "Edward Beckenstein"
+    id: "isbn:9781584888666"
+    type: "book"
+    location: "Chapman and Hall/CRC, 2010"
+    relationship: "background"
+  - title: "Closed Graph Theorems and Webbed Spaces"
+    authors:
+      - "Marc De Wilde"
+    type: "book"
+    location: "Pitman, 1978"
+    relationship: "background"
+    note: "Original source of webbed spaces; the formalization follows Köthe II §35."
+  - title: "Completeness and the open mapping theorem"
+    authors:
+      - "Vlastimil Pták"
+    type: "paper"
+    location: "Bulletin de la Société Mathématique de France 86 (1958)"
+    relationship: "background"
+  - title: "A Course in Functional Analysis (second edition)"
+    authors:
+      - "John B. Conway"
+    type: "book"
+    location: "Graduate Texts in Mathematics 96, Springer, 1990"
+    relationship: "background"
+  - title: "Introduction to Topological Vector Spaces (lecture notes)"
+    authors:
+      - "Bill Casselman"
+    type: "other"
+    location: "University of British Columbia, 2016"
+    relationship: "background"
+
+related_formalizations:
+  - id: "https://github.com/leanprover-community/mathlib4"
+    relationship: "builds-on"
+    note: >-
+      Extends Mathlib's library of locally convex spaces (seminorms, von Neumann bounded
+      sets, barrelled spaces and Banach–Steinhaus, polars, weak and strong duals, Montel
+      spaces, Hahn–Banach separation, Krein–Milman, test functions, Schwartz space). The new
+      space classes are defined through seminorms in the style of Mathlib's BarrelledSpace.
+  - id: "https://github.com/leanprover-community/mathlib4/pull/26345"
+    relationship: "adapts"
+    note: >-
+      Open Mathlib PR (C. Hoskin) proving the bipolar theorem for a pairing. The project's
+      bipolar theorem was written after reading it; the statement is reformulated and the
+      proof is organized differently. See the notes in LocallyConvexSpaces/Bipolar.lean.
+  - id: "https://github.com/leanprover-community/mathlib4/pull/41166"
+    relationship: "adapts"
+    note: >-
+      Open Mathlib PRs #40983 and #41166 (K. H. Wilson) generalize the open mapping theorem to
+      F-spaces. The project contains adapted duplicates of support lemmas of #40983, under the
+      same names, and its successive-approximation argument follows the organization of the
+      proof in #41166; see the notes in TopologicalVectorSpaces/Basic.lean and
+      TopologicalGroups/NearlyOpen.lean.
+  - id: "https://github.com/leanprover-community/mathlib4/pull/26339"
+    relationship: "independent"
+    note: >-
+      Draft Mathlib PR (C. Hoskin) towards the Banach–Dieudonné lemma for normed spaces; the
+      project proves it independently for first-countable topological vector spaces.
+  - id: "https://github.com/leanprover-community/mathlib4/pull/43747"
+    relationship: "independent"
+    note: >-
+      Open Mathlib PR (yuanyi-350) characterizing dense real submodules by annihilators; the
+      project's Transpose.lean proves the pointwise statement over ℝ or ℂ independently.
+  - id: "https://github.com/leanprover-community/mathlib4/pull/34106"
+    relationship: "independent"
+    note: >-
+      Draft Mathlib PR (A. Dedecker) on quotient group seminorms; the project's
+      QuotientSeminorm.lean is the independently obtained analogue for seminorms over a field.
+  - id: "https://github.com/mrdouglasny/gaussian-field"
+    relationship: "independent"
+    note: >-
+      Independent Lean development (M. R. Douglas, Y. Tanimoto) of nuclear spaces and Gaussian
+      measures on duals of nuclear Fréchet spaces; nuclear spaces are not treated in lean-LCS.
+
+status:
+  scope: >-
+    Formalized: the results listed in the description, together with supporting theory of
+    gauges, seminorm families, completions, quotients, final locally convex topologies,
+    transposes, local Banach spaces and projective limits, Banach disks and fast convergence,
+    and permanence of webbedness. Scalars are ℝ or ℂ except where a statement holds over a
+    more general normed field. Not formalized: (DF)-spaces, nuclear and Schwartz-type spaces
+    in general, tensor products, and non-archimedean spaces. Specializations to Banach spaces are left to Mathlib.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: []
+
+automation:
+  methods:
+    - method: "agent"
+      models: ["Claude Opus 5.5", "TEMPLATE: other models used, or remove this entry"]
+      framework: "Claude Code"
+      tool_setup: >-
+        TEMPLATE: describe the agent set-up (for example Claude Code in the terminal with lake
+        build as the only proof state, and the project rules in AGENTS.md)
+      cost:
+        wall_time: "TEMPLATE: approximate elapsed effort"
+        spend_usd: "TEMPLATE: amount, subscription-based, or not tracked"
+        hardware: "local machine"
+      prompting_notes: "TEMPLATE: representative prompting notes, or n/a"
+    - method: "TEMPLATE: manual, copilot, agent, autonomous, or other for any further method"
+  spend_usd: "TEMPLATE: total amount, subscription-based, or not tracked"
+  notes: "TEMPLATE: describe the overall human and automation workflow"
+
+fidelity:
+  divergences: >-
+    Bornological, quasi-barrelled and ultrabornological spaces are defined through seminorms,
+    in the style of Mathlib's BarrelledSpace; theorems prove the equivalence with the
+    classical definitions by absorbing sets for real and complex spaces. The test spaces in
+    the definition of ultrabornological spaces are complete seminormed spaces in the universe
+    of the space. Local convexity is expressed as LocallyConvexSpace ℝ E. A Fréchet space is a
+    complete, first-countable locally convex space; Hausdorffness is assumed separately where
+    needed, and several results are proved without it. A reflexive space is a semi-reflexive
+    space whose canonical map into the strong bidual is inducing. Strict inductive limits are
+    countable and carry the final locally convex topology. De Wilde's theorems are stated for
+    sequentially closed graphs, with webs as in Köthe II §35. Milman's theorem is stated for
+    real spaces. The Alaoglu–Bourbaki theorem is stated over a proper nontrivially normed
+    field.
+
+review:
+  status: "TEMPLATE: honest review status, for example self-assessed"
+  reviewers:
+    - "TEMPLATE: reviewer name, or none"
+  notes: >-
+    TEMPLATE: describe statement audits and mathematical review performed. Mechanical checks
+    already in place: the library builds with warnings as errors in continuous integration;
+    MainResults.lean checks the axioms of the headline theorems; and the definitions and
+    statements of Challenge.lean were checked to elaborate to the same terms as the library's.
+
+alignment:
+  namespace: "LeanLCS"
+  statements:
+    - source: "Schaefer–Wolff II §7; Bourbaki III §4.1"
+      lean: "LeanLCS.barrelledSpace_iff_forall_isBarrel_mem_nhds"
+      module: "Challenge"
+      status: "proved"
+      note: "Mathlib's seminorm definition of barrelled spaces agrees with the classical one."
+    - source: "Schaefer–Wolff III §2 and IV §8; Köthe II §34"
+      lean: "LeanLCS.LinearMap.continuous_of_isClosed_graph_of_barrelledSpace"
+      module: "Challenge"
+      status: "proved"
+      note: "Barrelled domain; complete, first-countable locally convex codomain."
+    - source: "Schaefer–Wolff III §2 and IV §8; Köthe II §34"
+      lean: "LeanLCS.ContinuousLinearMap.isOpenMap_of_barrelledSpace"
+      module: "Challenge"
+      status: "proved"
+      note: "Complete, first-countable locally convex domain; barrelled Hausdorff codomain."
+    - source: "Schaefer–Wolff IV §8; Köthe II §34; Pták (1958)"
+      lean: "LeanLCS.LinearMap.continuous_of_isClosed_graph_of_infraPtakSpace"
+      module: "Challenge"
+      status: "proved"
+    - source: "Schaefer–Wolff IV §8; Köthe II §34; Pták (1958)"
+      lean: "LeanLCS.ContinuousLinearMap.isOpenMap_of_ptakSpace"
+      module: "Challenge"
+      status: "proved"
+    - source: "Schaefer–Wolff IV §1.5; Bourbaki II §6.3, IV §1.3; Conway V.1.8"
+      lean: "LeanLCS.StrongDual.bipolar_eq_self"
+      module: "Challenge"
+      status: "proved"
+    - source: "Bourbaki III §3.4; Schaefer–Wolff III §4.3"
+      lean: "LeanLCS.WeakDual.isCompact_polar_of_mem_nhds"
+      module: "Challenge"
+      status: "proved"
+    - source: "Schaefer–Wolff IV §3.2; Bourbaki III §5.3; Köthe I §20.11"
+      lean: "LeanLCS.Bornology.isVonNBounded_iff_forall_strongDual"
+      module: "Challenge"
+      status: "proved"
+    - source: "Schaefer–Wolff IV §3.2; Bourbaki IV §1.1; Köthe I §21.4"
+      lean: "LeanLCS.LinearMap.isCompatibleTopology_iff_mackeyTopology_le"
+      module: "Challenge"
+      status: "proved"
+    - source: "Schaefer–Wolff IV §6; Köthe I §21.10; Bourbaki IV §3.5"
+      lean: "LeanLCS.StrongDual.isClosed_of_isAlmostWeakStarClosed"
+      module: "Challenge"
+      status: "proved"
+      note: "Krein–Šmulian theorem for complete, first-countable locally convex spaces."
+    - source: "Schaefer–Wolff IV §6.2; Bourbaki III §3.6; Köthe I §21.9"
+      lean: "LeanLCS.StrongDual.completeSpace_iff_forall_exists_eq_apply"
+      module: "Challenge"
+      status: "proved"
+    - source: "Schaefer–Wolff IV §5.5–5.8; Köthe I §23.4–23.5"
+      lean: "LeanLCS.reflexiveSpace_iff_semiReflexiveSpace_and_barrelledSpace"
+      module: "Challenge"
+      status: "proved"
+    - source: "Schaefer–Wolff IV §6.1"
+      lean: "LeanLCS.BornologicalSpace.completeSpace_strongDual"
+      module: "Challenge"
+      status: "proved"
+    - source: "Schaefer–Wolff II §6.5 (Dieudonné–Schwartz)"
+      lean: "LeanLCS.IsStrictInductiveLimit.exists_subset_range_of_isVonNBounded"
+      module: "Challenge"
+      status: "proved"
+    - source: "Schaefer–Wolff II §6.6"
+      lean: "LeanLCS.IsStrictInductiveLimit.completeSpace"
+      module: "Challenge"
+      status: "proved"
+    - source: "Schaefer–Wolff II §10.5"
+      lean: "LeanLCS.IsCompact.extremePoints_closure_convexHull_subset_closure"
+      module: "Challenge"
+      status: "proved"
+      note: "Real locally convex spaces."
+    - source: "Köthe II §35.2.(2)"
+      lean: "LeanLCS.LinearMap.continuous_of_isSeqClosed_graph_of_ultrabornologicalSpace"
+      module: "Challenge"
+      status: "proved"
+    - source: "Köthe II §35.3.(5)"
+      lean: "LeanLCS.LinearMap.isOpenMap_of_isSeqClosed_graph_of_ultrabornologicalSpace"
+      module: "Challenge"
+      status: "proved"
+    - source: "Köthe II §35.1.(4)"
+      lean: "LeanLCS.StrictlyWebbedSpace.of_completeSpace_firstCountableTopology"
+      module: "Challenge"
+      status: "proved"
+    - source: "Köthe II §35.5.(2)"
+      lean: "LeanLCS.LinearMap.isClosed_range_of_rank_quotient_le_aleph0"
+      module: "Challenge"
+      status: "proved"
+
+acknowledgements: >-
+  The formalization builds on Mathlib and its library of locally convex spaces, due in
+  particular to Moritz Doll, Anatole Dedecker, Kalle Kytölä, Jean Lo, Bhavik Mehta, Yaël
+  Dillies, Jireh Loreaux, Sébastien Gouëzel, Filippo A. E. Nuccio, Christopher Hoskin, Luigi
+  Massacci and Yongxi Lin. Related open Mathlib pull requests by Christopher Hoskin, Kevin H.
+  Wilson, Anatole Dedecker and yuanyi-350 are recorded beside the corresponding declarations.

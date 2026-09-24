@@ -49,6 +49,12 @@ space.
 * `Submodule.injective_transpose_mkQL`, `Submodule.range_transpose_mkQL`: the transpose of the
   quotient map `E → E ⧸ M` is injective with range `M^⊥`.
 
+## Relation to work outside Mathlib
+
+Mathlib PR #43747 (yuanyi-350, open) characterizes dense real submodules by their annihilators;
+see the docstrings of `Submodule.mem_closure_iff_forall_strongDual` and
+`ContinuousLinearMap.denseRange_iff_injective_transpose`.
+
 ## References
 
 * [H. H. Schaefer and M. P. Wolff, *Topological Vector Spaces*][schaefer1999], IV §2, IV §4.1
@@ -100,7 +106,16 @@ variable [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [IsTopologicalAddGroup E] [Co
   [LocallyConvexSpace ℝ E]
 
 /-- A point of a locally convex space lies in the closure of a subspace `M` if and only if every
-continuous linear functional that vanishes on `M` vanishes at the point. -/
+continuous linear functional that vanishes on `M` vanishes at the point.
+
+Mathlib PR #43747 (yuanyi-350, open, "characterize dense submodules by annihilators"), file
+`Mathlib/Analysis/LocallyConvex/Separation.lean`, proves `Submodule.dense_iff_forall_dual_eq_zero`
+and `Submodule.exists_dual_annihilator_of_not_dense`, and in
+`Mathlib/Analysis/LocallyConvex/Polar.lean` `Submodule.dense_iff_polarSubmodule_eq_bot`: a real
+submodule is dense if and only if every continuous functional vanishing on it is zero. That is the
+special case `closure M = univ`, over `ℝ`, of the present statement, which is pointwise and holds
+over `ℝ` or `ℂ`. The statement and proof here were obtained independently. If that PR is merged into
+the pinned Mathlib, retain this theorem as the generalization and relate the two. -/
 theorem Submodule.mem_closure_iff_forall_strongDual {M : Submodule 𝕜 E} {x : E} :
     x ∈ closure (M : Set E) ↔ ∀ φ ∈ StrongDual.polarSubmodule 𝕜 M, φ x = 0 := by
   constructor
@@ -179,7 +194,12 @@ theorem mem_closure_range_iff {y : F} :
   exact h
 
 /-- A continuous linear map into a locally convex space has dense range if and only if its
-transpose is injective. -/
+transpose is injective.
+
+This is the dense-range form of `Submodule.dense_iff_forall_dual_eq_zero` of Mathlib PR #43747
+(yuanyi-350, open), file `Mathlib/Analysis/LocallyConvex/Separation.lean`, stated there for real
+submodules; see the note at `Submodule.mem_closure_iff_forall_strongDual`. Obtained independently;
+retain it if that PR is merged. -/
 theorem denseRange_iff_injective_transpose :
     DenseRange f ↔ Injective f.transpose := by
   constructor
