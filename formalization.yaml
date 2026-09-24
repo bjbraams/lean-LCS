@@ -1,8 +1,5 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
 # formalization.yaml v0.4 for the Palomar submission of lean-LCS.
-# Values that only the author can supply still carry the marker "TEMPLATE:"; Palomar's
-# validator (scripts/validate-formalization.rb in the PalomarTemplate repository) reports every
-# remaining marker.
 version: "v0.4"
 
 project:
@@ -162,19 +159,30 @@ status:
 automation:
   methods:
     - method: "agent"
-      models: ["Claude Opus 5.5", "TEMPLATE: other models used, or remove this entry"]
+      framework: "Codex"
+      models: ["gpt-6-astra"]
+    - method: "agent"
       framework: "Claude Code"
+      models: ["claude-fable-5-1", "claude-opus-5-5"]
       tool_setup: >-
-        TEMPLATE: describe the agent set-up (for example Claude Code in the terminal with lake
-        build as the only proof state, and the project rules in AGENTS.md)
+        Terminal coding agents working in the repository under the project rules in AGENTS.md:
+        `lake build` output as the only proof state, no new axioms, no sorry in the library,
+        and a note beside every declaration that duplicates an open Mathlib pull request.
+        Claude Opus 5.5 was used for the final code review, the Mathlib-style renaming, the
+        upgrade to Lean and Mathlib v4.35.0-rc2 and the preparation of this submission.
       cost:
-        wall_time: "TEMPLATE: approximate elapsed effort"
-        spend_usd: "TEMPLATE: amount, subscription-based, or not tracked"
+        wall_time: "not tracked"
+        spend_usd: "subscription-based"
         hardware: "local machine"
-      prompting_notes: "TEMPLATE: representative prompting notes, or n/a"
-    - method: "TEMPLATE: manual, copilot, agent, autonomous, or other for any further method"
-  spend_usd: "TEMPLATE: total amount, subscription-based, or not tracked"
-  notes: "TEMPLATE: describe the overall human and automation workflow"
+  spend_usd: "subscription-based"
+  notes: >-
+    Human-directed, agent-assisted mathematical development, proof writing, debugging and
+    review, validated throughout by Lean builds. The author chose the material, the
+    conventions and the sources and directed the work; coding agents wrote most of the Lean
+    text. Historical model versions and per-session costs are not reconstructed here.
+    Challenge.lean copies the needed library definitions verbatim and states the compared
+    theorems with sorry; Solution.lean restates them and proves each by the corresponding
+    library theorem.
 
 fidelity:
   divergences: >-
@@ -192,14 +200,18 @@ fidelity:
     field.
 
 review:
-  status: "TEMPLATE: honest review status, for example self-assessed"
-  reviewers:
-    - "TEMPLATE: reviewer name, or none"
+  status: "agent-reviewed"
   notes: >-
-    TEMPLATE: describe statement audits and mathematical review performed. Mechanical checks
-    already in place: the library builds with warnings as errors in continuous integration;
-    MainResults.lean checks the axioms of the headline theorems; and the definitions and
-    statements of Challenge.lean were checked to elaborate to the same terms as the library's.
+    The library builds with Lean and Mathlib v4.35.0-rc2 without errors, warnings or sorry,
+    with warnings treated as errors in continuous integration, and passes Mathlib's
+    environment linters. MainResults.lean checks the axioms of the headline theorems. The
+    compared declarations use only propext, Quot.sound and Classical.choice. Before the
+    official run, the definitions and statements of Challenge.lean were checked to elaborate
+    to the same terms as the library's by comparing fully elaborated expressions. Comparator
+    (lake comparator of Lean v4.35.0-rc2, with the con-ron, NanoDa and Lean kernels) accepts
+    Solution.lean for all 58 compared theorems. The code was reviewed by coding agents for
+    generality, Mathlib naming, docstrings and provenance. Palomar's editorial review is
+    pending. No independent human peer review is claimed.
 
 alignment:
   namespace: "LeanLCS"
