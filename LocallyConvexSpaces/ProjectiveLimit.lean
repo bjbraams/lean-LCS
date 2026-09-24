@@ -14,7 +14,7 @@ public import Mathlib.Topology.UniformSpace.AbstractCompletion
 # Projective representation by local Banach spaces
 
 A directed defining family of seminorms gives a system of local Banach spaces
-`Seminorm.Completion` and contraction maps between them. Its projective limit is the closed
+`Seminorm.LocalBanachSpace` and contraction maps between them. Its projective limit is the closed
 subspace of compatible families in the product. The original space maps densely and uniformly
 inducingly into this limit, which identifies the limit with the separated completion. The proof
 uses Mathlib's uniqueness of completions. The directed and monotone defining families are
@@ -22,7 +22,7 @@ provided by `TopologicalVectorSpaces.CountableSeminorms`.
 
 ## Main definitions
 
-* `SeminormFamily.toCompletionProduct`: the diagonal map into the product of local Banach
+* `SeminormFamily.toLocalBanachSpaceProduct`: the diagonal map into the product of local Banach
   spaces.
 * `SeminormFamily.projectiveLimit`: the projective limit of the local Banach spaces.
 * `SeminormFamily.toProjectiveLimit`, `SeminormFamily.projectiveLimitLift`: the canonical map
@@ -57,20 +57,21 @@ variable {𝕜 E ι : Type*} [NontriviallyNormedField 𝕜] [AddCommGroup E] [Mo
   (p : SeminormFamily 𝕜 E ι)
 
 /-- The diagonal map into the product of the local Banach spaces. -/
-def toCompletionProduct : E →ₗ[𝕜] ∀ i, (p i).Completion :=
-  LinearMap.pi fun i ↦ (p i).toCompletion
+def toLocalBanachSpaceProduct : E →ₗ[𝕜] ∀ i, (p i).LocalBanachSpace :=
+  LinearMap.pi fun i ↦ (p i).toLocalBanachSpace
 
 /-- The projective limit consists of families compatible with all seminorm dominations. -/
-def projectiveLimit : Submodule 𝕜 (∀ i, (p i).Completion) where
-  carrier := {z | ∀ i j (h : p i ≤ p j), Seminorm.completionMap h (z j) = z i}
+def projectiveLimit : Submodule 𝕜 (∀ i, (p i).LocalBanachSpace) where
+  carrier := {z | ∀ i j (h : p i ≤ p j), Seminorm.LocalBanachSpace.mapOfLE h (z j) = z i}
   zero_mem' := by simp
   add_mem' := by intro x y hx hy i j h; simp [map_add, hx i j h, hy i j h]
   smul_mem' := by intro a x hx i j h; simp [map_smul, hx i j h]
 
 /-- Compatibility is a closed condition in the product of local Banach spaces. -/
-theorem isClosed_projectiveLimit : IsClosed (p.projectiveLimit : Set (∀ i, (p i).Completion)) := by
-  change IsClosed {z : ∀ i, (p i).Completion | ∀ i j (h : p i ≤ p j),
-    Seminorm.completionMap h (z j) = z i}
+theorem isClosed_projectiveLimit :
+    IsClosed (p.projectiveLimit : Set (∀ i, (p i).LocalBanachSpace)) := by
+  change IsClosed {z : ∀ i, (p i).LocalBanachSpace | ∀ i j (h : p i ≤ p j),
+    Seminorm.LocalBanachSpace.mapOfLE h (z j) = z i}
   simp only [ofPred_forall]
   apply isClosed_iInter
   intro i
@@ -78,7 +79,7 @@ theorem isClosed_projectiveLimit : IsClosed (p.projectiveLimit : Set (∀ i, (p 
   intro j
   apply isClosed_iInter
   intro h
-  exact isClosed_eq ((Seminorm.completionMap h).continuous.comp (continuous_apply j))
+  exact isClosed_eq ((Seminorm.LocalBanachSpace.mapOfLE h).continuous.comp (continuous_apply j))
     (continuous_apply i)
 
 /-- The projective limit is complete as a closed subspace of a product of Banach spaces. -/
@@ -90,16 +91,16 @@ instance : IsUniformAddGroup p.projectiveLimit := p.projectiveLimit.toAddSubgrou
 
 /-- A compatible family of continuous linear maps induces a map into the projective limit. -/
 def projectiveLimitLift {F : Type*} [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F]
-    (f : ∀ i, F →L[𝕜] (p i).Completion)
-    (hf : ∀ i j (h : p i ≤ p j) x, Seminorm.completionMap h (f j x) = f i x) :
+    (f : ∀ i, F →L[𝕜] (p i).LocalBanachSpace)
+    (hf : ∀ i j (h : p i ≤ p j) x, Seminorm.LocalBanachSpace.mapOfLE h (f j x) = f i x) :
     F →L[𝕜] p.projectiveLimit where
   toLinearMap := (LinearMap.pi fun i ↦ (f i).toLinearMap).codRestrict _ (fun x i j h ↦ hf i j h x)
   cont := (continuous_pi fun i ↦ (f i).continuous).subtype_mk _
 
 /-- The map induced by a compatible family has the prescribed coordinates. -/
 @[simp] theorem projectiveLimitLift_apply {F : Type*} [AddCommGroup F] [Module 𝕜 F]
-    [TopologicalSpace F] (f : ∀ i, F →L[𝕜] (p i).Completion)
-    (hf : ∀ i j (h : p i ≤ p j) x, Seminorm.completionMap h (f j x) = f i x)
+    [TopologicalSpace F] (f : ∀ i, F →L[𝕜] (p i).LocalBanachSpace)
+    (hf : ∀ i j (h : p i ≤ p j) x, Seminorm.LocalBanachSpace.mapOfLE h (f j x) = f i x)
     (x : F) (i : ι) : (p.projectiveLimitLift f hf x).val i = f i x := rfl
 
 /-- Continuous linear maps into the projective limit are determined by their coordinates. -/
@@ -111,16 +112,17 @@ theorem projectiveLimit_ext {F : Type*} [AddCommGroup F] [Module 𝕜 F] [Topolo
 
 /-- The canonical map from the original space to its projective limit. -/
 def toProjectiveLimit : E →ₗ[𝕜] p.projectiveLimit :=
-  p.toCompletionProduct.codRestrict _ fun x _i _j h ↦ Seminorm.completionMap_toCompletion h x
+  p.toLocalBanachSpaceProduct.codRestrict _ fun x _i _j h ↦
+    Seminorm.LocalBanachSpace.mapOfLE_toLocalBanachSpace h x
 
 /-- Evaluation of the canonical projective-limit map. -/
 @[simp] theorem toProjectiveLimit_apply (x : E) (i : ι) :
-    (p.toProjectiveLimit x).val i = (p i).toCompletion x := rfl
+    (p.toProjectiveLimit x).val i = (p i).toLocalBanachSpace x := rfl
 
 /-- A compatible family is approximated simultaneously in finitely many coordinates.
 This is the density step of the classical projective completion construction. -/
-theorem closure_range_toCompletionProduct [Nonempty ι] (hp : Directed (· ≤ ·) p) :
-    closure (range p.toCompletionProduct) = p.projectiveLimit := by
+theorem closure_range_toLocalBanachSpaceProduct [Nonempty ι] (hp : Directed (· ≤ ·) p) :
+    closure (range p.toLocalBanachSpaceProduct) = p.projectiveLimit := by
   apply Subset.antisymm
   · apply closure_minimal _ p.isClosed_projectiveLimit
     rintro _ ⟨x, rfl⟩
@@ -131,21 +133,22 @@ theorem closure_range_toCompletionProduct [Nonempty ι] (hp : Directed (· ≤ �
     intro U hU hzU
     obtain ⟨s, V, hV, hVU⟩ := isOpen_pi_iff.mp hU z hzU
     obtain ⟨k, hk⟩ := hp.finset_le s
-    let W : Set (p k).Completion := {w | ∀ i : s,
-      Seminorm.completionMap (hk i i.property) w ∈ V i}
+    let W : Set (p k).LocalBanachSpace := {w | ∀ i : s,
+      Seminorm.LocalBanachSpace.mapOfLE (hk i i.property) w ∈ V i}
     have hW : IsOpen W := by
-      change IsOpen {w | ∀ i : s, Seminorm.completionMap (hk i i.property) w ∈ V i}
+      change IsOpen {w | ∀ i : s, Seminorm.LocalBanachSpace.mapOfLE (hk i i.property) w ∈ V i}
       simp only [ofPred_forall]
       exact isOpen_iInter_of_finite fun i ↦
-        (hV i i.property).1.preimage (Seminorm.completionMap (hk i i.property)).continuous
+        (hV i i.property).1.preimage
+          (Seminorm.LocalBanachSpace.mapOfLE (hk i i.property)).continuous
     have hzW : z k ∈ W := fun i ↦ by
       rw [hz i k (hk i i.property)]
       exact (hV i i.property).2
-    obtain ⟨x, hx⟩ := (p k).denseRange_toCompletion.exists_mem_open hW ⟨z k, hzW⟩
-    refine ⟨p.toCompletionProduct x, hVU ?_, ⟨x, rfl⟩⟩
+    obtain ⟨x, hx⟩ := (p k).denseRange_toLocalBanachSpace.exists_mem_open hW ⟨z k, hzW⟩
+    refine ⟨p.toLocalBanachSpaceProduct x, hVU ?_, ⟨x, rfl⟩⟩
     intro i hi
-    change (p i).toCompletion x ∈ V i
-    simpa only [Seminorm.completionMap_toCompletion] using hx ⟨i, hi⟩
+    change (p i).toLocalBanachSpace x ∈ V i
+    simpa only [Seminorm.LocalBanachSpace.mapOfLE_toLocalBanachSpace] using hx ⟨i, hi⟩
 
 /-- The original space is dense in the projective limit for a directed defining family. -/
 theorem denseRange_toProjectiveLimit [Nonempty ι] (hp : Directed (· ≤ ·) p) :
@@ -153,39 +156,39 @@ theorem denseRange_toProjectiveLimit [Nonempty ι] (hp : Directed (· ≤ ·) p)
   intro z
   rw [Topology.IsInducing.subtypeVal.closure_eq_preimage_closure_image]
   change z.val ∈ closure (Subtype.val '' range p.toProjectiveLimit)
-  have him : Subtype.val '' range p.toProjectiveLimit = range p.toCompletionProduct := by
+  have him : Subtype.val '' range p.toProjectiveLimit = range p.toLocalBanachSpaceProduct := by
     ext z
     constructor
     · rintro ⟨_, ⟨x, rfl⟩, rfl⟩
       exact ⟨x, rfl⟩
     · rintro ⟨x, rfl⟩
       exact ⟨p.toProjectiveLimit x, ⟨x, rfl⟩, rfl⟩
-  rw [him, p.closure_range_toCompletionProduct hp]
+  rw [him, p.closure_range_toLocalBanachSpaceProduct hp]
   exact z.property
 
 variable [UniformSpace E] [IsUniformAddGroup E]
 
 /-- The diagonal map recovers exactly the uniformity of a defining seminorm family. -/
-theorem isUniformInducing_toCompletionProduct (hp : WithSeminorms p) :
-    IsUniformInducing p.toCompletionProduct := by
+theorem isUniformInducing_toLocalBanachSpaceProduct (hp : WithSeminorms p) :
+    IsUniformInducing p.toLocalBanachSpaceProduct := by
   rw [isUniformInducing_iff_uniformSpace, Pi.uniformSpace_eq, UniformSpace.comap_iInf]
   rw [p.withSeminorms_iff_uniformSpace_eq_iInf.mp hp]
   congr 1
   funext i
   rw [← UniformSpace.comap_comap]
-  exact (UniformSpace.Completion.isUniformInducing_coe (p i).Space).comap_uniformSpace
+  exact (UniformSpace.Completion.isUniformInducing_coe (p i).LocalSpace).comap_uniformSpace
 
 /-- The map into the projective limit recovers the original uniformity. -/
 theorem isUniformInducing_toProjectiveLimit (hp : WithSeminorms p) :
     IsUniformInducing p.toProjectiveLimit :=
   (isUniformEmbedding_subtype_val.isUniformInducing.of_comp_iff).mp
-    (p.isUniformInducing_toCompletionProduct hp)
+    (p.isUniformInducing_toLocalBanachSpaceProduct hp)
 
 /-- A Hausdorff space embeds uniformly in the product of its local Banach spaces. -/
-theorem isUniformEmbedding_toCompletionProduct [T0Space E] (hp : WithSeminorms p) :
-    IsUniformEmbedding p.toCompletionProduct :=
-  ⟨p.isUniformInducing_toCompletionProduct hp,
-    (p.isUniformInducing_toCompletionProduct hp).injective⟩
+theorem isUniformEmbedding_toLocalBanachSpaceProduct [T2Space E] (hp : WithSeminorms p) :
+    IsUniformEmbedding p.toLocalBanachSpaceProduct :=
+  ⟨p.isUniformInducing_toLocalBanachSpaceProduct hp,
+    (p.isUniformInducing_toLocalBanachSpaceProduct hp).injective⟩
 
 /-- The projective limit is a completion of the space defined by the seminorm family. -/
 def projectiveCompletion [Nonempty ι] (hp : WithSeminorms p) (hd : Directed (· ≤ ·) p) :
@@ -213,7 +216,7 @@ def completionUniformEquiv [Nonempty ι] (hp : WithSeminorms p) (hd : Directed (
 variable [UniformContinuousConstSMul 𝕜 E]
 
 /-- A complete Hausdorff space is itself the projective limit of its local Banach spaces. -/
-def equivProjectiveLimit [Nonempty ι] [CompleteSpace E] [T0Space E]
+def equivProjectiveLimit [Nonempty ι] [CompleteSpace E] [T2Space E]
     (hp : WithSeminorms p) (hd : Directed (· ≤ ·) p) : E ≃L[𝕜] p.projectiveLimit := by
   let e : E ≃ᵤ p.projectiveLimit := (AbstractCompletion.ofComplete (α := E)).compareEquiv
     (p.projectiveCompletion hp hd)
@@ -305,7 +308,7 @@ omit [UniformContinuousConstSMul 𝕜 E] in
 /-- A complete Hausdorff first-countable polynormable space is a countable projective limit
 of local Banach spaces; this is the projective representation of a Fréchet space. -/
 theorem exists_countable_equivProjectiveLimit [FirstCountableTopology E] [CompleteSpace E]
-    [T0Space E] : ∃ p : SeminormFamily 𝕜 E ℕ, WithSeminorms p ∧ Monotone p ∧
+    [T2Space E] : ∃ p : SeminormFamily 𝕜 E ℕ, WithSeminorms p ∧ Monotone p ∧
       Nonempty (E ≃L[𝕜] p.projectiveLimit) := by
   obtain ⟨p, hp, hm⟩ := exists_monotone_withSeminorms 𝕜 E
   exact ⟨p, hp, hm, ⟨p.equivProjectiveLimit hp fun i j ↦

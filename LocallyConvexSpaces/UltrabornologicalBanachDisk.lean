@@ -26,11 +26,11 @@ a complete seminormed space into a vector space.
 
 ## Main definitions
 
-* `banachDisks 𝕜 E`: the set of Banach disks of `E`.
+* `Bornology.banachDisks 𝕜 E`: the set of Banach disks of `E`.
 
 ## Main statements
 
-* `DiskSpace.completeSpace_image_closedBall`, `IsBanachDisk.image_closedBall`,
+* `DiskSpace.completeSpace_image_closedBall`, `Bornology.IsBanachDisk.image_closedBall`,
   `ContinuousLinearMap.isBanachDisk_image_closedBall`,
   `ContinuousLinearMap.exists_diskSpace_comp_eq`.
 * `UltrabornologicalSpace.continuous_of_forall_bddAbove`,
@@ -175,7 +175,7 @@ end DiskSpace
 
 /-- The image of the closed unit ball of a Banach space under a continuous linear map is a
 Banach disk. -/
-theorem IsBanachDisk.image_closedBall [CompleteSpace X] [TopologicalSpace E]
+theorem Bornology.IsBanachDisk.image_closedBall [CompleteSpace X] [TopologicalSpace E]
     (hf : Continuous f) :
     IsBanachDisk 𝕜 (f '' Metric.closedBall (0 : X) 1) :=
   ⟨f.convex_image_closedBall, f.balanced_image_closedBall,
@@ -191,7 +191,7 @@ variable {𝕜 : Type*} [RCLike 𝕜] {E X : Type*} [AddCommGroup E] [Module �
   [CompleteSpace X] (f : X →L[𝕜] E)
 
 /-- The image of the closed unit ball of a complete seminormed space under a continuous linear
-map is a Banach disk. Unlike `IsBanachDisk.image_closedBall`, no real structure on `X` is
+map is a Banach disk. Unlike `Bornology.IsBanachDisk.image_closedBall`, no real structure on `X` is
 assumed. -/
 theorem ContinuousLinearMap.isBanachDisk_image_closedBall :
     IsBanachDisk 𝕜 (f '' Metric.closedBall (0 : X) 1) :=
@@ -288,7 +288,7 @@ variable (𝕜 : Type v) (E : Type u) [RCLike 𝕜] [AddCommGroup E] [Module �
 
 /-- The Banach disks of a topological vector space. -/
 @[expose]
-def banachDisks : Set (Set E) :=
+def Bornology.banachDisks : Set (Set E) :=
   {B | IsBanachDisk 𝕜 B}
 
 variable {𝕜 E}
@@ -375,7 +375,7 @@ theorem UltrabornologicalSpace.eq_locallyConvexFinalTopology_banachDisks [IsTopo
   refine le_antisymm ?_ ((locallyConvexFinalTopology.le_iff g).mpr fun B ↦
     DiskSpace.continuous_incl B.2.isVonNBounded)
   -- A convex balanced neighbourhood of zero for the hull topology is a neighbourhood of zero.
-  refine TopologicalSpace.le_of_nhds_zero_le inferInstance
+  refine IsTopologicalAddGroup.le_of_nhds_zero_le inferInstance
     (locallyConvexFinalTopology.isTopologicalAddGroup g) fun U hU ↦ ?_
   obtain ⟨W, ⟨hW, hWc, hWb⟩, hWU⟩ :=
     (@nhds_zero_hasBasis_convex_balanced 𝕜 E _ _ _ _ _ (locallyConvexFinalTopology g)

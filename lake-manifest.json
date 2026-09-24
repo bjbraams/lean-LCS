@@ -91,6 +91,6 @@
    "inputRev": "main",
    "inherited": true,
    "configFile": "lakefile.toml"}],
- "name": "Main",
+ "name": "LeanLCS",
  "lakeDir": ".lake",
  "fixedToolchain": false}

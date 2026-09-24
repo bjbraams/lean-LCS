@@ -129,7 +129,7 @@ theorem exists_nhds_forall_decomposition_of_webbed_complement {W : Set H}
 complement `H` is the one induced by `F`, Köthe II §35.5.(1). -/
 theorem isInducing_of_webbed_complement (hι : Injective ι) : Topology.IsInducing ι := by
   refine ⟨le_antisymm (continuous_iff_le_induced.mp ι.continuous) ?_⟩
-  refine TopologicalSpace.le_of_nhds_zero_le (isTopologicalAddGroup_induced ι) inferInstance
+  refine IsTopologicalAddGroup.le_of_nhds_zero_le (isTopologicalAddGroup_induced ι) inferInstance
     fun W hW ↦ ?_
   obtain ⟨N, hN, h⟩ := exists_nhds_forall_decomposition_of_webbed_complement G hG ι hsum hdisj hW
   rw [nhds_induced, map_zero]
@@ -139,7 +139,7 @@ theorem isInducing_of_webbed_complement (hι : Injective ι) : Topology.IsInduci
 
 /-- Under the hypotheses of De Wilde's theorem, if `ι` is injective and `H` is Hausdorff, then the
 range of `G` is closed, Köthe II §35.5.(1). -/
-theorem isClosed_snd_image_of_webbed_complement [T1Space H] (hι : Injective ι) :
+theorem isClosed_snd_image_of_webbed_complement [T2Space H] (hι : Injective ι) :
     IsClosed (Prod.snd '' (G : Set (E × F))) := by
   refine isClosed_of_closure_subset fun y hy ↦ ?_
   obtain ⟨q, hq, z, hyq⟩ := hsum y

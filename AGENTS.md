@@ -100,9 +100,10 @@ Preserve the `assert_not_imported WebbedSpaces.Basic` guard in `LocallyConvexSpa
 Import specific prerequisites in implementation files, rather than entire subject umbrellas.
 `MathlibExtras.lean`, `TopologicalGroups.lean`, and `TopologicalVectorSpaces.lean` are subject
 umbrellas. `LocallyConvexSpaces.lean` imports the LCS core and its general prerequisites;
-`WebbedSpaces.lean` imports the webbed-space and De Wilde extension. `Main.lean` imports both
-and is the complete-project Lake entry module. `MainResults.lean` imports `Main` and checks the axioms of the
-headline theorems listed in the README; keep its list in sync with the README's *Main results*
+`WebbedSpaces.lean` imports the webbed-space and De Wilde extension. `LeanLCS.lean` imports
+both and is the complete-project Lake entry module; the Lake package and library are also named
+`LeanLCS`. `MainResults.lean` imports `LeanLCS` and checks the axioms of the headline theorems
+listed in the README; keep its list in sync with the README's *Main results*
 table, and update its expected output only if a change of axioms is intended. Keep the umbrellas and Lake roots/globs in
 sync when adding modules; retain the existing package and Lake root.
 

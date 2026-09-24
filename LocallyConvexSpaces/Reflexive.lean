@@ -143,7 +143,7 @@ variable (𝕜 E : Type*) [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Topolo
 
 /-- The canonical map of a Hausdorff locally convex space into its bidual is injective. -/
 theorem StrongDual.inclusionInDoubleDual_injective [Module ℝ E] [IsScalarTower ℝ 𝕜 E]
-    [IsTopologicalAddGroup E] [LocallyConvexSpace ℝ E] [T1Space E] :
+    [IsTopologicalAddGroup E] [LocallyConvexSpace ℝ E] [T2Space E] :
     Injective (StrongDual.inclusionInDoubleDual 𝕜 E) := by
   let : SeparatingDual 𝕜 E := SeparatingDual.of_locallyConvexSpace_real 𝕜 E
   exact StrongDual.inclusionInDoubleDual_injective_of_separatingDual 𝕜 E
@@ -187,7 +187,7 @@ theorem SemiReflexiveSpace.of_forall_isVonNBounded
       ∃ K ∈ (topDualPairing 𝕜 E).mackeyFamily, toWeakSpace 𝕜 E '' S ⊆ K) :
     SemiReflexiveSpace 𝕜 E := by
   rw [semiReflexiveSpace_iff_mackeyTopology_le]
-  refine TopologicalSpace.le_of_nhds_zero_le
+  refine IsTopologicalAddGroup.le_of_nhds_zero_le
     (LinearMap.polarTopology.isTopologicalAddGroup _ _) inferInstance fun U hU ↦ ?_
   obtain ⟨S, hS, hSU⟩ := StrongDual.hasBasis_nhds_zero_polar.mem_iff.mp hU
   obtain ⟨K, hK, hSK⟩ := h S hS
@@ -196,7 +196,7 @@ theorem SemiReflexiveSpace.of_forall_isVonNBounded
     (Subset.trans ?_ hSU)
   exact fun φ hφ x hx ↦ hφ _ (hSK ⟨x, hx, rfl⟩)
 
-variable [LocallyConvexSpace ℝ E] [T1Space E]
+variable [LocallyConvexSpace ℝ E] [T2Space E]
 
 /-- In a semi-reflexive Hausdorff locally convex space every bounded set lies in a weakly
 compact, convex, balanced set. -/

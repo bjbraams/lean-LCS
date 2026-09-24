@@ -213,7 +213,7 @@ variable {𝕜 E F : Type*} [RCLike 𝕜]
   [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E]
   [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F]
 variable [Module ℝ F] [IsScalarTower ℝ 𝕜 F] [IsTopologicalAddGroup F] [ContinuousSMul 𝕜 F]
-  [LocallyConvexSpace ℝ F] [T1Space F] (f : E →L[𝕜] F)
+  [LocallyConvexSpace ℝ F] [T2Space F] (f : E →L[𝕜] F)
 
 /-- The kernel of a continuous linear map into a Hausdorff locally convex space consists of the
 points at which all functionals in the range of the transpose vanish: `ker f = (range fᵗ)_⊥`. -/

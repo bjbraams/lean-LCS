@@ -34,7 +34,7 @@ map on such a space is continuous as soon as its restrictions to Banach spaces a
 
 ## Main definitions
 
-* `IsBornivorous 𝕜 s`: the set `s` absorbs every von Neumann bounded set.
+* `Bornology.IsBornivorous 𝕜 s`: the set `s` absorbs every von Neumann bounded set.
 * `BornologicalSpace 𝕜 E`: every seminorm on `E` that is bounded on the von Neumann bounded
   sets is continuous.
 * `UltrabornologicalSpace 𝕜 E`: every seminorm on `E` whose compositions with the continuous
@@ -42,7 +42,7 @@ map on such a space is continuous as soon as its restrictions to Banach spaces a
 
 ## Main statements
 
-* `IsBornivorous.mem_nhds_zero_of_firstCountableTopology`: every bornivorous set in a
+* `Bornology.IsBornivorous.mem_nhds_zero_of_firstCountableTopology`: every bornivorous set in a
   first-countable topological vector space is a neighbourhood of zero.
 * `Seminorm.isBornivorous_ball`, `Seminorm.bddAbove_image_of_isBornivorous`: a seminorm is
   bounded on the bounded sets if and only if its balls are bornivorous.
@@ -114,27 +114,29 @@ variable (𝕜 : Type*) {E : Type*} [NontriviallyNormedField 𝕜] [AddCommGroup
 
 /-- A set is **bornivorous** if it absorbs every von Neumann bounded set. -/
 @[expose]
-def IsBornivorous (s : Set E) : Prop :=
+def Bornology.IsBornivorous (s : Set E) : Prop :=
   ∀ t : Set E, IsVonNBounded 𝕜 t → Absorbs 𝕜 s t
 
 variable {𝕜}
 
 /-- A neighbourhood of zero is bornivorous. -/
-theorem isBornivorous_of_mem_nhds {s : Set E} (hs : s ∈ 𝓝 (0 : E)) : IsBornivorous 𝕜 s :=
+theorem Bornology.isBornivorous_of_mem_nhds {s : Set E} (hs : s ∈ 𝓝 (0 : E)) : IsBornivorous 𝕜 s :=
   fun _ ht ↦ ht hs
 
 /-- A superset of a bornivorous set is bornivorous. -/
-theorem IsBornivorous.mono {s t : Set E} (hs : IsBornivorous 𝕜 s) (hst : s ⊆ t) :
+theorem Bornology.IsBornivorous.mono {s t : Set E} (hs : IsBornivorous 𝕜 s) (hst : s ⊆ t) :
     IsBornivorous 𝕜 t := fun u hu ↦ (hs u hu).mono_left hst
 
 /-- A bornivorous set is absorbent. -/
-theorem IsBornivorous.absorbent [ContinuousSMul 𝕜 E] {s : Set E} (hs : IsBornivorous 𝕜 s) :
+theorem Bornology.IsBornivorous.absorbent [ContinuousSMul 𝕜 E] {s : Set E}
+    (hs : IsBornivorous 𝕜 s) :
     Absorbent 𝕜 s :=
   fun x ↦ hs {x} (isVonNBounded_singleton x)
 
 /-- The preimage of a bornivorous set under a linear map that maps bounded sets to bounded sets
 is bornivorous. -/
-theorem IsBornivorous.preimage {F : Type*} [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F]
+theorem Bornology.IsBornivorous.preimage {F : Type*} [AddCommGroup F] [Module 𝕜 F]
+    [TopologicalSpace F]
     {s : Set F} (hs : IsBornivorous 𝕜 s) (f : E →ₗ[𝕜] F)
     (hf : ∀ t : Set E, IsVonNBounded 𝕜 t → IsVonNBounded 𝕜 (f '' t)) :
     IsBornivorous 𝕜 (f ⁻¹' s) := by
@@ -150,7 +152,7 @@ theorem IsBornivorous.preimage {F : Type*} [AddCommGroup F] [Module 𝕜 F] [Top
 
 /-- In a first-countable topological vector space every bornivorous set is a neighbourhood of
 zero. -/
-theorem IsBornivorous.mem_nhds_zero_of_firstCountableTopology [IsTopologicalAddGroup E]
+theorem Bornology.IsBornivorous.mem_nhds_zero_of_firstCountableTopology [IsTopologicalAddGroup E]
     [ContinuousSMul 𝕜 E] [FirstCountableTopology E] {s : Set E} (hs : IsBornivorous 𝕜 s) :
     s ∈ 𝓝 (0 : E) :=
   mem_nhds_zero_of_forall_absorbs_range fun _ hx ↦ hs _ (hx.isVonNBounded_range 𝕜)

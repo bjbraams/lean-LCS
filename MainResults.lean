@@ -5,7 +5,7 @@ Authors: Bastiaan J Braams
 -/
 module
 
-import Main
+import LeanLCS
 
 /-!
 # Main results and axiom report

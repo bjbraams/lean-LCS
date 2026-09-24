@@ -315,7 +315,7 @@ disk `B` in `E` there is a strand `σ` such that every set `C (res σ k)` absorb
 Köthe II §35.6.(2) a). -/
 theorem LinearMap.exists_forall_image_banachDisk_subset_smul_res {C : List ℕ → Set F}
     (hC : IsStrictWeb 𝕜 C) (A : E →ₗ[𝕜] F) (hA : IsSeqClosed (A.graph : Set (E × F)))
-    {B : Set E} (hB : IsBanachDisk 𝕜 B) :
+    {B : Set E} (hB : Bornology.IsBanachDisk 𝕜 B) :
     ∃ σ : ℕ → ℕ, ∀ k, ∃ a : ℝ, 0 < a ∧ A '' B ⊆ a • C (res σ k) := by
   have := hB.completeSpace
   -- The restriction of `A` to the Banach space `E_B` has a sequentially closed graph.
@@ -352,7 +352,7 @@ theorem LinearMap.exists_forall_image_banachDisk_subset_smul_res {C : List ℕ �
 /-- Every Banach disk of a locally convex space with a strict web `C` is absorbed by all the sets
 of some strand of the web, Köthe II §35.6.(2) b). -/
 theorem IsStrictWeb.exists_forall_banachDisk_subset_smul_res {C : List ℕ → Set E}
-    (hC : IsStrictWeb 𝕜 C) [T2Space E] {B : Set E} (hB : IsBanachDisk 𝕜 B) :
+    (hC : IsStrictWeb 𝕜 C) [T2Space E] {B : Set E} (hB : Bornology.IsBanachDisk 𝕜 B) :
     ∃ σ : ℕ → ℕ, ∀ k, ∃ a : ℝ, 0 < a ∧ B ⊆ a • C (res σ k) := by
   have hid : IsSeqClosed ((LinearMap.id : E →ₗ[𝕜] E).graph : Set (E × E)) :=
     (ContinuousLinearMap.id 𝕜 E).isClosed_graph.isSeqClosed

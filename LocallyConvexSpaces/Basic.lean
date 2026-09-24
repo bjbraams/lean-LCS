@@ -87,7 +87,7 @@ theorem PolynormableSpace.of_locallyConvexSpace_real [ContinuousSMul 𝕜 E] :
   exact LocallyConvexSpace.toPolynormableSpace
 
 /-- The continuous dual of a Hausdorff real or complex locally convex space separates points. -/
-theorem SeparatingDual.of_locallyConvexSpace_real [ContinuousSMul 𝕜 E] [T1Space E] :
+theorem SeparatingDual.of_locallyConvexSpace_real [ContinuousSMul 𝕜 E] [T2Space E] :
     SeparatingDual 𝕜 E := by
   constructor
   intro x hx

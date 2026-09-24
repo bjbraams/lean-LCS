@@ -86,7 +86,7 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module
 
 /-- A series `∑ γ k • z k` with `z k` in a Banach disk `M` and `0 ≤ γ k ≤ (1 / 2) ^ (k + 1)`
 converges. -/
-theorem IsBanachDisk.exists_tendsto_sum {M : Set E} (hM : IsBanachDisk 𝕜 M) {z : ℕ → E}
+theorem Bornology.IsBanachDisk.exists_tendsto_sum {M : Set E} (hM : IsBanachDisk 𝕜 M) {z : ℕ → E}
     (hz : ∀ k, z k ∈ M) {γ : ℕ → ℝ} (hγ : ∀ k, 0 ≤ γ k ∧ γ k ≤ (1 / 2 : ℝ) ^ (k + 1)) :
     ∃ s : E, Tendsto (fun N ↦ ∑ k ∈ Finset.range N, γ k • z k) atTop (𝓝 s) := by
   have := hM.completeSpace

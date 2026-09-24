@@ -419,7 +419,7 @@ omit [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [IsTopologicalAddGroup E] [Contin
 /-- If `F` is a Hausdorff locally convex space and the range of the transpose of `f : E →L[𝕜] F`
 is weak-\* closed, then it consists of all functionals that vanish on the kernel of `f`. -/
 theorem ContinuousLinearMap.mem_range_transpose_of_forall_ker [LocallyConvexSpace ℝ F]
-    [T1Space F] (f : E →L[𝕜] F)
+    [T2Space F] (f : E →L[𝕜] F)
     (hQ : IsClosed (WeakDual.toStrongDual ⁻¹'
       (LinearMap.range f.transpose.toLinearMap : Set (StrongDual 𝕜 E))))
     {φ : StrongDual 𝕜 E} (hφ : ∀ x, f x = 0 → φ x = 0) :
@@ -430,7 +430,7 @@ theorem ContinuousLinearMap.mem_range_transpose_of_forall_ker [LocallyConvexSpac
 /-- **Pták's open mapping theorem**: a continuous linear map from a Pták (`B`-complete) locally
 convex space onto a barrelled Hausdorff locally convex space is an open map. -/
 theorem ContinuousLinearMap.isOpenMap_of_ptakSpace [LocallyConvexSpace ℝ E] [PtakSpace 𝕜 E]
-    [LocallyConvexSpace ℝ F] [BarrelledSpace 𝕜 F] [T1Space F] (f : E →L[𝕜] F)
+    [LocallyConvexSpace ℝ F] [BarrelledSpace 𝕜 F] [T2Space F] (f : E →L[𝕜] F)
     (hf : Function.Surjective f) : IsOpenMap f := by
   have : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
   -- The range of the transpose is weak-* closed, hence it is the annihilator of the kernel.
@@ -486,7 +486,7 @@ theorem ContinuousLinearMap.isOpenMap_of_ptakSpace [LocallyConvexSpace ℝ E] [P
 /-- A continuous linear map from a Pták locally convex space onto a barrelled Hausdorff locally
 convex space is a quotient map. -/
 theorem ContinuousLinearMap.isQuotientMap_of_ptakSpace [LocallyConvexSpace ℝ E] [PtakSpace 𝕜 E]
-    [LocallyConvexSpace ℝ F] [BarrelledSpace 𝕜 F] [T1Space F] (f : E →L[𝕜] F)
+    [LocallyConvexSpace ℝ F] [BarrelledSpace 𝕜 F] [T2Space F] (f : E →L[𝕜] F)
     (hf : Function.Surjective f) : Topology.IsQuotientMap f :=
   (f.isOpenMap_of_ptakSpace hf).isQuotientMap f.continuous hf
 

@@ -238,7 +238,7 @@ theorem StrongDual.continuous_inclusionInDoubleDual_of_forall_equicontinuous
     (h : ∀ H : Set (StrongDual 𝕜 E), IsVonNBounded 𝕜 H → Equicontinuous ((↑) : H → E → 𝕜)) :
     Continuous (StrongDual.inclusionInDoubleDual 𝕜 E) := by
   let J : E →ₗ[𝕜] StrongDual 𝕜 (StrongDual 𝕜 E) := StrongDual.inclusionInDoubleDual 𝕜 E
-  refine continuous_iff_le_induced.mpr (TopologicalSpace.le_of_nhds_zero_le inferInstance
+  refine continuous_iff_le_induced.mpr (IsTopologicalAddGroup.le_of_nhds_zero_le inferInstance
     (isTopologicalAddGroup_induced J) ?_)
   rw [nhds_induced, map_zero, ← Filter.map_le_iff_le_comap]
   intro W hW
@@ -282,7 +282,7 @@ theorem reflexiveSpace_iff_semiReflexiveSpace_and_quasiBarrelledSpace :
     refine { hs with isInducing_inclusionInDoubleDual := ⟨le_antisymm ?_ ?_⟩ }
     · exact continuous_iff_le_induced.mp
         (QuasiBarrelledSpace.continuous_inclusionInDoubleDual (𝕜 := 𝕜) (E := E))
-    · refine TopologicalSpace.le_of_nhds_zero_le
+    · refine IsTopologicalAddGroup.le_of_nhds_zero_le
         (isTopologicalAddGroup_induced J) inferInstance
         fun U hU ↦ ?_
       obtain ⟨W, hW, hWU⟩ :=
@@ -352,7 +352,7 @@ section Montel
 /-- In a Montel space, that is a space in which closed bounded sets are compact, every bounded
 set lies in a weakly compact, convex, balanced set; hence a locally convex Montel space is
 semi-reflexive. -/
-theorem MontelSpace.semiReflexiveSpace [T1Space E] [MontelSpace 𝕜 E] : SemiReflexiveSpace 𝕜 E := by
+theorem MontelSpace.semiReflexiveSpace [T2Space E] [MontelSpace 𝕜 E] : SemiReflexiveSpace 𝕜 E := by
   have : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
   refine SemiReflexiveSpace.of_forall_isVonNBounded 𝕜 E fun S hS ↦ ?_
   -- The closed convex balanced hull of `S` is bounded and closed, hence compact.
@@ -370,7 +370,7 @@ theorem MontelSpace.semiReflexiveSpace [T1Space E] [MontelSpace 𝕜 E] : SemiRe
   · exact (subset_balancedHull 𝕜).trans ((subset_convexHull ℝ _).trans subset_closure)
 
 /-- A barrelled locally convex Montel space is reflexive. -/
-theorem MontelSpace.reflexiveSpace [T1Space E] [MontelSpace 𝕜 E] [BarrelledSpace 𝕜 E] :
+theorem MontelSpace.reflexiveSpace [T2Space E] [MontelSpace 𝕜 E] [BarrelledSpace 𝕜 E] :
     ReflexiveSpace 𝕜 E :=
   reflexiveSpace_iff_semiReflexiveSpace_and_barrelledSpace.mpr
     ⟨MontelSpace.semiReflexiveSpace, inferInstance⟩

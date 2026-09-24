@@ -20,7 +20,7 @@ De Wilde's closed graph theorem applies to maps into Fréchet spaces.
 
 ## Main definitions
 
-* `Seminorm.web p`: the web of a sequence of seminorms.
+* `SeminormFamily.web p`: the web of a sequence of seminorms.
 
 ## Main statements
 
@@ -47,16 +47,16 @@ section General
 
 variable {𝕜 E : Type*} [NontriviallyNormedField 𝕜] [AddCommGroup E] [Module 𝕜 E]
 
-namespace Seminorm
+namespace SeminormFamily
 
 /-- The **web of a sequence of seminorms**: the set attached to the finite sequence `n₀, …, n_{k-1}`
 (stored with the newest index at the head) is `{x | ∀ i < k, p i x ≤ n i + 1}`. -/
 @[expose]
-def web (p : ℕ → Seminorm 𝕜 E) : List ℕ → Set E
+def web (p : SeminormFamily 𝕜 E ℕ) : List ℕ → Set E
   | [] => univ
   | n :: l => web p l ∩ (p l.length).closedBall 0 (n + 1)
 
-variable (p : ℕ → Seminorm 𝕜 E)
+variable (p : SeminormFamily 𝕜 E ℕ)
 
 /-- The root of the web of a sequence of seminorms is the whole space. -/
 @[simp]
@@ -108,7 +108,7 @@ theorem isClosed_web [TopologicalSpace E] (hp : ∀ i, Continuous (p i)) (l : Li
     rw [h]
     exact isClosed_le (hp l.length) continuous_const
 
-end Seminorm
+end SeminormFamily
 
 end General
 
@@ -116,9 +116,9 @@ section RCLike
 
 variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E]
 
-namespace Seminorm
+namespace SeminormFamily
 
-variable (p : ℕ → Seminorm 𝕜 E)
+variable (p : SeminormFamily 𝕜 E ℕ)
 
 /-- The sets of the web of a sequence of seminorms are convex. -/
 theorem convex_web [Module ℝ E] [IsScalarTower ℝ 𝕜 E] (l : List ℕ) : Convex ℝ (web p l) := by
@@ -126,7 +126,7 @@ theorem convex_web [Module ℝ E] [IsScalarTower ℝ 𝕜 E] (l : List ℕ) : Co
   | nil => exact convex_univ
   | cons n l ih => exact ih.inter ((p l.length).convex_closedBall 0 _)
 
-end Seminorm
+end SeminormFamily
 
 variable [UniformSpace E] [IsUniformAddGroup E] [CompleteSpace E] {p : SeminormFamily 𝕜 E ℕ}
 
@@ -136,10 +136,10 @@ variable [Module ℝ E] [IsScalarTower ℝ 𝕜 E]
 /-- The web of a sequence of seminorms that generates the topology of a complete space is a
 strict web, Köthe II §35.1.(4). -/
 theorem WithSeminorms.isStrictWeb_web (hp : WithSeminorms p) :
-    IsStrictWeb 𝕜 (Seminorm.web p) where
-  toIsWeb := Seminorm.isWeb_web p
-  convex := Seminorm.convex_web p
-  balanced := Seminorm.balanced_web p
+    IsStrictWeb 𝕜 (SeminormFamily.web p) where
+  toIsWeb := SeminormFamily.isWeb_web p
+  convex := SeminormFamily.convex_web p
+  balanced := SeminormFamily.balanced_web p
   exists_radius σ := by
     -- Real scalars act through `𝕜`.
     have hpsmul (i : ℕ) (c : ℝ) (z : E) : p i (c • z) = |c| * p i z := by
@@ -156,7 +156,7 @@ theorem WithSeminorms.isStrictWeb_web (hp : WithSeminorms p) :
     -- The key estimate for the terms of the series.
     have hkey (m i : ℕ) (hi : i ≤ m) : p i (c m • x m) ≤ (1 / 2 : ℝ) ^ (m + 1) := by
       have hxi : p i (x m) ≤ σ i + 1 :=
-        (Seminorm.mem_web_res p).mp (hx m) i (Nat.lt_succ_of_le hi)
+        (SeminormFamily.mem_web_res p).mp (hx m) i (Nat.lt_succ_of_le hi)
       rw [hpsmul, abs_of_nonneg (hc m).1]
       calc c m * p i (x m)
           ≤ (1 / 2 : ℝ) ^ (m + 1) / B m * B m :=
@@ -174,9 +174,9 @@ theorem WithSeminorms.isStrictWeb_web (hp : WithSeminorms p) :
     obtain ⟨s, hs⟩ := hsum
     refine ⟨s, ?_, hs.tendsto_sum_nat⟩
     -- The partial sums lie in the closed set `web p (res σ (k₀ + 1))`.
-    refine (Seminorm.isClosed_web p (fun i ↦ hp.continuous_seminorm i) _).mem_of_tendsto
+    refine (SeminormFamily.isClosed_web p (fun i ↦ hp.continuous_seminorm i) _).mem_of_tendsto
       hs.tendsto_sum_nat (Eventually.of_forall fun N ↦ ?_)
-    rw [Seminorm.mem_web_res]
+    rw [SeminormFamily.mem_web_res]
     intro i hi
     calc p i (∑ k ∈ Finset.range N, c (k₀ + k) • x (k₀ + k))
         ≤ ∑ k ∈ Finset.range N, p i (c (k₀ + k) • x (k₀ + k)) :=
@@ -196,6 +196,6 @@ instance StrictlyWebbedSpace.of_completeSpace_firstCountableTopology [Continuous
     [LocallyConvexSpace ℝ E] [FirstCountableTopology E] : StrictlyWebbedSpace 𝕜 E := by
   have : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
   obtain ⟨p, hp⟩ := exists_seminormFamily_nat_withSeminorms 𝕜 E
-  exact ⟨Seminorm.web p, hp.isStrictWeb_web⟩
+  exact ⟨SeminormFamily.web p, hp.isStrictWeb_web⟩
 
 end RCLike

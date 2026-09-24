@@ -1,15 +1,15 @@
-name = "Main"
+name = "LeanLCS"
 version = "0.1.0"
-defaultTargets = ["Main"]
+defaultTargets = ["LeanLCS"]
 
 [[lean_lib]]
-name = "Main"
+name = "LeanLCS"
 roots = [
-  "Main", "MathlibExtras", "TopologicalGroups", "TopologicalVectorSpaces",
+  "LeanLCS", "MathlibExtras", "TopologicalGroups", "TopologicalVectorSpaces",
   "LocallyConvexSpaces", "WebbedSpaces",
 ]
 globs = [
-  "Main", "MainResults",
+  "LeanLCS", "MainResults",
   "MathlibExtras", "MathlibExtras.+",
   "TopologicalGroups", "TopologicalGroups.+",
   "TopologicalVectorSpaces", "TopologicalVectorSpaces.+",

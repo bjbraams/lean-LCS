@@ -166,7 +166,7 @@ variable {𝕜 E F : Type*} [RCLike 𝕜]
 
 /-- A bounded-lifting image of a Hausdorff semi-reflexive locally convex space is semi-reflexive.
 Bounded sets need only lift up to closure. -/
-theorem SemiReflexiveSpace.of_bounded_lifting [T1Space E] [T1Space F]
+theorem SemiReflexiveSpace.of_bounded_lifting [T2Space E] [T2Space F]
     [SemiReflexiveSpace 𝕜 E] (f : E →L[𝕜] F)
     (h : ∀ S : Set F, IsVonNBounded 𝕜 S →
       ∃ B : Set E, IsVonNBounded 𝕜 B ∧ S ⊆ closure (f '' B)) : SemiReflexiveSpace 𝕜 F := by
@@ -187,7 +187,7 @@ theorem SemiReflexiveSpace.of_bounded_lifting [T1Space E] [T1Space F]
   exact ⟨toWeakSpace 𝕜 E x, hBK ⟨x, hx, rfl⟩, rfl⟩
 
 /-- A quasi-barrelled bounded-lifting image of a semi-reflexive space is reflexive. -/
-theorem ReflexiveSpace.of_bounded_lifting [T1Space E] [T1Space F]
+theorem ReflexiveSpace.of_bounded_lifting [T2Space E] [T2Space F]
     [SemiReflexiveSpace 𝕜 E] [QuasiBarrelledSpace 𝕜 F] (f : E →L[𝕜] F)
     (h : ∀ S : Set F, IsVonNBounded 𝕜 S →
       ∃ B : Set E, IsVonNBounded 𝕜 B ∧ S ⊆ closure (f '' B)) : ReflexiveSpace 𝕜 F :=
@@ -195,8 +195,8 @@ theorem ReflexiveSpace.of_bounded_lifting [T1Space E] [T1Space F]
     ⟨SemiReflexiveSpace.of_bounded_lifting f h, inferInstance⟩
 
 /-- A Hausdorff bounded-lifting quotient of a reflexive space is reflexive. -/
-theorem ReflexiveSpace.quotient_of_bounded_lifting [T1Space E] [ReflexiveSpace 𝕜 E]
-    (M : Submodule 𝕜 E) [T1Space (E ⧸ M)]
+theorem ReflexiveSpace.quotient_of_bounded_lifting [T2Space E] [ReflexiveSpace 𝕜 E]
+    (M : Submodule 𝕜 E) [T2Space (E ⧸ M)]
     (h : ∀ S : Set (E ⧸ M), IsVonNBounded 𝕜 S →
       ∃ B : Set E, IsVonNBounded 𝕜 B ∧ S ⊆ closure (M.mkQ '' B)) :
     ReflexiveSpace 𝕜 (E ⧸ M) := by

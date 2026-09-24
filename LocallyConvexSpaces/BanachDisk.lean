@@ -35,7 +35,7 @@ interpretation applies when the bounded disk lies in a Hausdorff topological vec
 * `diskHull 𝕜 B`, `DiskSpace 𝕜 B`, `DiskSpace.incl`, `DiskSpace.unitDisk`.
 * `DiskSpace.normedAddCommGroup`: the norm structure for a bounded set in a Hausdorff space;
   a definition, not an instance.
-* `IsBanachDisk 𝕜 B`.
+* `Bornology.IsBanachDisk 𝕜 B`.
 
 ## Main statements
 
@@ -334,7 +334,7 @@ theorem continuous_incl (hB : IsVonNBounded 𝕜 B) : Continuous (incl 𝕜 B) :
 
 omit [IsTopologicalAddGroup E] in
 /-- For a bounded subset `B` of a Hausdorff locally convex space the gauge on `E_B` is a norm. -/
-theorem eq_zero_of_norm_eq_zero [T1Space E] (hB : IsVonNBounded 𝕜 B) {x : DiskSpace 𝕜 B}
+theorem eq_zero_of_norm_eq_zero [T2Space E] (hB : IsVonNBounded 𝕜 B) {x : DiskSpace 𝕜 B}
     (hx : ‖x‖ = 0) : x = 0 := by
   refine incl_injective ?_
   rw [map_zero]
@@ -346,7 +346,7 @@ theorem eq_zero_of_norm_eq_zero [T1Space E] (hB : IsVonNBounded 𝕜 B) {x : Dis
 /-- The normed group structure of `E_B` for a bounded subset `B` of a Hausdorff locally convex
 space. This is a definition and not an instance, because it depends on the boundedness of
 `B`. -/
-noncomputable abbrev normedAddCommGroup [T1Space E] (hB : IsVonNBounded 𝕜 B) :
+noncomputable abbrev normedAddCommGroup [T2Space E] (hB : IsVonNBounded 𝕜 B) :
     NormedAddCommGroup (DiskSpace 𝕜 B) :=
   NormedAddCommGroup.ofSeparation fun _ hx ↦ eq_zero_of_norm_eq_zero hB hx
 
@@ -439,7 +439,7 @@ theorem absorbent_diskHull_of_span_eq_top (B : Set E) (h : Submodule.span 𝕜 B
 bounded, and `DiskSpace 𝕜 B` is complete for the gauge of `diskHull 𝕜 B`. For a nonempty disk
 this is the gauge of `B` itself. The empty set is allowed. Without Hausdorffness of the ambient
 space the resulting complete space is only seminormed in general. -/
-structure IsBanachDisk (𝕜 : Type*) {E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E]
+structure Bornology.IsBanachDisk (𝕜 : Type*) {E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E]
     [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] (B : Set E) : Prop where
   /-- A Banach disk is convex. -/
   convex : Convex ℝ B
@@ -452,7 +452,7 @@ structure IsBanachDisk (𝕜 : Type*) {E : Type*} [RCLike 𝕜] [AddCommGroup E]
 
 /-- A nonempty bounded disk that is complete as a subset of a Hausdorff locally convex space, in
 particular a compact disk, is a Banach disk. -/
-theorem IsBanachDisk.of_isComplete {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E]
+theorem Bornology.IsBanachDisk.of_isComplete {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E]
     [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [UniformSpace E] [IsUniformAddGroup E]
     [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] [T2Space E] {B : Set E} (hc : Convex ℝ B)
     (hb : Balanced 𝕜 B) (hne : B.Nonempty) (hB : IsVonNBounded 𝕜 B) (hcomplete : IsComplete B) :

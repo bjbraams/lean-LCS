@@ -73,11 +73,75 @@ theorem mem_equicontinuousDual_iff (f : StrongDual 𝕜 E →ₗ[𝕜] 𝕜) :
 end StrongDual
 
 /-- The dual model of the completion: linear forms on the continuous dual that are weak-*
-continuous on every equicontinuous set, tested on zero-neighbourhood polars. -/
-abbrev GrothendieckCompletion (𝕜 E : Type*) [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E]
+continuous on every equicontinuous set, tested on zero-neighbourhood polars. This is a type
+synonym of the submodule `StrongDual.equicontinuousDual 𝕜 E`, not an `abbrev`, so that the
+uniform structure transported below does not become an instance on that submodule. -/
+@[expose]
+def GrothendieckCompletion (𝕜 E : Type*) [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E]
     [TopologicalSpace E] : Type _ := StrongDual.equicontinuousDual 𝕜 E
 
 namespace GrothendieckCompletion
+
+section Basic
+
+variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E]
+
+/-- The dual model is an additive group, as a submodule of the linear forms on the dual. -/
+instance instAddCommGroup : AddCommGroup (GrothendieckCompletion 𝕜 E) :=
+  inferInstanceAs (AddCommGroup (StrongDual.equicontinuousDual 𝕜 E))
+
+/-- The dual model is a module, as a submodule of the linear forms on the dual. -/
+instance instModule : Module 𝕜 (GrothendieckCompletion 𝕜 E) :=
+  inferInstanceAs (Module 𝕜 (StrongDual.equicontinuousDual 𝕜 E))
+
+/-- The dual model is a real vector space, by restriction of scalars. -/
+instance instModuleReal : Module ℝ (GrothendieckCompletion 𝕜 E) :=
+  inferInstanceAs (Module ℝ (StrongDual.equicontinuousDual 𝕜 E))
+
+/-- The real and the `𝕜`-module structures of the dual model are compatible. -/
+instance instIsScalarTower : IsScalarTower ℝ 𝕜 (GrothendieckCompletion 𝕜 E) :=
+  inferInstanceAs (IsScalarTower ℝ 𝕜 (StrongDual.equicontinuousDual 𝕜 E))
+
+/-- The underlying linear form on the continuous dual. -/
+@[expose]
+def toLinearMap (f : GrothendieckCompletion 𝕜 E) : StrongDual 𝕜 E →ₗ[𝕜] 𝕜 :=
+  (show StrongDual.equicontinuousDual 𝕜 E from f).1
+
+/-- An element of the dual model is a linear form on the continuous dual. -/
+instance instFunLike : FunLike (GrothendieckCompletion 𝕜 E) (StrongDual 𝕜 E) 𝕜 where
+  coe f := f.toLinearMap
+  coe_injective _ _ h := Subtype.ext (LinearMap.coe_injective h)
+
+/-- The coercion to functions factors through the underlying linear form. -/
+@[simp]
+theorem coe_toLinearMap (f : GrothendieckCompletion 𝕜 E) : ⇑f.toLinearMap = f :=
+  rfl
+
+/-- Elements of the dual model agree if they agree on every continuous functional. -/
+@[ext]
+theorem ext {f g : GrothendieckCompletion 𝕜 E} (h : ∀ φ, f φ = g φ) : f = g :=
+  DFunLike.ext f g h
+
+/-- The element of the dual model given by a linear form on the dual that is weak-*
+continuous on the polars of the neighbourhoods of zero. -/
+@[expose]
+def mk (g : StrongDual 𝕜 E →ₗ[𝕜] 𝕜) (hg : g ∈ StrongDual.equicontinuousDual 𝕜 E) :
+    GrothendieckCompletion 𝕜 E :=
+  (⟨g, hg⟩ : StrongDual.equicontinuousDual 𝕜 E)
+
+/-- The element built from a linear form evaluates as that linear form. -/
+@[simp]
+theorem mk_apply (g : StrongDual 𝕜 E →ₗ[𝕜] 𝕜) (hg : g ∈ StrongDual.equicontinuousDual 𝕜 E)
+    (φ : StrongDual 𝕜 E) : mk g hg φ = g φ :=
+  rfl
+
+/-- The linear form underlying an element of the dual model is weak-* continuous on the polar
+of every neighbourhood of zero. -/
+theorem continuousOn_polar (f : GrothendieckCompletion 𝕜 E) {U : Set E} (hU : U ∈ 𝓝 (0 : E)) :
+    ContinuousOn (fun φ : WeakDual 𝕜 E ↦ f (WeakDual.toStrongDual φ)) (WeakDual.polar 𝕜 U) :=
+  (show StrongDual.equicontinuousDual 𝕜 E from f).2 U hU
+
+end Basic
 
 variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module ℝ E]
   [IsScalarTower ℝ 𝕜 E] [UniformSpace E] [IsUniformAddGroup E] [ContinuousSMul 𝕜 E]
@@ -87,23 +151,24 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module
 dual model. -/
 @[expose]
 def ofCompletion : UniformSpace.Completion E →ₗ[𝕜] GrothendieckCompletion 𝕜 E where
-  toFun z := ⟨
+  toFun z := mk
     { toFun := fun φ ↦ (UniformSpace.Completion.strongDualEquiv 𝕜 E).symm φ z
       map_add' := by intros; simp
-      map_smul' := by intros; simp },
-    fun U hU ↦ UniformSpace.Completion.continuousOn_extend_eval_polar z hU⟩
-  map_add' := by
-    intro z w
-    apply Subtype.ext
-    apply LinearMap.ext
-    intro φ
+      map_smul' := by intros; simp }
+    fun U hU ↦ UniformSpace.Completion.continuousOn_extend_eval_polar z hU
+  map_add' z w := by
+    ext φ
     exact map_add ((UniformSpace.Completion.strongDualEquiv 𝕜 E).symm φ) z w
-  map_smul' := by
-    intro c z
-    apply Subtype.ext
-    apply LinearMap.ext
-    intro φ
+  map_smul' c z := by
+    ext φ
     exact map_smul ((UniformSpace.Completion.strongDualEquiv 𝕜 E).symm φ) c z
+
+omit [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [LocallyConvexSpace ℝ E] [UniformContinuousConstSMul ℝ E] in
+/-- The form attached to a point of the completion evaluates the extended functionals. -/
+@[simp]
+theorem ofCompletion_apply (z : UniformSpace.Completion E) (φ : StrongDual 𝕜 E) :
+    ofCompletion z φ = (UniformSpace.Completion.strongDualEquiv 𝕜 E).symm φ z :=
+  rfl
 
 /-- The dual model distinguishes points of the completion. -/
 theorem ofCompletion_injective : Injective (ofCompletion (𝕜 := 𝕜) (E := E)) := by
@@ -112,8 +177,8 @@ theorem ofCompletion_injective : Injective (ofCompletion (𝕜 := 𝕜) (E := E)
   by_contra hne
   obtain ⟨ψ, hψ⟩ := RCLike.geometric_hahn_banach_point_point (𝕜 := 𝕜) hne
   have he := congrArg (fun f : GrothendieckCompletion 𝕜 E ↦
-    f.val (UniformSpace.Completion.strongDualEquiv 𝕜 E ψ)) h
-  have he' : ψ z = ψ w := by simpa [ofCompletion] using he
+    f (UniformSpace.Completion.strongDualEquiv 𝕜 E ψ)) h
+  have he' : ψ z = ψ w := by simpa using he
   exact (ne_of_lt hψ) (congrArg RCLike.re he')
 
 /-- Every form in the dual model is evaluation at a point of the completion. -/
@@ -121,7 +186,7 @@ theorem ofCompletion_surjective : Surjective (ofCompletion (𝕜 := 𝕜) (E := 
   let : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
   intro f
   let e := UniformSpace.Completion.strongDualEquiv 𝕜 E
-  let g := f.val.comp e.toLinearMap
+  let g := f.toLinearMap.comp e.toLinearMap
   have hg (V : Set (UniformSpace.Completion E)) (hV : V ∈ 𝓝 0) :
       ContinuousOn (fun ψ : WeakDual 𝕜 (UniformSpace.Completion E) ↦
         g (WeakDual.toStrongDual ψ)) (WeakDual.polar 𝕜 V) := by
@@ -132,11 +197,11 @@ theorem ofCompletion_surjective : Surjective (ofCompletion (𝕜 := 𝕜) (E := 
         StrongDual.toWeakDual (e (WeakDual.toStrongDual ψ))) :=
       WeakDual.continuous_of_continuous_eval fun x ↦ WeakDual.eval_continuous (x :
         UniformSpace.Completion E)
-    exact (f.property U hU).comp hc.continuousOn (fun ψ hψ x hx ↦ hψ _ hx)
+    exact (f.continuousOn_polar hU).comp hc.continuousOn (fun ψ hψ x hx ↦ hψ _ hx)
   obtain ⟨z, hz⟩ := StrongDual.exists_forall_eq_apply_of_completeSpace g hg
-  refine ⟨z, Subtype.ext (LinearMap.ext fun φ ↦ ?_)⟩
+  refine ⟨z, ext fun φ ↦ ?_⟩
   have he := hz (e.symm φ)
-  simpa [g, ofCompletion] using he.symm
+  simpa [g] using he.symm
 
 /-- The linear identification of the usual completion with its dual model. -/
 @[expose]
@@ -191,7 +256,7 @@ def evaluation : E →L[𝕜] GrothendieckCompletion 𝕜 E :=
 /-- The canonical map into the dual model evaluates continuous functionals. -/
 @[simp]
 theorem evaluation_apply (x : E) (φ : StrongDual 𝕜 E) :
-    (evaluation (𝕜 := 𝕜) x).val φ = φ x :=
+    evaluation (𝕜 := 𝕜) x φ = φ x :=
   UniformSpace.Completion.strongDualEquiv_symm_apply_coe φ x
 
 /-- Evaluation is uniformly inducing, even if the original space is not Hausdorff. -/
@@ -215,7 +280,7 @@ when its associated form is bounded by one on that neighbourhood's polar. -/
 theorem mem_closure_image_iff {U : Set E} (hU : U ∈ 𝓝 (0 : E))
     (hc : Convex ℝ U) (hb : Balanced 𝕜 U) (z : UniformSpace.Completion E) :
     z ∈ closure (((↑) : E → UniformSpace.Completion E) '' U) ↔
-      ∀ φ ∈ StrongDual.polar 𝕜 U, ‖(ofCompletion z).val φ‖ ≤ 1 := by
+      ∀ φ ∈ StrongDual.polar 𝕜 U, ‖ofCompletion z φ‖ ≤ 1 := by
   let : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
   let c := UniformSpace.Completion.coeCLM 𝕜 E
   let V := closure (c '' U)
@@ -238,7 +303,7 @@ theorem mem_closure_image_iff {U : Set E} (hU : U ∈ 𝓝 (0 : E))
   · intro hz ψ hψ
     have hp := (UniformSpace.Completion.mem_polar_closure_image_iff
       (StrongDual.toWeakDual ψ)).mp hψ
-    simpa [ofCompletion] using hz (UniformSpace.Completion.strongDualEquiv 𝕜 E ψ) hp
+    simpa using hz (UniformSpace.Completion.strongDualEquiv 𝕜 E ψ) hp
 
 /-- A basis of zero neighbourhoods in the dual model consists of uniform bounds by one on
 polars of convex balanced zero neighbourhoods of the original space. Thus the transported
@@ -246,7 +311,7 @@ topology is the topology of uniform convergence on equicontinuous sets. -/
 theorem hasBasis_nhds_zero :
     (𝓝 (0 : GrothendieckCompletion 𝕜 E)).HasBasis
       (fun U : Set E ↦ U ∈ 𝓝 (0 : E) ∧ Convex ℝ U ∧ Balanced 𝕜 U)
-      (fun U ↦ {f | ∀ φ ∈ StrongDual.polar 𝕜 U, ‖f.val φ‖ ≤ 1}) := by
+      (fun U ↦ {f | ∀ φ ∈ StrongDual.polar 𝕜 U, ‖f φ‖ ≤ 1}) := by
   have hbase : (𝓝 (0 : UniformSpace.Completion E)).HasBasis
       (fun U : Set E ↦ U ∈ 𝓝 (0 : E) ∧ Convex ℝ U ∧ Balanced 𝕜 U)
       (fun U ↦ closure (((↑) : E → UniformSpace.Completion E) '' U)) := by

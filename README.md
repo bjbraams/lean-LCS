@@ -1,6 +1,9 @@
 # lean-LCS
 
 [![CI](https://github.com/bjbraams/lean-LCS/actions/workflows/ci.yml/badge.svg)](https://github.com/bjbraams/lean-LCS/actions/workflows/ci.yml)
+[![Documentation](https://github.com/bjbraams/lean-LCS/actions/workflows/docs.yml/badge.svg)](https://bjbraams.github.io/lean-LCS/docs/)
+
+**API documentation:** <https://bjbraams.github.io/lean-LCS/docs/>
 
 A Lean 4 formalization of locally convex topological vector spaces, their duality and
 completeness theory, and closed graph and open mapping theorems, built on Mathlib.
@@ -226,7 +229,7 @@ import LocallyConvexSpaces
 For the complete project, including webbed spaces and De Wilde's theorems, use:
 
 ```lean
-import Main
+import LeanLCS
 ```
 
 Individual modules can be imported directly to keep prerequisites small. For example:
@@ -244,11 +247,11 @@ linked above provide broader indexes.
 ### In another project
 
 Add the repository as a dependency in the other project's `lakefile.toml`. The Lake package
-is named `Main`:
+is named `LeanLCS`:
 
 ```toml
 [[require]]
-name = "Main"
+name = "LeanLCS"
 git = "https://github.com/bjbraams/lean-LCS.git"
 rev = "main"
 ```

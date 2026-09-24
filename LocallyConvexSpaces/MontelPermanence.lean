@@ -65,7 +65,7 @@ theorem of_continuousLinearEquiv [MontelSpace 𝕜 E] (e : E ≃L[𝕜] F) : Mon
 
 /-- A bounded-lifting image of a Montel space is Montel. Lifting up to closure suffices. -/
 theorem of_bounded_lifting [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E]
-    [MontelSpace 𝕜 E] [T1Space E] [T2Space F] (f : E →L[𝕜] F)
+    [MontelSpace 𝕜 E] [T2Space E] [T2Space F] (f : E →L[𝕜] F)
     (h : ∀ S : Set F, IsVonNBounded 𝕜 S →
       ∃ B : Set E, IsVonNBounded 𝕜 B ∧ S ⊆ closure (f '' B)) : MontelSpace 𝕜 F := by
   constructor
@@ -85,7 +85,7 @@ theorem of_rightInverse [MontelSpace 𝕜 E] [T2Space E]
 instance pi {ι : Type*} {G : ι → Type*} [∀ i, AddCommGroup (G i)]
     [∀ i, Module 𝕜 (G i)] [∀ i, TopologicalSpace (G i)]
     [∀ i, IsTopologicalAddGroup (G i)] [∀ i, ContinuousSMul 𝕜 (G i)]
-    [∀ i, MontelSpace 𝕜 (G i)] [∀ i, T1Space (G i)] : MontelSpace 𝕜 (∀ i, G i) := by
+    [∀ i, MontelSpace 𝕜 (G i)] [∀ i, T2Space (G i)] : MontelSpace 𝕜 (∀ i, G i) := by
   constructor
   intro S hS hSb
   have hK : ∀ i, IsCompact (closure (eval i '' S)) := fun i ↦
@@ -104,7 +104,7 @@ section BoundedCover
 variable {𝕜 ι F : Type*} [NormedField 𝕜] {E : ι → Type*}
   [∀ i, AddCommGroup (E i)] [∀ i, Module 𝕜 (E i)] [∀ i, TopologicalSpace (E i)]
   [∀ i, IsTopologicalAddGroup (E i)] [∀ i, ContinuousSMul 𝕜 (E i)]
-  [∀ i, T1Space (E i)] [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F]
+  [∀ i, T2Space (E i)] [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F]
 
 /-- The Montel property passes through a family whose bounded images cover target bounded sets. -/
 theorem of_bounded_cover [∀ i, MontelSpace 𝕜 (E i)]

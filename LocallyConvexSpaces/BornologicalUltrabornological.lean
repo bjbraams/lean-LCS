@@ -48,14 +48,14 @@ variable (𝕜 : Type v) (E : Type u) [RCLike 𝕜] [AddCommGroup E] [Module �
 
 /-- The closed, bounded, nonempty disks of a topological vector space. -/
 @[expose]
-def closedBoundedDisks [TopologicalSpace E] : Set (Set E) :=
+def Bornology.closedBoundedDisks [TopologicalSpace E] : Set (Set E) :=
   {B | IsClosed B ∧ Convex ℝ B ∧ Balanced 𝕜 B ∧ IsVonNBounded 𝕜 B ∧ B.Nonempty}
 
 variable {𝕜 E}
 
 /-- Every bounded subset of a locally convex space lies in a closed bounded disk. -/
-theorem exists_mem_closedBoundedDisks_of_isVonNBounded [TopologicalSpace E]
-    [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] [T1Space E]
+theorem Bornology.exists_mem_closedBoundedDisks_of_isVonNBounded [TopologicalSpace E]
+    [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] [T2Space E]
     {S : Set E} (hS : IsVonNBounded 𝕜 S) : ∃ B ∈ closedBoundedDisks 𝕜 E, S ⊆ B := by
   have : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
   refine ⟨closure (diskHull 𝕜 S), ⟨isClosed_closure, (convex_diskHull S).closure,
@@ -63,7 +63,7 @@ theorem exists_mem_closedBoundedDisks_of_isVonNBounded [TopologicalSpace E]
     (subset_diskHull S).trans subset_closure⟩
 
 variable [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E]
-  [LocallyConvexSpace ℝ E] [T1Space E]
+  [LocallyConvexSpace ℝ E] [T2Space E]
 
 /-- The topology of a Hausdorff bornological locally convex space is the final locally convex
 topology of the normed spaces `E_B` spanned by its closed bounded disks `B`. -/
@@ -73,7 +73,7 @@ theorem BornologicalSpace.eq_locallyConvexFinalTopology_diskSpace [BornologicalS
   let f := fun B : closedBoundedDisks 𝕜 E ↦ DiskSpace.incl 𝕜 B.1
   refine le_antisymm ?_ ?_
   · -- Every neighbourhood of zero for the final topology is bornivorous.
-    refine TopologicalSpace.le_of_nhds_zero_le inferInstance
+    refine IsTopologicalAddGroup.le_of_nhds_zero_le inferInstance
       (locallyConvexFinalTopology.isTopologicalAddGroup f) fun U hU ↦ ?_
     obtain ⟨W, ⟨hW, hWc, hWb⟩, hWU⟩ :=
       (@nhds_zero_hasBasis_convex_balanced 𝕜 E _ _ _ _ _ (locallyConvexFinalTopology f)

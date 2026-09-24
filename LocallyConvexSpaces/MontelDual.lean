@@ -39,7 +39,7 @@ open scoped Topology
 
 variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E]
   [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E]
-  [T1Space E] [MontelSpace 𝕜 E]
+  [T2Space E] [MontelSpace 𝕜 E]
 
 /-- In a Hausdorff Montel space the polar of a zero-neighbourhood is strongly compact. -/
 theorem StrongDual.isCompact_polar_of_montelSpace {U : Set E} (hU : U ∈ 𝓝 (0 : E)) :

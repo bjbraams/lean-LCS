@@ -25,18 +25,19 @@ continuous if it maps fast convergent null sequences to bounded sequences.
 
 ## Main definitions
 
-* `IsFastNullSeq 𝕜 x`, `IsFastConvergent 𝕜 x x₀`.
+* `Bornology.IsFastNullSeq 𝕜 x`, `Bornology.IsFastConvergent 𝕜 x x₀`.
 
 ## Main statements
 
-* `isFastNullSeq_iff_exists_smul`
-* `IsBanachDisk.isFastNullSeq_of_tendsto_zero`, `isFastNullSeq_iff_exists_isBanachDisk`:
-  the remark after §35.7.(4).
-* `isFastNullSeq_of_tendsto_zero`, `IsFastNullSeq.exists_tendsto_atTop_smul`: §35.7.(4).
+* `Bornology.isFastNullSeq_iff_exists_smul`
+* `Bornology.IsBanachDisk.isFastNullSeq_of_tendsto_zero`,
+  `Bornology.isFastNullSeq_iff_exists_isBanachDisk`: the remark after §35.7.(4).
+* `Bornology.isFastNullSeq_of_tendsto_zero`, `Bornology.IsFastNullSeq.exists_tendsto_atTop_smul`:
+  §35.7.(4).
 * `UltrabornologicalSpace.mem_nhds_zero_of_forall_absorbs_isFastNullSeq`,
   `UltrabornologicalSpace.of_forall_absorbs_isFastNullSeq`: §35.7.(3).
 * `LinearMap.continuous_of_forall_isVonNBounded_range_isFastNullSeq`: §35.7.(5) c) and (6) b).
-* `IsFastNullSeq.map`: §35.7.(6) a).
+* `Bornology.IsFastNullSeq.map`: §35.7.(6) a).
 
 ## References
 
@@ -61,13 +62,13 @@ variable (𝕜 : Type v) {E : Type u} [RCLike 𝕜] [AddCommGroup E] [Module �
 /-- A sequence `x` is **fast convergent to zero** if there is a compact disk `K` such that `x`
 tends to zero in the gauge-seminormed space `E_K` spanned by `K`. -/
 @[expose]
-def IsFastNullSeq [TopologicalSpace E] (x : ℕ → E) : Prop :=
+def Bornology.IsFastNullSeq [TopologicalSpace E] (x : ℕ → E) : Prop :=
   ∃ K ∈ compactDisks 𝕜 E, ∃ y : ℕ → DiskSpace 𝕜 K,
     (∀ n, DiskSpace.incl 𝕜 K (y n) = x n) ∧ Tendsto y atTop (𝓝 0)
 
 /-- A sequence `x` is **fast convergent** to `x₀` if `x - x₀` is fast convergent to zero. -/
 @[expose]
-def IsFastConvergent [TopologicalSpace E] (x : ℕ → E) (x₀ : E) : Prop :=
+def Bornology.IsFastConvergent [TopologicalSpace E] (x : ℕ → E) (x₀ : E) : Prop :=
   IsFastNullSeq 𝕜 fun n ↦ x n - x₀
 
 variable {𝕜}
@@ -78,7 +79,7 @@ variable [TopologicalSpace E]
 
 /-- A sequence is fast convergent to zero if and only if `x n ∈ c n • K` for a compact disk `K`
 and positive numbers `c n` that tend to zero. -/
-theorem isFastNullSeq_iff_exists_smul {x : ℕ → E} :
+theorem Bornology.isFastNullSeq_iff_exists_smul {x : ℕ → E} :
     IsFastNullSeq 𝕜 x ↔ ∃ K ∈ compactDisks 𝕜 E, ∃ c : ℕ → ℝ, (∀ n, 0 < c n) ∧
       Tendsto c atTop (𝓝 0) ∧ ∀ n, x n ∈ c n • K := by
   constructor
@@ -104,7 +105,7 @@ theorem isFastNullSeq_iff_exists_smul {x : ℕ → E} :
     exact smul_set_mono (subset_diskHull K) (hx n)
 
 /-- The multiples of a vector by the scalars of norm at most one form a compact disk. -/
-theorem image_toSpanSingleton_closedBall_mem_compactDisks [ContinuousSMul 𝕜 E] (v : E) :
+theorem Bornology.image_toSpanSingleton_closedBall_mem_compactDisks [ContinuousSMul 𝕜 E] (v : E) :
     LinearMap.toSpanSingleton 𝕜 E v '' Metric.closedBall (0 : 𝕜) 1 ∈ compactDisks 𝕜 E := by
   refine ⟨(isCompact_closedBall (0 : 𝕜) 1).image ?_,
     (LinearMap.toSpanSingleton 𝕜 E v).convex_image_closedBall,
@@ -114,7 +115,7 @@ theorem image_toSpanSingleton_closedBall_mem_compactDisks [ContinuousSMul 𝕜 E
   exact h
 
 /-- The sequence `v, 0, 0, …` is fast convergent to zero. -/
-theorem isFastNullSeq_single [ContinuousSMul 𝕜 E] (v : E) :
+theorem Bornology.isFastNullSeq_single [ContinuousSMul 𝕜 E] (v : E) :
     IsFastNullSeq 𝕜 fun n : ℕ ↦ if n = 0 then v else 0 := by
   refine isFastNullSeq_iff_exists_smul.mpr ⟨_, image_toSpanSingleton_closedBall_mem_compactDisks v,
     fun n ↦ 1 / ((n : ℝ) + 1), fun n ↦ by positivity,
@@ -134,7 +135,7 @@ variable [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E]
   [LocallyConvexSpace ℝ E]
 
 /-- A sequence that is fast convergent to zero tends to zero. -/
-theorem IsFastNullSeq.tendsto_zero {x : ℕ → E} (hx : IsFastNullSeq 𝕜 x) :
+theorem Bornology.IsFastNullSeq.tendsto_zero {x : ℕ → E} (hx : IsFastNullSeq 𝕜 x) :
     Tendsto x atTop (𝓝 0) := by
   obtain ⟨K, hK, y, hyx, hy⟩ := hx
   have h := ((DiskSpace.continuous_incl (hK.1.isVonNBounded 𝕜)).tendsto 0).comp hy
@@ -143,7 +144,7 @@ theorem IsFastNullSeq.tendsto_zero {x : ℕ → E} (hx : IsFastNullSeq 𝕜 x) :
 
 /-- A sequence that tends to zero in the Banach space `E_B` of a Banach disk `B` is fast
 convergent to zero, Köthe II §35.7, the remark after (4). -/
-theorem IsBanachDisk.isFastNullSeq_of_tendsto_zero {B : Set E} (hB : IsBanachDisk 𝕜 B)
+theorem Bornology.IsBanachDisk.isFastNullSeq_of_tendsto_zero {B : Set E} (hB : IsBanachDisk 𝕜 B)
     {y : ℕ → DiskSpace 𝕜 B} (hy : Tendsto y atTop (𝓝 0)) :
     IsFastNullSeq 𝕜 fun n ↦ DiskSpace.incl 𝕜 B (y n) := by
   obtain ⟨ρ, hρ1, hρ, hz⟩ := exists_tendsto_atTop_tendsto_smul_zero hy
@@ -158,7 +159,7 @@ theorem IsBanachDisk.isFastNullSeq_of_tendsto_zero {B : Set E} (hB : IsBanachDis
 omit [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] in
 /-- If `x` is fast convergent to zero then there are `ρ n → ∞` such that `ρ n • x n` is fast
 convergent to zero, Köthe II §35.7.(4). -/
-theorem IsFastNullSeq.exists_tendsto_atTop_smul {x : ℕ → E} (hx : IsFastNullSeq 𝕜 x) :
+theorem Bornology.IsFastNullSeq.exists_tendsto_atTop_smul {x : ℕ → E} (hx : IsFastNullSeq 𝕜 x) :
     ∃ ρ : ℕ → ℝ, (∀ n, 1 ≤ ρ n) ∧ Tendsto ρ atTop atTop ∧
       IsFastNullSeq 𝕜 fun n ↦ ρ n • x n := by
   obtain ⟨K, hK, y, hyx, hy⟩ := hx
@@ -169,7 +170,7 @@ theorem IsFastNullSeq.exists_tendsto_atTop_smul {x : ℕ → E} (hx : IsFastNull
 omit [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] in
 /-- The image of a fast convergent null sequence under a continuous linear map is a fast
 convergent null sequence, Köthe II §35.7.(6) a). -/
-theorem IsFastNullSeq.map {F : Type*} [AddCommGroup F] [Module 𝕜 F] [Module ℝ F]
+theorem Bornology.IsFastNullSeq.map {F : Type*} [AddCommGroup F] [Module 𝕜 F] [Module ℝ F]
     [IsScalarTower ℝ 𝕜 F] [TopologicalSpace F] {x : ℕ → E} (hx : IsFastNullSeq 𝕜 x)
     (A : E →L[𝕜] F) : IsFastNullSeq 𝕜 fun n ↦ A (x n) := by
   obtain ⟨K, hK, c, hc, hc0, hxK⟩ := isFastNullSeq_iff_exists_smul.mp hx
@@ -188,7 +189,7 @@ variable [UniformSpace E] [IsUniformAddGroup E] [ContinuousSMul 𝕜 E] [Locally
 
 /-- A sequence is fast convergent to zero if and only if it tends to zero in the Banach space
 `E_B` of some Banach disk `B`, Köthe II §35.7, the remark after (4). -/
-theorem isFastNullSeq_iff_exists_isBanachDisk [T2Space E] {x : ℕ → E} :
+theorem Bornology.isFastNullSeq_iff_exists_isBanachDisk [T2Space E] {x : ℕ → E} :
     IsFastNullSeq 𝕜 x ↔ ∃ B : Set E, IsBanachDisk 𝕜 B ∧ ∃ y : ℕ → DiskSpace 𝕜 B,
       (∀ n, DiskSpace.incl 𝕜 B (y n) = x n) ∧ Tendsto y atTop (𝓝 0) := by
   constructor
@@ -200,8 +201,8 @@ theorem isFastNullSeq_iff_exists_isBanachDisk [T2Space E] {x : ℕ → E} :
 
 /-- **In a Fréchet space every sequence that tends to zero is fast convergent to zero**,
 Köthe II §35.7.(4). -/
-theorem isFastNullSeq_of_tendsto_zero [CompleteSpace E] [FirstCountableTopology E] {x : ℕ → E}
-    (hx : Tendsto x atTop (𝓝 0)) : IsFastNullSeq 𝕜 x := by
+theorem Bornology.isFastNullSeq_of_tendsto_zero [CompleteSpace E] [FirstCountableTopology E]
+    {x : ℕ → E} (hx : Tendsto x atTop (𝓝 0)) : IsFastNullSeq 𝕜 x := by
   have : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
   obtain ⟨ρ, hρ1, hρ, hz⟩ := exists_tendsto_atTop_tendsto_smul_zero hx
   obtain ⟨K, hzK, hKc, hKconv, hKbal, hK0⟩ :=
@@ -249,7 +250,7 @@ theorem UltrabornologicalSpace.of_forall_absorbs_isFastNullSeq [UniformSpace E]
   refine UltrabornologicalSpace.of_eq_locallyConvexFinalTopology_compactDisks
     (le_antisymm ?_ ((locallyConvexFinalTopology.le_iff g).mpr fun K ↦
       DiskSpace.continuous_incl (K.2.1.isVonNBounded 𝕜)))
-  refine TopologicalSpace.le_of_nhds_zero_le inferInstance
+  refine IsTopologicalAddGroup.le_of_nhds_zero_le inferInstance
     (locallyConvexFinalTopology.isTopologicalAddGroup g) fun U hU ↦ ?_
   obtain ⟨W, ⟨hW, hWc, hWb⟩, hWU⟩ :=
     (@nhds_zero_hasBasis_convex_balanced 𝕜 E _ _ _ _ _ (locallyConvexFinalTopology g)

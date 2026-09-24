@@ -25,13 +25,13 @@ that its trace on `E_B` is a neighbourhood of zero.
 
 ## Main definitions
 
-* `compactDisks 𝕜 E`: the nonempty compact disks of `E`.
+* `Bornology.compactDisks 𝕜 E`: the nonempty compact disks of `E`.
 
 ## Main statements
 
-* `IsBanachDisk.of_isCompact`: a nonempty compact disk of a Hausdorff locally convex space is a
-  Banach disk.
-* `IsBanachDisk.exists_mem_compactDisks_of_tendsto_zero`
+* `Bornology.IsBanachDisk.of_isCompact`: a nonempty compact disk of a Hausdorff locally convex
+  space is a Banach disk.
+* `Bornology.IsBanachDisk.exists_mem_compactDisks_of_tendsto_zero`
 * `UltrabornologicalSpace.eq_locallyConvexFinalTopology_compactDisks`,
   `UltrabornologicalSpace.of_eq_locallyConvexFinalTopology_compactDisks`: Köthe II §35.7.(2).
 * `LinearMap.continuous_of_forall_isVonNBounded_image_compactDisk`: Köthe II §35.7.(5) b).
@@ -58,15 +58,15 @@ variable (𝕜 : Type v) (E : Type u) [RCLike 𝕜] [AddCommGroup E] [Module �
 
 /-- The nonempty compact disks of a topological vector space. -/
 @[expose]
-def compactDisks [TopologicalSpace E] : Set (Set E) :=
+def Bornology.compactDisks [TopologicalSpace E] : Set (Set E) :=
   {K | IsCompact K ∧ Convex ℝ K ∧ Balanced 𝕜 K ∧ K.Nonempty}
 
 variable {𝕜 E}
 
 /-- A nonempty compact disk of a Hausdorff locally convex space is a Banach disk. -/
-theorem IsBanachDisk.of_isCompact [UniformSpace E] [IsUniformAddGroup E] [ContinuousSMul 𝕜 E]
-    [LocallyConvexSpace ℝ E] [T2Space E] {K : Set E} (hK : IsCompact K) (hc : Convex ℝ K)
-    (hb : Balanced 𝕜 K) (hne : K.Nonempty) : IsBanachDisk 𝕜 K :=
+theorem Bornology.IsBanachDisk.of_isCompact [UniformSpace E] [IsUniformAddGroup E]
+    [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] [T2Space E] {K : Set E} (hK : IsCompact K)
+    (hc : Convex ℝ K) (hb : Balanced 𝕜 K) (hne : K.Nonempty) : IsBanachDisk 𝕜 K :=
   IsBanachDisk.of_isComplete hc hb hne (hK.isVonNBounded 𝕜) hK.isComplete
 
 section Topology
@@ -76,7 +76,7 @@ variable [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E]
 
 /-- A sequence that tends to zero in the Banach space `E_B` of a Banach disk `B` lies in a
 compact disk of `E`. -/
-theorem IsBanachDisk.exists_mem_compactDisks_of_tendsto_zero {B : Set E}
+theorem Bornology.IsBanachDisk.exists_mem_compactDisks_of_tendsto_zero {B : Set E}
     (hB : IsBanachDisk 𝕜 B) {y : ℕ → DiskSpace 𝕜 B} (hy : Tendsto y atTop (𝓝 0)) :
     ∃ K ∈ compactDisks 𝕜 E, ∀ n, DiskSpace.incl 𝕜 B (y n) ∈ K := by
   have := hB.completeSpace
@@ -100,7 +100,7 @@ theorem UltrabornologicalSpace.eq_locallyConvexFinalTopology_compactDisks
   refine le_antisymm ?_ ((locallyConvexFinalTopology.le_iff gK).mpr fun K ↦
     DiskSpace.continuous_incl (K.2.1.isVonNBounded 𝕜))
   -- A convex balanced neighbourhood of zero for the hull topology absorbs the compact disks.
-  refine TopologicalSpace.le_of_nhds_zero_le inferInstance
+  refine IsTopologicalAddGroup.le_of_nhds_zero_le inferInstance
     (locallyConvexFinalTopology.isTopologicalAddGroup gK) fun U hU ↦ ?_
   obtain ⟨W, ⟨hW, hWc, hWb⟩, hWU⟩ :=
     (@nhds_zero_hasBasis_convex_balanced 𝕜 E _ _ _ _ _ (locallyConvexFinalTopology gK)

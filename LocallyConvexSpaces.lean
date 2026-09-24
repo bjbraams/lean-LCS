@@ -67,7 +67,7 @@ public import TopologicalVectorSpaces
 
 Umbrella module for the LCS core and its general prerequisites. It imports the
 `MathlibExtras`, `TopologicalGroups`, and `TopologicalVectorSpaces` layers and the
-LCS modules below. Webbed-space theory is a separate extension, imported by `Main`.
+LCS modules below. Webbed-space theory is a separate extension, imported by `LeanLCS`.
 Individual LCS modules import only their specific prerequisites.
 
 ## General infrastructure

@@ -17,7 +17,7 @@ Mathlib.
 
 ## Main statements
 
-* `TopologicalSpace.le_of_nhds_zero_le`: two group topologies are comparable as soon as their
+* `IsTopologicalAddGroup.le_of_nhds_zero_le`: two group topologies are comparable as soon as their
   neighbourhood filters of zero are.
 * `IsTopologicalAddGroup.firstCountableTopology_of_isCountablyGenerated_nhds_zero`: a topological
   group is first-countable as soon as the neighbourhood filter of zero is countably generated;
@@ -37,11 +37,12 @@ open Filter
 
 open scoped Topology
 
-/-- Two group topologies are comparable as soon as their neighbourhood filters of the identity are.
--/
-@[to_additive TopologicalSpace.le_of_nhds_zero_le /-- Two group topologies are comparable as soon as
-their neighbourhood filters of zero are. -/]
-theorem TopologicalSpace.le_of_nhds_one_le {G : Type*} [Group G] {t₁ t₂ : TopologicalSpace G}
+/-- Two group topologies are comparable as soon as their neighbourhood filters of the identity
+are. This complements `IsTopologicalGroup.ext`. -/
+@[to_additive IsTopologicalAddGroup.le_of_nhds_zero_le /-- Two additive group topologies are
+comparable as soon as their neighbourhood filters of zero are. This complements
+`IsTopologicalAddGroup.ext`. -/]
+theorem IsTopologicalGroup.le_of_nhds_one_le {G : Type*} [Group G] {t₁ t₂ : TopologicalSpace G}
     (h₁ : @IsTopologicalGroup G t₁ _) (h₂ : @IsTopologicalGroup G t₂ _)
     (h : @nhds G t₁ 1 ≤ @nhds G t₂ 1) : t₁ ≤ t₂ :=
   continuous_id_iff_le.mp (@continuous_of_continuousAt_one G t₁ _ h₁ G (G →* G) _ t₂

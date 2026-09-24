@@ -47,7 +47,7 @@ variable {𝕜 ι F : Type*} [RCLike 𝕜] {E : ι → Type*}
   [∀ i, AddCommGroup (E i)] [∀ i, Module 𝕜 (E i)] [∀ i, Module ℝ (E i)]
   [∀ i, IsScalarTower ℝ 𝕜 (E i)] [∀ i, TopologicalSpace (E i)]
   [∀ i, IsTopologicalAddGroup (E i)] [∀ i, ContinuousSMul 𝕜 (E i)]
-  [∀ i, LocallyConvexSpace ℝ (E i)] [∀ i, T1Space (E i)]
+  [∀ i, LocallyConvexSpace ℝ (E i)] [∀ i, T2Space (E i)]
   [AddCommGroup F] [Module 𝕜 F] [Module ℝ F] [IsScalarTower ℝ 𝕜 F]
   [TopologicalSpace F] [ContinuousSMul 𝕜 F]
 
@@ -76,7 +76,7 @@ variable {𝕜 F : Type*} [RCLike 𝕜] {E : ℕ → Type*}
   [∀ n, AddCommGroup (E n)] [∀ n, Module 𝕜 (E n)] [∀ n, Module ℝ (E n)]
   [∀ n, IsScalarTower ℝ 𝕜 (E n)] [∀ n, TopologicalSpace (E n)]
   [∀ n, IsTopologicalAddGroup (E n)] [∀ n, ContinuousSMul 𝕜 (E n)]
-  [∀ n, LocallyConvexSpace ℝ (E n)] [∀ n, T1Space (E n)]
+  [∀ n, LocallyConvexSpace ℝ (E n)] [∀ n, T2Space (E n)]
   [AddCommGroup F] [Module 𝕜 F] [Module ℝ F] [IsScalarTower ℝ 𝕜 F]
   [tF : TopologicalSpace F] [ContinuousSMul 𝕜 F]
   {j : ∀ n, E n →L[𝕜] E (n + 1)} {f : ∀ n, E n →ₗ[𝕜] F}
@@ -132,14 +132,14 @@ variable {𝕜 E ι : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E]
   (p : SeminormFamily 𝕜 E ι)
 
 /-- The local-Banach projective limit is semi-reflexive if every factor is semi-reflexive. -/
-theorem semiReflexiveSpace_projectiveLimit [∀ i, SemiReflexiveSpace 𝕜 (p i).Completion] :
+theorem semiReflexiveSpace_projectiveLimit [∀ i, SemiReflexiveSpace 𝕜 (p i).LocalBanachSpace] :
     SemiReflexiveSpace 𝕜 p.projectiveLimit := by
-  let (i : ι) : NormedSpace ℝ (p i).Completion := NormedSpace.restrictScalars ℝ 𝕜 _
-  let (i : ι) : IsScalarTower ℝ 𝕜 (p i).Completion := IsScalarTower.restrictScalars ℝ 𝕜 _
+  let (i : ι) : NormedSpace ℝ (p i).LocalBanachSpace := NormedSpace.restrictScalars ℝ 𝕜 _
+  let (i : ι) : IsScalarTower ℝ 𝕜 (p i).LocalBanachSpace := IsScalarTower.restrictScalars ℝ 𝕜 _
   exact SemiReflexiveSpace.submodule p.projectiveLimit p.isClosed_projectiveLimit
 
 /-- A projective limit with Montel local Banach factors has the Montel property. -/
-theorem montelSpace_projectiveLimit [∀ i, MontelSpace 𝕜 (p i).Completion] :
+theorem montelSpace_projectiveLimit [∀ i, MontelSpace 𝕜 (p i).LocalBanachSpace] :
     MontelSpace 𝕜 p.projectiveLimit :=
   MontelSpace.submodule p.projectiveLimit p.isClosed_projectiveLimit
 

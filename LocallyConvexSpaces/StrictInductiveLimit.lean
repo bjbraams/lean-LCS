@@ -402,7 +402,7 @@ theorem isEmbedding (n : ℕ) :
 
 include h in
 /-- A strict inductive limit of Hausdorff locally convex spaces is Hausdorff. -/
-theorem t2Space [∀ n, T1Space (E n)] : @T2Space F (locallyConvexFinalTopology f) := by
+theorem t2Space [∀ n, T2Space (E n)] : @T2Space F (locallyConvexFinalTopology f) := by
   let _ : TopologicalSpace F := locallyConvexFinalTopology f
   have h1 : IsTopologicalAddGroup F := locallyConvexFinalTopology.isTopologicalAddGroup f
   refine IsTopologicalAddGroup.t2Space_of_zero_sep fun y hy ↦ ?_
