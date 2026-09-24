@@ -191,10 +191,10 @@ fidelity:
     classical definitions by absorbing sets for real and complex spaces. The test spaces in
     the definition of ultrabornological spaces are complete seminormed spaces in the universe
     of the space. Local convexity is expressed as LocallyConvexSpace ℝ E. A Fréchet space is a
-    complete, first-countable locally convex space; Hausdorffness is assumed separately where
-    needed, and several results are proved without it. A reflexive space is a semi-reflexive
-    space whose canonical map into the strong bidual is inducing. Strict inductive limits are
-    countable and carry the final locally convex topology. De Wilde's theorems are stated for
+    Hausdorff, complete, first-countable locally convex space. Results without Hausdorffness
+    are stated for complete, first-countable locally convex spaces. A reflexive space is a
+    semi-reflexive space whose canonical map into the strong bidual is inducing. Strict inductive
+    limits are countable and carry the final locally convex topology. De Wilde's theorems are stated for
     sequentially closed graphs, with webs as in Köthe II §35. Milman's theorem is stated for
     real spaces. The Alaoglu–Bourbaki theorem is stated over a proper nontrivially normed
     field.
