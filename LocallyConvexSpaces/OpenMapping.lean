@@ -13,27 +13,29 @@ public import TopologicalGroups.NearlyOpen
 /-!
 # The open mapping theorem for a barrelled codomain
 
-A continuous linear map from a Fréchet space onto a barrelled Hausdorff space is open. Here a
-Fréchet space is a complete, first-countable, locally convex topological vector space. More
-generally, a surjective linear map with closed graph from a Fréchet space onto a barrelled space
-is open.
+A continuous linear map from a complete, first-countable locally convex space onto a barrelled
+Hausdorff space is open. More generally, a surjective linear map with closed graph from a complete,
+first-countable locally convex space onto a barrelled space is open. Neither statement requires
+the domain to be Hausdorff; in particular both apply to Fréchet domains, where a Fréchet space is
+a Hausdorff, complete, first-countable locally convex topological vector space.
 
 The proof has two steps. Barrelledness of the codomain makes every surjective linear map *nearly
 open* (`LinearMap.closure_image_mem_nhds_of_barrelledSpace` in `LocallyConvexSpaces.Barrel`): the
-closure of the image of a convex balanced neighbourhood of zero is a barrel, hence a neighbourhood
-of zero. Completeness and first countability of the domain together with closedness of the graph
-then upgrade near openness to openness (`AddMonoidHom.isOpenMap_of_isClosed_graph_of_nearlyOpen` in
-`TopologicalGroups.NearlyOpen`).
+closure of the image of a `ℝ`-convex balanced neighbourhood of zero is a barrel, hence a
+neighbourhood of zero. Completeness and first countability of the domain together with closedness
+of the graph then upgrade near openness to openness
+(`AddMonoidHom.isOpenMap_of_isClosed_graph_of_nearlyOpen` in `TopologicalGroups.NearlyOpen`).
 
 ## Main statements
 
 * `LinearMap.isOpenMap_of_isClosed_graph_of_barrelledSpace`: a surjective linear map with closed
-  graph from a Fréchet space onto a barrelled space is open.
+  graph from a complete, first-countable locally convex space onto a barrelled space is open.
 * `ContinuousLinearMap.isOpenMap_of_barrelledSpace`: the **open mapping theorem**: a continuous
-  linear map from a Fréchet space onto a barrelled Hausdorff space is open.
+  linear map from a complete, first-countable locally convex space onto a barrelled Hausdorff
+  space is open.
 * `ContinuousLinearMap.isQuotientMap_of_barrelledSpace`: such a map is a quotient map.
-* `LinearEquiv.continuous_symm_of_barrelledSpace`: a continuous linear bijection from a Fréchet
-  space onto a barrelled Hausdorff space has a continuous inverse.
+* `LinearEquiv.continuous_symm_of_barrelledSpace`: a continuous linear bijection from a complete,
+  first-countable locally convex space onto a barrelled Hausdorff space has a continuous inverse.
 
 ## Relation to other open mapping theorems
 

@@ -39,7 +39,7 @@ functions in `Mathlib/Analysis/Distribution/TestFunction.lean`, made general.
   to a locally convex space is continuous if and only if its composition with every `f i` is
   continuous.
 * `locallyConvexFinalTopology.trans`: transitivity of final locally convex topologies.
-* `locallyConvexFinalTopology.mem_nhds_zero`: a convex, balanced, absorbent set whose preimage
+* `locallyConvexFinalTopology.mem_nhds_zero`: a `ℝ`-convex, balanced, absorbent set whose preimage
   under every `f i` is a neighbourhood of zero is a neighbourhood of zero.
 * `locallyConvexFinalTopology.barrelledSpace`: if every `E i` is barrelled then so is `F`.
 
@@ -168,7 +168,7 @@ section Nhds
 
 variable [∀ i, IsTopologicalAddGroup (E i)] [∀ i, ContinuousSMul 𝕜 (E i)]
 
-/-- A convex, balanced, absorbent subset of `F` whose preimage under every map of the family is
+/-- A `ℝ`-convex, balanced, absorbent subset of `F` whose preimage under every map of the family is
 a neighbourhood of zero is a neighbourhood of zero for the final locally convex topology. -/
 theorem mem_nhds_zero {U : Set F} (hc : Convex ℝ U) (hb : Balanced 𝕜 U) (ha : Absorbent 𝕜 U)
     (h : ∀ i, f i ⁻¹' U ∈ 𝓝 (0 : E i)) : U ∈ @nhds F (locallyConvexFinalTopology f) 0 := by

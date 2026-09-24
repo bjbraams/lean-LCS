@@ -25,7 +25,7 @@ cover `F`. The space `F` with the final locally convex topology for the family `
 test functions in Mathlib (`Mathlib/Analysis/Distribution/TestFunction.lean`).
 
 The limit induces on every step its own topology: each `f n` is a topological embedding.
-This rests on the extension lemma for convex balanced neighbourhoods of zero along a linear
+This rests on the extension lemma for `ℝ`-convex balanced neighbourhoods of zero along a linear
 embedding. The limit of complete steps is complete, by separation in its completion.
 
 ## Main definitions
@@ -37,12 +37,12 @@ embedding. The limit of complete steps is complete, by separation in its complet
 ## Main statements
 
 * `ContinuousLinearMap.exists_convex_balanced_nhds_preimage_eq`: if `j : E →L[𝕜] G` is an
-  injective linear topological embedding of locally convex spaces and `V` is a convex balanced
-  neighbourhood of zero in `E`, then there is a convex balanced neighbourhood `W` of zero in `G`
+  injective linear topological embedding of locally convex spaces and `V` is a `ℝ`-convex balanced
+  neighbourhood of zero in `E`, then there is a `ℝ`-convex balanced neighbourhood `W` of zero in `G`
   with `j ⁻¹' W = V`. The variants `…_preimage_eq_subset_add` and `…_preimage_eq_notMem` in
   addition make `W ⊆ j '' V + N` for a given neighbourhood `N`, respectively `p ∉ W` for a
   given point `p` outside the closed range of `j`.
-* `IsStrictInductiveLimit.exists_nhds_preimage_eq`: a convex balanced neighbourhood of zero in a
+* `IsStrictInductiveLimit.exists_nhds_preimage_eq`: a `ℝ`-convex balanced neighbourhood of zero in a
   step `E n` is the preimage of a neighbourhood of zero of the limit.
 * `IsStrictInductiveLimit.isInducing`: every `f n` is inducing for the final locally convex
   topology; with injectivity, `IsStrictInductiveLimit.isEmbedding`.
@@ -90,8 +90,8 @@ variable {𝕜 E G : Type*} [RCLike 𝕜]
 
 /-- The extension lemma for neighbourhoods, with control of the size of the extension. Let
 `j : E →L[𝕜] G` be an injective linear map that is a topological embedding into a locally convex
-space, let `V` be a convex balanced neighbourhood of zero in `E` and `N` a neighbourhood of zero
-in `G`. Then there is a convex balanced neighbourhood `W` of zero in `G` with `j ⁻¹' W = V` and
+space, let `V` be a `ℝ`-convex balanced neighbourhood of zero in `E` and `N` a neighbourhood of zero
+in `G`. Then there is a `ℝ`-convex balanced neighbourhood `W` of zero in `G` with `j ⁻¹' W = V` and
 `W ⊆ j '' V + N`. -/
 theorem ContinuousLinearMap.exists_convex_balanced_nhds_preimage_eq_subset_add
     (j : E →L[𝕜] G) (hj : Topology.IsInducing j) (hinj : Injective j) {V : Set E}
@@ -150,8 +150,8 @@ theorem ContinuousLinearMap.exists_convex_balanced_nhds_preimage_eq_subset_add
       rwa [smul_zero, zero_add] at h
 
 /-- The extension lemma for neighbourhoods. Let `j : E →L[𝕜] G` be an injective linear map that
-is a topological embedding into a locally convex space, and let `V` be a convex balanced
-neighbourhood of zero in `E`. Then there is a convex balanced neighbourhood `W` of zero in `G`
+is a topological embedding into a locally convex space, and let `V` be a `ℝ`-convex balanced
+neighbourhood of zero in `E`. Then there is a `ℝ`-convex balanced neighbourhood `W` of zero in `G`
 with `j ⁻¹' W = V`. -/
 theorem ContinuousLinearMap.exists_convex_balanced_nhds_preimage_eq (j : E →L[𝕜] G)
     (hj : Topology.IsInducing j) (hinj : Injective j) {V : Set E} (hV : V ∈ 𝓝 (0 : E))
@@ -309,7 +309,7 @@ variable {𝕜 : Type*} [RCLike 𝕜] {E : ℕ → Type*} {F : Type*}
 variable {j f} (h : IsStrictInductiveLimit j f)
 
 include h in
-/-- In a strict inductive limit, every convex balanced neighbourhood `V` of zero in a step
+/-- In a strict inductive limit, every `ℝ`-convex balanced neighbourhood `V` of zero in a step
 `E n` is the preimage under `f n` of a neighbourhood of zero of the limit. -/
 theorem exists_nhds_preimage_eq (n : ℕ) {V : Set (E n)} (hV : V ∈ 𝓝 (0 : E n))
     (hVc : Convex ℝ V) (hVb : Balanced 𝕜 V) :

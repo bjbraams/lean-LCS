@@ -12,7 +12,7 @@ public import Mathlib.Analysis.LocallyConvex.Separation
 # Topologies with the same dual
 
 Two locally convex vector space topologies on `E` with the same continuous linear functionals
-have the same closed convex sets, by the Hahn–Banach theorem, and the same bounded sets, by
+have the same closed `ℝ`-convex sets, by the Hahn–Banach theorem, and the same bounded sets, by
 Mackey's theorem. In particular this holds for all topologies that are compatible with a given
 pairing, from the weak topology to the Mackey topology.
 
@@ -22,7 +22,7 @@ The statements are formulated for one topology `t₁` that is an instance and a 
 
 ## Main statements
 
-* `Convex.isClosed_of_forall_continuous_linearMap`: a convex `t₁`-closed set is `t₂`-closed if
+* `Convex.isClosed_of_forall_continuous_linearMap`: a `ℝ`-convex `t₁`-closed set is `t₂`-closed if
   every `t₁`-continuous linear functional is `t₂`-continuous.
 * `Bornology.IsVonNBounded.of_forall_continuous_linearMap`: a `t₂`-bounded set is `t₁`-bounded
   if every `t₁`-continuous linear functional is `t₂`-continuous.
@@ -51,7 +51,7 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module
   [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E]
 
 /-- Let `E` be a locally convex space and `t₂` a second topology on `E` for which every
-continuous linear functional of `E` is continuous. Then every closed convex subset of `E` is
+continuous linear functional of `E` is continuous. Then every closed `ℝ`-convex subset of `E` is
 closed for `t₂`. -/
 theorem Convex.isClosed_of_forall_continuous_linearMap
     (h : ∀ f : E →ₗ[𝕜] 𝕜, Continuous f → @Continuous E 𝕜 t₂ _ f) {s : Set E}

@@ -23,7 +23,7 @@ neighbourhood `U` of zero is weak-\* compact (Alaoglu–Bourbaki), hence a Baire
 the union of the weak-\* closed sets `{φ | ∀ x ∈ A, ‖φ x‖ ≤ n}`. One of them has an interior
 point `φ₀` relative to `U°`. By the tube lemma there is `t ∈ (0, 1]` such that
 `(1 - t) φ₀ + t ψ` lies in that interior for all `ψ ∈ U°` simultaneously, which bounds `A`
-uniformly on `U°`. If `U` is closed, convex and balanced, the bipolar theorem turns this into
+uniformly on `U°`. If `U` is closed, `ℝ`-convex and balanced, the bipolar theorem turns this into
 the statement that `U` absorbs `A`.
 
 ## Main statements

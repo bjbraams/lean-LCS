@@ -14,7 +14,7 @@ public import Mathlib.Analysis.LocallyConvex.WeakDual
 /-!
 # Polars of neighbourhoods are Banach disks in the strong dual
 
-Let `U` be a neighbourhood of zero in a topological vector space `E`. The polar `U°` is convex,
+Let `U` be a neighbourhood of zero in a topological vector space `E`. The polar `U°` is `ℝ`-convex,
 balanced and bounded in the strong dual, and the space that it spans is complete for the gauge
 of `U°`. Hence `U°` is a Banach disk in the strong dual. The proof uses compactness of the
 polar in the weak-* topology; no seminorm property of the gauge of the arbitrary set `U` is

@@ -33,7 +33,7 @@ topology of compact convergence (`E →L_c[𝕜] 𝕜`).
   of zero for the `𝔖`-topology.
 * `UniformConvergenceCLM.hasBasis_nhds_zero_polar`: the polars of the members of `𝔖` form a
   basis of neighbourhoods of zero.
-* `UniformConvergenceCLM.convex_polar`: polars are convex.
+* `UniformConvergenceCLM.convex_polar`: polars are `ℝ`-convex.
 * `StrongDual.hasBasis_nhds_zero_polar`: in the strong dual the polars of the von Neumann
   bounded sets form a basis of neighbourhoods of zero.
 * `CompactConvergenceCLM.hasBasis_nhds_zero_polar`: for the topology of compact convergence the
@@ -111,7 +111,7 @@ theorem hasBasis_nhds_zero_polar (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : Directed
   calc ‖f x‖ ≤ ‖c‖⁻¹ := by rwa [← one_div, le_div_iff₀ hc0, mul_comm]
     _ ≤ ε := inv_le_of_inv_le₀ hε hc.le
 
-/-- Polars are convex, as subsets of the dual with the `𝔖`-topology. -/
+/-- Polars are `ℝ`-convex, as subsets of the dual with the `𝔖`-topology. -/
 theorem convex_polar {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E]
     {𝔖 : Set (Set E)} (S : Set E) : Convex ℝ (polar 𝕜 𝔖 S) := by
   intro f hf g hg a b ha hb hab x hx

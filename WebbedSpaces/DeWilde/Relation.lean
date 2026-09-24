@@ -45,7 +45,7 @@ approximated successively (`exists_seq_mem_sub_sum_mem_closure`) by sums of term
 `y (k + 1) ∈ ν k • (N k - b k)`, with small `ν k > 0`. The web makes the corresponding series in
 `F` converge, to a point `a` with `p a ≤ 3`, and `(a, y₀)` lies in the closure of `G`: in the
 sequential closure if `E` is first-countable, and in general by Köthe's argument that uses
-§35.1.(3). Köthe treats convex webs first and handles general webs by a telescoping
+§35.1.(3). Köthe treats `ℝ`-convex webs first and handles general webs by a telescoping
 construction; here the translation by `b k` lets one approximation lemma serve all cases.
 
 ## Main statements

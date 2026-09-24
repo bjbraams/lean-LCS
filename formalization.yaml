@@ -14,7 +14,7 @@ project:
     reflexive and Montel spaces with their permanence properties; completeness of strong
     duals; countable strict inductive limits, with the Dieudonné–Schwartz theorem; Milman's
     converse to the Krein–Milman theorem; and webbed spaces with De Wilde's closed graph and
-    open mapping theorems. The Palomar entry compares 58 theorems from these areas; their
+    open mapping theorems. The Palomar entry compares 52 theorems from these areas; their
     statements and the notions they use are in Challenge.lean. The results are classical
     textbook and research results; the formalization proves them without sorry and without
     additional axioms.
@@ -26,7 +26,7 @@ project:
 
 classification:
   arxiv: ["math.FA"]
-  msc2020: ["46A03", "46A08", "46A30", "46A20", "46A25", "46A13", "46A04", "03B35"]
+  msc2020: ["46A03", "46A08", "46A30", "46A20", "46A25", "46A13", "46A04"]
 
 sources:
   # The Lean module headers record the chapters and sections used for each file.
@@ -209,7 +209,7 @@ review:
     official run, the definitions and statements of Challenge.lean were checked to elaborate
     to the same terms as the library's by comparing fully elaborated expressions. Comparator
     (lake comparator of Lean v4.35.0-rc2, with the con-ron, NanoDa and Lean kernels) accepts
-    Solution.lean for all 58 compared theorems. The code was reviewed by coding agents for
+    Solution.lean for all 52 compared theorems. The code was reviewed by coding agents for
     generality, Mathlib naming, docstrings and provenance. Palomar's editorial review is
     pending. No independent human peer review is claimed.
 
@@ -291,14 +291,6 @@ alignment:
       status: "proved"
     - source: "Köthe II §35.3.(5)"
       lean: "LeanLCS.LinearMap.isOpenMap_of_isSeqClosed_graph_of_ultrabornologicalSpace"
-      module: "Challenge"
-      status: "proved"
-    - source: "Köthe II §35.1.(4)"
-      lean: "LeanLCS.StrictlyWebbedSpace.of_completeSpace_firstCountableTopology"
-      module: "Challenge"
-      status: "proved"
-    - source: "Köthe II §35.5.(2)"
-      lean: "LeanLCS.LinearMap.isClosed_range_of_rank_quotient_le_aleph0"
       module: "Challenge"
       status: "proved"
 

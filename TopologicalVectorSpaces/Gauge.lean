@@ -8,13 +8,13 @@ module
 public import Mathlib.Analysis.Convex.Gauge
 
 /-!
-# Gauge seminorm balls of convex balanced neighbourhoods
+# Gauge seminorm balls of `ℝ`-convex balanced neighbourhoods
 
 These results need no locally convex ambient topology.
 
 ## Main statements
 
-* `gaugeSeminorm_ball_mem_nhds`: the balls of positive radius of the gauge seminorm of a convex
+* `gaugeSeminorm_ball_mem_nhds`: the balls of positive radius of the gauge seminorm of a `ℝ`-convex
   balanced neighbourhood of zero are neighbourhoods of zero.
 * `gaugeSeminorm_ball_one_subset`: its open unit ball lies in the neighbourhood.
 
@@ -32,7 +32,7 @@ open scoped Topology Pointwise
 variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module ℝ E]
   [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
 
-/-- Balls of the gauge seminorm of a convex balanced neighbourhood of zero are neighbourhoods
+/-- Balls of the gauge seminorm of a `ℝ`-convex balanced neighbourhood of zero are neighbourhoods
 of zero. -/
 theorem gaugeSeminorm_ball_mem_nhds {W : Set E} (hW : W ∈ 𝓝 (0 : E)) (hc : Convex ℝ W)
     (hb : Balanced 𝕜 W) {r : ℝ} (hr : 0 < r) :
@@ -46,7 +46,7 @@ theorem gaugeSeminorm_ball_mem_nhds {W : Set E} (hW : W ∈ 𝓝 (0 : E)) (hc : 
   exact hx
 
 omit [IsTopologicalAddGroup E] in
-/-- The open unit ball of the gauge seminorm of a convex neighbourhood of zero lies in that
+/-- The open unit ball of the gauge seminorm of a `ℝ`-convex neighbourhood of zero lies in that
 neighbourhood. -/
 theorem gaugeSeminorm_ball_one_subset {W : Set E} (hW : W ∈ 𝓝 (0 : E)) (hc : Convex ℝ W)
     (hb : Balanced 𝕜 W) : (gaugeSeminorm hb hc (absorbent_nhds_zero hW)).ball 0 1 ⊆ W :=

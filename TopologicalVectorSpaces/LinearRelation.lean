@@ -23,8 +23,10 @@ absorbent sets to absorbent sets. No topology on either module is needed.
 * `Submodule.convex_relImage`, `Submodule.neg_mem_relImage`, `Submodule.balanced_relImage`
 * `Submodule.smul_relImage_subset`, `Submodule.absorbent_relImage`
 
-Convexity and scalar multiplication allow a scalar tower; symmetry is stated over a ring,
-balancedness over a normed field, and absorbency over a nontrivially normed field.
+Convexity and scalar multiplication allow a scalar tower over semirings on additive commutative
+monoids. Balancedness is stated over a seminormed ring on additive commutative monoids;
+symmetry and absorbency use additive commutative groups over a ring and a normed field,
+respectively.
 -/
 
 public section
@@ -34,9 +36,9 @@ open scoped Pointwise
 
 section ScalarTower
 
-variable {R 𝕜 E F : Type*} [Semiring R] [PartialOrder R] [Ring 𝕜] [SMul R 𝕜]
-  [AddCommGroup E] [Module 𝕜 E] [Module R E] [IsScalarTower R 𝕜 E]
-  [AddCommGroup F] [Module 𝕜 F] [Module R F] [IsScalarTower R 𝕜 F]
+variable {R 𝕜 E F : Type*} [Semiring R] [PartialOrder R] [Semiring 𝕜] [SMul R 𝕜]
+  [AddCommMonoid E] [Module 𝕜 E] [Module R E] [IsScalarTower R 𝕜 E]
+  [AddCommMonoid F] [Module 𝕜 F] [Module R F] [IsScalarTower R 𝕜 F]
   (G : Submodule 𝕜 (F × E))
 
 /-- The image of a convex set under a linear relation is convex. -/
@@ -69,10 +71,10 @@ theorem Submodule.neg_mem_relImage {S : Set F} (hS : ∀ x ∈ S, -x ∈ S) :
 
 end Ring
 
-section NormedField
+section SeminormedRing
 
-variable {𝕜 E F : Type*} [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E]
-  [AddCommGroup F] [Module 𝕜 F] (G : Submodule 𝕜 (F × E))
+variable {𝕜 E F : Type*} [SeminormedRing 𝕜] [AddCommMonoid E] [Module 𝕜 E]
+  [AddCommMonoid F] [Module 𝕜 F] (G : Submodule 𝕜 (F × E))
 
 /-- The image of a balanced set under a linear relation is balanced. -/
 theorem Submodule.balanced_relImage {S : Set F} (hS : Balanced 𝕜 S) :
@@ -80,11 +82,11 @@ theorem Submodule.balanced_relImage {S : Set F} (hS : Balanced 𝕜 S) :
   rintro c hc _ ⟨y, ⟨x, hx, h⟩, rfl⟩
   exact ⟨c • x, hS c hc (smul_mem_smul_set hx), G.smul_mem c h⟩
 
-end NormedField
+end SeminormedRing
 
-section NontriviallyNormedField
+section NormedField
 
-variable {𝕜 E F : Type*} [NontriviallyNormedField 𝕜] [AddCommGroup E] [Module 𝕜 E]
+variable {𝕜 E F : Type*} [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E]
   [AddCommGroup F] [Module 𝕜 F] (G : Submodule 𝕜 (F × E))
 
 /-- The image of an absorbent set under a linear relation with full range is absorbent. -/
@@ -101,4 +103,4 @@ theorem Submodule.absorbent_relImage {S : Set F} (hS : Absorbent 𝕜 S)
   rw [Prod.smul_def, ← hvx', inv_smul_smul₀ hc0] at h
   exact h
 
-end NontriviallyNormedField
+end NormedField

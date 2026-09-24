@@ -16,7 +16,7 @@ public import LocallyConvexSpaces.PairingTopology
 # The Mackey topology and the Mackey–Arens theorem
 
 Let `B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜` be a pairing. The *Mackey topology* `τ(E, F)` on `E` is the topology
-of uniform convergence on the `σ(F, E)`-compact, convex, balanced subsets of `F`. A topology on
+of uniform convergence on the `σ(F, E)`-compact, `ℝ`-convex, balanced subsets of `F`. A topology on
 `E` is *compatible* with the pairing if its continuous linear functionals are exactly the
 functionals `x ↦ B x y` with `y : F`. The **Mackey–Arens theorem** says that a locally convex
 vector space topology on `E` is compatible with the pairing if and only if it is finer than the
@@ -24,7 +24,7 @@ weak topology `σ(E, F)` and coarser than the Mackey topology `τ(E, F)`.
 
 ## Main definitions
 
-* `LinearMap.mackeyFamily B`: the `σ(F, E)`-compact, convex, balanced subsets of `F`.
+* `LinearMap.mackeyFamily B`: the `σ(F, E)`-compact, `ℝ`-convex, balanced subsets of `F`.
 * `LinearMap.mackeyTopology B`: the Mackey topology on `E`.
 * `LinearMap.IsCompatibleTopology B`: the topology of `E` is compatible with the pairing.
 
@@ -62,7 +62,7 @@ namespace LinearMap
 variable {𝕜 E F : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [AddCommGroup F] [Module 𝕜 F]
   [Module ℝ F] [IsScalarTower ℝ 𝕜 F] (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜)
 
-/-- The family of `σ(F, E)`-compact, convex, balanced subsets of `F`, which defines the Mackey
+/-- The family of `σ(F, E)`-compact, `ℝ`-convex, balanced subsets of `F`, which defines the Mackey
 topology on `E`. -/
 @[expose]
 def mackeyFamily : Set (Set (WeakBilin B.flip)) :=
@@ -73,7 +73,7 @@ omit [IsScalarTower ℝ 𝕜 F] in
 theorem mackeyFamily_nonempty : (B.mackeyFamily).Nonempty :=
   ⟨{0}, isCompact_singleton, convex_singleton 0, balanced_zero⟩
 
-/-- The Mackey family is directed: two of its members lie in the convex hull of their union. -/
+/-- The Mackey family is directed: two of its members lie in the `ℝ`-convex hull of their union. -/
 theorem directedOn_mackeyFamily : DirectedOn (· ⊆ ·) B.mackeyFamily := by
   have : ContinuousSMul ℝ (WeakBilin B.flip) := IsScalarTower.continuousSMul 𝕜
   rintro K₁ ⟨h₁c, h₁v, h₁b⟩ K₂ ⟨h₂c, h₂v, h₂b⟩
@@ -99,12 +99,12 @@ theorem isVonNBounded_of_mem_mackeyFamily {K : Set (WeakBilin B.flip)}
   hK.1.isVonNBounded 𝕜
 
 /-- The **Mackey topology** `τ(E, F)` on `E` for a pairing `B`: the topology of uniform
-convergence on the `σ(F, E)`-compact, convex, balanced subsets of `F`. -/
+convergence on the `σ(F, E)`-compact, `ℝ`-convex, balanced subsets of `F`. -/
 @[expose, instance_reducible]
 noncomputable def mackeyTopology : TopologicalSpace E :=
   B.polarTopology B.mackeyFamily
 
-/-- The polars of the weakly compact, convex, balanced subsets of `F` form a basis of
+/-- The polars of the weakly compact, `ℝ`-convex, balanced subsets of `F` form a basis of
 neighbourhoods of zero for the Mackey topology. -/
 theorem mackeyTopology_hasBasis_nhds_zero :
     (@nhds E B.mackeyTopology 0).HasBasis (· ∈ B.mackeyFamily) fun K ↦ B.flip.polar K :=
@@ -156,7 +156,7 @@ def IsCompatibleTopology [TopologicalSpace E] : Prop :=
   ∀ f : E →ₗ[𝕜] 𝕜, Continuous f ↔ ∃ y : F, ∀ x, f x = B x y
 
 /-- Every point of `F` lies in a member of the Mackey family: the balanced hull of a point is
-weakly compact, convex and balanced. -/
+weakly compact, `ℝ`-convex and balanced. -/
 theorem sUnion_mackeyFamily : ⋃₀ B.mackeyFamily = univ := by
   have : ContinuousSMul ℝ (WeakBilin B.flip) := IsScalarTower.continuousSMul 𝕜
   refine eq_univ_of_forall fun y ↦ ?_

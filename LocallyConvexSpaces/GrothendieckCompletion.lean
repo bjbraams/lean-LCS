@@ -122,6 +122,10 @@ theorem coe_toLinearMap (f : GrothendieckCompletion 𝕜 E) : ⇑f.toLinearMap =
 theorem ext {f g : GrothendieckCompletion 𝕜 E} (h : ∀ φ, f φ = g φ) : f = g :=
   DFunLike.ext f g h
 
+/-- Elements of the dual model are equal if and only if they agree on every continuous
+functional. -/
+add_decl_doc GrothendieckCompletion.ext_iff
+
 /-- The element of the dual model given by a linear form on the dual that is weak-*
 continuous on the polars of the neighbourhoods of zero. -/
 @[expose]
@@ -275,7 +279,7 @@ theorem denseRange_evaluation : DenseRange (evaluation (𝕜 := 𝕜) (E := E)) 
   (completionEquiv (𝕜 := 𝕜) (E := E)).surjective.denseRange.comp
     (UniformSpace.Completion.denseRange_coeCLM 𝕜 E) completionEquiv.continuous
 
-/-- A point of the completion lies in the closure of a convex balanced neighbourhood precisely
+/-- A point of the completion lies in the closure of a `ℝ`-convex balanced neighbourhood precisely
 when its associated form is bounded by one on that neighbourhood's polar. -/
 theorem mem_closure_image_iff {U : Set E} (hU : U ∈ 𝓝 (0 : E))
     (hc : Convex ℝ U) (hb : Balanced 𝕜 U) (z : UniformSpace.Completion E) :
@@ -306,7 +310,7 @@ theorem mem_closure_image_iff {U : Set E} (hU : U ∈ 𝓝 (0 : E))
     simpa using hz (UniformSpace.Completion.strongDualEquiv 𝕜 E ψ) hp
 
 /-- A basis of zero neighbourhoods in the dual model consists of uniform bounds by one on
-polars of convex balanced zero neighbourhoods of the original space. Thus the transported
+polars of `ℝ`-convex balanced zero neighbourhoods of the original space. Thus the transported
 topology is the topology of uniform convergence on equicontinuous sets. -/
 theorem hasBasis_nhds_zero :
     (𝓝 (0 : GrothendieckCompletion 𝕜 E)).HasBasis

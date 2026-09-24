@@ -19,7 +19,7 @@ from an ultrabornological space into a locally convex space is continuous as soo
 bounded on every compact disk (§35.7.(5) b) for linear functionals).
 
 The point is that a sequence that tends to zero in the Banach space `E_B` of a Banach disk `B`
-lies in a compact disk of `E_B`, whose image in `E` is a compact disk. Hence a convex balanced
+lies in a compact disk of `E_B`, whose image in `E` is a compact disk. Hence a `ℝ`-convex balanced
 set that absorbs the compact disks absorbs, in every `E_B`, the sequences that tend to zero, so
 that its trace on `E_B` is a neighbourhood of zero.
 

@@ -29,7 +29,7 @@ of a sequence `σ : ℕ → ℕ` are `C (PiNat.res σ k)`.
 
 A web is *completing* (a `𝒞`-web, a web of type `𝒞`) if for every strand `σ` there are numbers
 `ρ k > 0` such that the series `∑ λ k • x k` converges whenever `x k ∈ C (res σ (k + 1))` and
-`0 ≤ λ k ≤ ρ k`. It is *strict* if moreover its sets are convex and balanced and the tails
+`0 ≤ λ k ≤ ρ k`. It is *strict* if moreover its sets are `ℝ`-convex and `𝕜`-balanced and the tails
 `∑_{k ≥ k₀} λ k • x k` of these series lie in `C (res σ (k₀ + 1))`. A space is *webbed*
 (*strictly webbed*) if it has a completing (strict) web.
 
@@ -136,15 +136,15 @@ structure IsCompletingWeb (C : List ℕ → Set E) : Prop extends IsWeb C where
     ∀ (x : ℕ → E) (c : ℕ → ℝ), (∀ k, x k ∈ C (res σ (k + 1))) → (∀ k, 0 ≤ c k ∧ c k ≤ ρ k) →
       ∃ s : E, Tendsto (fun N ↦ ∑ k ∈ Finset.range N, c k • x k) atTop (𝓝 s)
 
-/-- A web is **strict** if its sets are convex and balanced and along every strand `σ` there
+/-- A web is **strict** if its sets are `ℝ`-convex and `𝕜`-balanced and along every strand `σ` there
 are numbers `ρ k > 0` such that for `x k ∈ C (res σ (k + 1))` and `0 ≤ λ k ≤ ρ k` the series
 `∑ λ k • x k` converges and each of its tails `∑_{k ≥ k₀} λ k • x k` lies in
 `C (res σ (k₀ + 1))`. -/
 structure IsStrictWeb (𝕜 : Type*) [NormedField 𝕜] [Module 𝕜 E] (C : List ℕ → Set E) :
     Prop extends IsWeb C where
-  /-- The sets of a strict web are convex. -/
+  /-- The sets of a strict web are `ℝ`-convex. -/
   convex : ∀ l, Convex ℝ (C l)
-  /-- The sets of a strict web are balanced. -/
+  /-- The sets of a strict web are balanced over `𝕜`. -/
   balanced : ∀ l, Balanced 𝕜 (C l)
   /-- Along every strand there is a sequence of radii for which the associated series converge
   and their tails stay in the sets of the strand. -/

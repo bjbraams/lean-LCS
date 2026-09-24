@@ -12,7 +12,9 @@ public import Mathlib.LinearAlgebra.LinearPMap
 # Graphs and relational images of linear maps
 
 The graph and the transposed graph of a total or partially defined linear map are linear
-subspaces. Topological consequences are in `TopologicalVectorSpaces.LinearMapGraph`.
+submodules. Total maps are treated over semirings on additive commutative monoids; partially
+defined maps use rings and additive commutative groups, as required by `LinearPMap`.
+Topological consequences are in `TopologicalVectorSpaces.LinearMapGraph`.
 
 ## Main definitions
 
@@ -31,7 +33,7 @@ public section
 
 open Set
 
-section TransposedGraph
+section PartialTransposedGraph
 
 variable {𝕜 : Type*} [Ring 𝕜] {E F : Type*} [AddCommGroup E] [Module 𝕜 E]
   [AddCommGroup F] [Module 𝕜 F]
@@ -69,7 +71,14 @@ theorem LinearPMap.snd_image_transposedGraph (A : E →ₗ.[𝕜] F) :
   · intro hy
     exact ⟨(A ⟨y, hy⟩, y), LinearPMap.mem_transposedGraph.mpr ⟨⟨y, hy⟩, rfl, rfl⟩, rfl⟩
 
-/-- The transposed graph `{(A x, x)}` of a linear map, as a linear subspace of `F × E`. -/
+end PartialTransposedGraph
+
+section TransposedGraph
+
+variable {𝕜 : Type*} [Semiring 𝕜] {E F : Type*} [AddCommMonoid E] [Module 𝕜 E]
+  [AddCommMonoid F] [Module 𝕜 F]
+
+/-- The transposed graph `{(A x, x)}` of a linear map, as a submodule of `F × E`. -/
 @[expose]
 def LinearMap.transposedGraph (A : E →ₗ[𝕜] F) : Submodule 𝕜 (F × E) :=
   A.graph.comap (LinearEquiv.prodComm 𝕜 F E : F × E →ₗ[𝕜] E × F)
@@ -97,7 +106,7 @@ theorem LinearMap.snd_image_transposedGraph (A : E →ₗ[𝕜] F) :
 
 end TransposedGraph
 
-section Graph
+section PartialGraph
 
 variable {𝕜 : Type*} [Ring 𝕜] {E F : Type*} [AddCommGroup E] [Module 𝕜 E]
   [AddCommGroup F] [Module 𝕜 F]
@@ -123,6 +132,13 @@ theorem LinearPMap.snd_image_graph (A : F →ₗ.[𝕜] E) :
     exact ⟨x, hxy⟩
   · rintro ⟨x, rfl⟩
     exact ⟨((x : F), A x), A.mem_graph x, rfl⟩
+
+end PartialGraph
+
+section Graph
+
+variable {𝕜 : Type*} [Semiring 𝕜] {E F : Type*} [AddCommMonoid E] [Module 𝕜 E]
+  [AddCommMonoid F] [Module 𝕜 F]
 
 /-- The image of a set under the graph of a linear map. -/
 theorem LinearMap.image_graph (A : F →ₗ[𝕜] E) (V : Set F) :

@@ -18,7 +18,7 @@ public import TopologicalVectorSpaces.Basic
 In Mathlib a real or complex locally convex space `E` is described by
 `[Module ℝ E] [LocallyConvexSpace ℝ E]` together with a compatible `𝕜`-module structure; see for
 instance `Mathlib/Analysis/LocallyConvex/Separation.lean`. The class `LocallyConvexSpace ℝ E`
-provides convex neighbourhoods of zero, whereas arguments with seminorms and barrels need
+provides `ℝ`-convex neighbourhoods of zero, whereas arguments with seminorms and barrels need
 neighbourhoods that are convex over `ℝ` and balanced over `𝕜`. This file provides them.
 
 ## Main statements

@@ -19,11 +19,11 @@ with the pairing between `E'` and `E`; this is the part of the Mackey–Arens th
 for the Krein–Šmulian theorem.
 
 The proof is the classical one. A functional `Λ` that is continuous for compact convergence is
-bounded by one on the polar `K°` of a compact set `K`, which may be taken convex and balanced
+bounded by one on the polar `K°` of a compact set `K`, which may be taken `ℝ`-convex and balanced
 because `E` is quasi-complete
 (`IsCompact.exists_isCompact_convex_balanced_superset_of_quasiCompleteSpace`). The image of `K`
 in the algebraic dual `G` of `E'` is compact for the weak topology `σ(G, E')`, hence closed, and
-it is convex and balanced. By the bipolar theorem for the pairing of `G` with `E'`
+it is `ℝ`-convex and balanced. By the bipolar theorem for the pairing of `G` with `E'`
 (`LinearMap.flip_polar_polar_eq_self`) it is its own bipolar, and `Λ` lies in that bipolar.
 
 ## Main statements
@@ -33,7 +33,7 @@ complete-space corollaries.
 
 * `CompactConvergenceCLM.exists_forall_apply_eq`: a continuous linear functional on
   `E →L_c[𝕜] 𝕜` is evaluation at a point of `E`.
-* `CompactConvergenceCLM.exists_pos_le_re_apply`: a convex set of functionals that misses the
+* `CompactConvergenceCLM.exists_pos_le_re_apply`: a `ℝ`-convex set of functionals that misses the
   polar of a compact set is separated from zero by a point of `E`.
 
 ## References
@@ -80,8 +80,8 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module
   [IsScalarTower ℝ 𝕜 E] [UniformSpace E] [IsUniformAddGroup E] [ContinuousSMul 𝕜 E]
   [LocallyConvexSpace ℝ E]
 
-/-- Let `E` be a quasi-complete locally convex space. A linear functional on the dual of `E` that is
-continuous for the topology of compact convergence is the evaluation at a point of `E`. -/
+/-- Let `E` be a quasi-complete locally convex space. A linear functional on the dual of `E` that
+is continuous for the topology of compact convergence is the evaluation at a point of `E`. -/
 theorem exists_forall_apply_eq_of_quasiCompleteSpace [QuasiCompleteSpace 𝕜 E]
     (Λ : (E →L_c[𝕜] 𝕜) →L[𝕜] 𝕜) :
     ∃ x : E, ∀ f : E →L_c[𝕜] 𝕜, Λ f = f x := by
@@ -122,8 +122,9 @@ theorem exists_forall_apply_eq_of_quasiCompleteSpace [QuasiCompleteSpace 𝕜 E]
   obtain ⟨x, -, hx⟩ := hmem
   exact ⟨x, fun f ↦ (LinearMap.congr_fun hx f).symm⟩
 
-/-- Let `E` be a quasi-complete locally convex space, `S` a compact subset of `E` and `T` a convex
-set of continuous linear functionals that does not meet the polar of `S`. Then `T` is separated from
+/-- Let `E` be a quasi-complete locally convex space, `S` a compact subset of `E` and `T` a
+`ℝ`-convex set of continuous linear functionals that does not meet the polar of `S`. Then `T` is
+separated from
 zero by a point of `E`: there are `x : E` and `u > 0` with `u ≤ re (f x)` for all `f ∈ T`. -/
 theorem exists_pos_le_re_apply_of_quasiCompleteSpace [QuasiCompleteSpace 𝕜 E] {S : Set E}
     (hS : IsCompact S) {T : Set (E →L_c[𝕜] 𝕜)}
@@ -151,7 +152,7 @@ theorem exists_forall_apply_eq [CompleteSpace E] (Λ : (E →L_c[𝕜] 𝕜) →
     ∃ x : E, ∀ f : E →L_c[𝕜] 𝕜, Λ f = f x :=
   exists_forall_apply_eq_of_quasiCompleteSpace Λ
 
-/-- In a complete locally convex space, a convex set of functionals missing the polar of a
+/-- In a complete locally convex space, a `ℝ`-convex set of functionals missing the polar of a
 compact set is separated from zero by evaluation at a point. -/
 theorem exists_pos_le_re_apply [CompleteSpace E] {S : Set E} (hS : IsCompact S)
     {T : Set (E →L_c[𝕜] 𝕜)} (hT : Convex ℝ T)

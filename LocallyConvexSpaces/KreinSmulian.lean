@@ -19,12 +19,13 @@ equicontinuous set lies in such a polar, this says that `C` meets every equicont
 closed set in a weak-\* closed set.
 
 The **Krein–Šmulian theorem** says that in the dual of a Fréchet space every almost weak-\* closed
-*convex* set is weak-\* closed. Applied to linear subspaces, this implies that Fréchet spaces are
-`B`-complete (Pták spaces), which is what is needed to apply Pták's open mapping and closed graph
-theorems to Fréchet spaces. It follows from the **Banach–Dieudonné theorem**: in the dual of a
-metrizable space, if the complement of `W` is almost weak-\* closed and `0 ∈ W`, then `W` contains
-the polar of a compact set; in other words the finest topology on `E'` that agrees with the weak-\*
-topology on equicontinuous sets is coarser than the topology of compact convergence at zero.
+*`ℝ`-convex* set is weak-\* closed. Applied to linear subspaces, this implies that Fréchet spaces
+are `B`-complete (Pták spaces), which is what is needed to apply Pták's open mapping and closed
+graph theorems to Fréchet spaces. It follows from the **Banach–Dieudonné theorem**: in the dual of
+a metrizable space, if the complement of `W` is almost weak-\* closed and `0 ∈ W`, then `W`
+contains the polar of a compact set; in other words the finest topology on `E'` that agrees with
+the weak-\* topology on equicontinuous sets is coarser than the topology of compact convergence at
+zero.
 
 ## Main definitions
 
@@ -63,10 +64,10 @@ a common point `φ`; then `φ ∈ (U n)°`, hence `φ ∈ (H n)° ∩ (U n)° �
 union `S` of the `F n` together with `0` is compact, because every neighbourhood of zero contains
 all but finitely many of its points, and `S° ⊆ W` because every `φ` lies in some `(U m)°`.
 
-*Krein–Šmulian.* Let `C` be convex and almost weak-\* closed and `ψ ∉ C`. After a translation,
+*Krein–Šmulian.* Let `C` be `ℝ`-convex and almost weak-\* closed and `ψ ∉ C`. After a translation,
 which preserves almost weak-\* closedness, `ψ = 0`. By Banach–Dieudonné there is a compact `S`
 with `S° ∩ C = ∅`. The interior of `S°` for the topology of compact convergence is an open
-convex set containing zero, so the geometric Hahn–Banach theorem separates it from `C` by a
+`ℝ`-convex set containing zero, so the geometric Hahn–Banach theorem separates it from `C` by a
 functional `Λ` on `E'` that is continuous for compact convergence. Because `E` is complete, `Λ`
 is evaluation at a point `x` of `E`. These two steps are
 `CompactConvergenceCLM.exists_pos_le_re_apply` in `LocallyConvexSpaces.CompactConvergenceDual`.
@@ -319,7 +320,7 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module
   [LocallyConvexSpace ℝ E] [CompleteSpace E] [FirstCountableTopology E]
 
 /-- The **Krein–Šmulian theorem**. In the dual of a complete, first-countable, locally convex
-space every convex almost weak-\* closed set is weak-\* closed. -/
+space every `ℝ`-convex almost weak-\* closed set is weak-\* closed. -/
 theorem isClosed_of_isAlmostWeakStarClosed {C : Set (StrongDual 𝕜 E)} (hC : Convex ℝ C)
     (h : IsAlmostWeakStarClosed C) : IsClosed (WeakDual.toStrongDual ⁻¹' C) := by
   have : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
@@ -358,7 +359,7 @@ theorem isClosed_of_isAlmostWeakStarClosed {C : Set (StrongDual 𝕜 E)} (hC : C
   rw [h3, map_zero] at h2
   exact (h2.trans_lt hu).false
 
-/-- In the dual of a complete, first-countable, locally convex space a convex set is weak-\*
+/-- In the dual of a complete, first-countable, locally convex space a `ℝ`-convex set is weak-\*
 closed if and only if it is almost weak-\* closed. -/
 theorem isClosed_iff_isAlmostWeakStarClosed {C : Set (StrongDual 𝕜 E)} (hC : Convex ℝ C) :
     IsClosed (WeakDual.toStrongDual ⁻¹' C) ↔ IsAlmostWeakStarClosed C :=

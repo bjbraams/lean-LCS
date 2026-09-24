@@ -21,7 +21,7 @@ maps from Banach spaces, which gives the seminorm condition of `Ultrabornologica
 
 The Banach spaces used are copies of `ℓ¹(ℕ, 𝕜)`. For every sequence `x` in `E` that tends to zero
 the map `a ↦ ∑' n, a n • x n` is a continuous linear map `ℓ¹(ℕ, 𝕜) → E` (`lp.tsumSMulCLM x hx`). If
-`U` is a convex balanced set whose preimage under each of these maps is a neighbourhood of zero,
+`U` is a `ℝ`-convex balanced set whose preimage under each of these maps is a neighbourhood of zero,
 then `U` absorbs every sequence tending to zero, and in a first-countable space such a set is a
 neighbourhood of zero (`mem_nhds_zero_of_forall_absorbs_range`). This avoids the normed spaces `E_B`
 spanned by Banach disks, through which the statement is usually proved.

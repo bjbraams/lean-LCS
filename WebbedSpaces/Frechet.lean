@@ -120,7 +120,7 @@ namespace SeminormFamily
 
 variable (p : SeminormFamily 𝕜 E ℕ)
 
-/-- The sets of the web of a sequence of seminorms are convex. -/
+/-- The sets of the web of a sequence of seminorms are `ℝ`-convex. -/
 theorem convex_web [Module ℝ E] [IsScalarTower ℝ 𝕜 E] (l : List ℕ) : Convex ℝ (web p l) := by
   induction l with
   | nil => exact convex_univ

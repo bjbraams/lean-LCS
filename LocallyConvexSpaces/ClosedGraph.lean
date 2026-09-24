@@ -19,7 +19,7 @@ statement; in particular it applies to every Fréchet codomain.
 
 The proof has two steps. Barrelledness of the domain makes every linear map *nearly continuous*
 (`LinearMap.closure_preimage_mem_nhds_of_barrelledSpace` in `LocallyConvexSpaces.Barrel`): the
-closure of the preimage of a convex balanced neighbourhood of zero is a barrel, hence a
+closure of the preimage of a `ℝ`-convex balanced neighbourhood of zero is a barrel, hence a
 neighbourhood of zero. Completeness and first countability of the codomain together with closedness
 of the graph then upgrade near continuity to continuity
 (`AddMonoidHom.continuous_of_isClosed_graph_of_nearlyContinuous` in `TopologicalGroups.NearlyOpen`).

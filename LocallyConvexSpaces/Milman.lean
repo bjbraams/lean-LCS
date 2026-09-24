@@ -14,22 +14,22 @@ import Mathlib.Tactic.Linarith
 /-!
 # Milman's converse to the Krein–Milman theorem
 
-If the closed convex hull of a set is compact, its extreme points belong to the closure of the
+If the closed `ℝ`-convex hull of a set is compact, its extreme points belong to the closure of the
 original set. In particular, a compact generating set contains all extreme points. Together with
-the Krein–Milman theorem, this characterizes the closed subsets that generate a compact convex
+the Krein–Milman theorem, this characterizes the closed subsets that generate a compact `ℝ`-convex
 set: they are exactly those containing the closure of its extreme points.
 
 All convex hulls and extreme points are over the real scalars. The ambient space is a Hausdorff
 locally convex real topological vector space; no completeness or metrizability assumption is
 imposed. For a compact generating set in a quasi-complete space, compactness of its closed
-convex hull is automatic.
+`ℝ`-convex hull is automatic.
 
 ## Main statements
 
 * `IsCompact.extremePoints_closure_convexHull_subset_closure`: **Milman's theorem**.
 * `IsCompact.extremePoints_closure_convexHull_subset`: the case of a compact generating set.
 * `IsCompact.closure_convexHull_eq_iff_closure_extremePoints_subset`: the closure of the
-  extreme points is the least closed generating subset of a compact convex set.
+  extreme points is the least closed generating subset of a compact `ℝ`-convex set.
 * `IsCompact.extremePoints_closure_convexHull_subset_of_quasiCompleteSpace`: the quasi-complete
   case, without a compactness hypothesis on the hull.
 
@@ -46,7 +46,7 @@ variable {E : Type*} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [T2Spa
   [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] [LocallyConvexSpace ℝ E]
   {s C : Set E}
 
-/-- **Milman's converse**: the extreme points of a compact closed convex hull belong to
+/-- **Milman's converse**: the extreme points of a compact closed `ℝ`-convex hull belong to
 the closure of the generating set. The finite-cover proof adapts the mathematical argument
 in Schaefer–Wolff, *Topological Vector Spaces*, II §10.5, using separating half-spaces. -/
 theorem IsCompact.extremePoints_closure_convexHull_subset_closure
@@ -92,7 +92,7 @@ theorem IsCompact.extremePoints_closure_convexHull_subset_closure
   have hle : f y x ≤ (f y y + f y x) / 2 := hy.2
   linarith [hf y]
 
-/-- A compact generating set contains all extreme points of its compact closed convex hull.
+/-- A compact generating set contains all extreme points of its compact closed `ℝ`-convex hull.
 This is the compact-set form of Milman's converse (Schaefer–Wolff, II §10.5). -/
 theorem IsCompact.extremePoints_closure_convexHull_subset (hs : IsCompact s)
     (hC : IsCompact (closure (convexHull ℝ s))) :
@@ -100,14 +100,14 @@ theorem IsCompact.extremePoints_closure_convexHull_subset (hs : IsCompact s)
   simpa only [hs.isClosed.closure_eq] using
     hC.extremePoints_closure_convexHull_subset_closure
 
-/-- Every set generating a compact convex set has all its extreme points in its closure. -/
+/-- Every set generating a compact `ℝ`-convex set has all its extreme points in its closure. -/
 theorem IsCompact.extremePoints_subset_closure_of_closure_convexHull_eq
     (hC : IsCompact C) (h : closure (convexHull ℝ s) = C) :
     C.extremePoints ℝ ⊆ closure s := by
   subst C
   exact hC.extremePoints_closure_convexHull_subset_closure
 
-/-- A closed subset of a compact convex set generates it exactly when it contains the
+/-- A closed subset of a compact `ℝ`-convex set generates it exactly when it contains the
 closure of the extreme points. Thus that closure is the least closed generating subset. -/
 theorem IsCompact.closure_convexHull_eq_iff_closure_extremePoints_subset
     (hC : IsCompact C) (hconv : Convex ℝ C) (hs : IsClosed s) (hsC : s ⊆ C) :
@@ -123,8 +123,8 @@ theorem IsCompact.closure_convexHull_eq_iff_closure_extremePoints_subset
     exact closure_mono (convexHull_mono (subset_closure.trans h))
 
 /-- In a Hausdorff quasi-complete locally convex space, a compact set contains every extreme
-point of its closed convex hull. This combines Milman's converse with compactness of the
-closed convex hull; it applies, in particular, in complete spaces. -/
+point of its closed `ℝ`-convex hull. This combines Milman's converse with compactness of the
+closed `ℝ`-convex hull; it applies, in particular, in complete spaces. -/
 theorem IsCompact.extremePoints_closure_convexHull_subset_of_quasiCompleteSpace
     {𝕜 F : Type*} [RCLike 𝕜] [AddCommGroup F] [Module 𝕜 F] [Module ℝ F]
     [IsScalarTower ℝ 𝕜 F] [UniformSpace F] [IsUniformAddGroup F] [T2Space F]

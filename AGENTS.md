@@ -135,6 +135,8 @@ See `PROJECT_ORGANIZATION.md` for the file-move and split map.
   found elsewhere.
 - Files use the Lean module system: `module`, `public import`, and `public section` (or
   `public noncomputable section` when needed).
+  The Palomar submission files `Challenge.lean` and `Solution.lean` are exceptions: they follow
+  the submission instructions and must not contain a `module` statement.
 - A definition that downstream files must unfold, or about which they prove `rfl` lemmas,
   must be exposed; a `public` theorem proved by `rfl` about an unexposed definition fails
   at build time even though `lake env lean` accepts it.

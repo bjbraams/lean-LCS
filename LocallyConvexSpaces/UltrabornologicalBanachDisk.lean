@@ -68,7 +68,7 @@ variable {𝕜 : Type*} [RCLike 𝕜] {E X : Type*} [AddCommGroup E] [Module �
   [IsScalarTower ℝ 𝕜 E] [SeminormedAddCommGroup X] [NormedSpace 𝕜 X] [NormedSpace ℝ X]
   [IsScalarTower ℝ 𝕜 X] (f : X →ₗ[𝕜] E)
 
-/-- The image of the closed unit ball under a linear map is convex. -/
+/-- The image of the closed unit ball under a linear map is `ℝ`-convex. -/
 theorem LinearMap.convex_image_closedBall : Convex ℝ (f '' Metric.closedBall (0 : X) 1) :=
   (convex_closedBall (0 : X) 1).is_linear_image (f.restrictScalars ℝ).isLinear
 

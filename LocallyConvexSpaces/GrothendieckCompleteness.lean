@@ -21,7 +21,7 @@ comes from the original space. Neither direction requires Hausdorffness.
 
 The proof uses the approximation lemma `StrongDual.exists_forall_mem_polar_norm_sub_le`: for
 every neighbourhood `U` of zero there is `a U : E` with `‖f φ - φ (a U)‖ ≤ 1` on `U°`. For closed,
-convex, balanced neighbourhoods `V ⊆ U` the bipolar theorem gives `a V - a U ∈ 2 • U`, so the
+`ℝ`-convex, balanced neighbourhoods `V ⊆ U` the bipolar theorem gives `a V - a U ∈ 2 • U`, so the
 points `a U` form a Cauchy filter along the filter of small neighbourhoods. Its limit `x`
 satisfies `‖f φ - φ x‖ ≤ 3` on every `U°`, and therefore `f φ = φ x`.
 
@@ -57,12 +57,12 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module
 
 namespace StrongDual
 
-/-- The closed, convex, balanced neighbourhoods of zero. -/
+/-- The closed, `ℝ`-convex, balanced neighbourhoods of zero. -/
 private def goodNhds (𝕜 E : Type*) [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module ℝ E]
     [TopologicalSpace E] : Set (Set E) :=
   {U | U ∈ 𝓝 (0 : E) ∧ Convex ℝ U ∧ Balanced 𝕜 U ∧ IsClosed U}
 
-/-- Every neighbourhood of zero contains a closed, convex, balanced neighbourhood of zero. -/
+/-- Every neighbourhood of zero contains a closed, `ℝ`-convex, balanced neighbourhood of zero. -/
 private theorem exists_goodNhds_subset {W : Set E} (hW : W ∈ 𝓝 (0 : E)) :
     ∃ U ∈ goodNhds 𝕜 E, U ⊆ W := by
   have : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
@@ -72,7 +72,7 @@ private theorem exists_goodNhds_subset {W : Set E} (hW : W ∈ 𝓝 (0 : E)) :
     isClosed_closure⟩, (closure_minimal hVC hCcl).trans hCW⟩
 
 /-- Two points that approximate a linear functional `f` on the dual to within one on the polar
-of a closed, convex, balanced neighbourhood `U` of zero differ by an element of `2 • U`. -/
+of a closed, `ℝ`-convex, balanced neighbourhood `U` of zero differ by an element of `2 • U`. -/
 private theorem sub_mem_two_smul_of_forall_norm_sub_le (f : StrongDual 𝕜 E →ₗ[𝕜] 𝕜)
     {U : Set E} (hU : U ∈ goodNhds 𝕜 E) {b c : E} (hb : ∀ φ ∈ polar 𝕜 U, ‖f φ - φ b‖ ≤ 1)
     (hc : ∀ φ ∈ polar 𝕜 U, ‖f φ - φ c‖ ≤ 1) : c - b ∈ (2 : ℝ) • U := by
@@ -89,7 +89,7 @@ private theorem sub_mem_two_smul_of_forall_norm_sub_le (f : StrongDual 𝕜 E �
   rw [he] at h3
   linarith
 
-/-- The filter of small closed, convex, balanced neighbourhoods of zero is nontrivial. -/
+/-- The filter of small closed, `ℝ`-convex, balanced neighbourhoods of zero is nontrivial. -/
 private theorem neBot_smallSets_inf_goodNhds :
     ((𝓝 (0 : E)).smallSets ⊓ 𝓟 (goodNhds 𝕜 E)).NeBot := by
   rw [(hasBasis_smallSets (𝓝 (0 : E))).inf_principal_neBot_iff]
@@ -98,13 +98,13 @@ private theorem neBot_smallSets_inf_goodNhds :
   exact ⟨U, hUW, hU⟩
 
 omit [IsScalarTower ℝ 𝕜 E] [IsUniformAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] in
-/-- The closed, convex, balanced neighbourhoods of zero inside a given one form a set of the
+/-- The closed, `ℝ`-convex, balanced neighbourhoods of zero inside a given one form a set of the
 filter of small such neighbourhoods. -/
 private theorem powerset_inter_goodNhds_mem {U : Set E} (hU : U ∈ goodNhds 𝕜 E) :
     𝒫 U ∩ goodNhds 𝕜 E ∈ (𝓝 (0 : E)).smallSets ⊓ 𝓟 (goodNhds 𝕜 E) :=
   inter_mem_inf ((hasBasis_smallSets (𝓝 (0 : E))).mem_of_mem hU.1) (mem_principal_self _)
 
-/-- Points `a U` with `a V - a U ∈ 2 • U` for closed, convex, balanced neighbourhoods `V ⊆ U` of
+/-- Points `a U` with `a V - a U ∈ 2 • U` for closed, `ℝ`-convex, balanced neighbourhoods `V ⊆ U` of
 zero form a Cauchy family along the filter of small such neighbourhoods. -/
 private theorem cauchy_map_of_forall_sub_mem {a : Set E → E}
     (hdiff : ∀ U ∈ goodNhds 𝕜 E, ∀ V ∈ goodNhds 𝕜 E, V ⊆ U → a V - a U ∈ (2 : ℝ) • U) :
@@ -140,7 +140,7 @@ private theorem cauchy_map_of_forall_sub_mem {a : Set E → E}
   exact hw4 ▸ hw
 
 /-- If the linear functional `f` on the dual is within `3` of the evaluation at `x` on the polar
-of every closed, convex, balanced neighbourhood of zero, then `f` is the evaluation at `x`. -/
+of every closed, `ℝ`-convex, balanced neighbourhood of zero, then `f` is the evaluation at `x`. -/
 private theorem eq_apply_of_forall_norm_sub_le (f : StrongDual 𝕜 E →ₗ[𝕜] 𝕜) {x : E}
     (h3 : ∀ U ∈ goodNhds 𝕜 E, ∀ φ ∈ polar 𝕜 U, ‖f φ - φ x‖ ≤ 3) (φ : StrongDual 𝕜 E) :
     f φ = φ x := by

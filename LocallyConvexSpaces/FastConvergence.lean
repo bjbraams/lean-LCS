@@ -19,7 +19,7 @@ and in a Fréchet space every sequence that tends to zero is fast convergent to 
 
 The main results are the characterization of ultrabornological spaces by fast convergent
 sequences, §35.7.(3): a Hausdorff locally convex space is ultrabornological if and only if
-every convex balanced set that absorbs the fast convergent null sequences is a neighbourhood of
+every `ℝ`-convex balanced set that absorbs the fast convergent null sequences is a neighbourhood of
 zero; and §35.7.(6): a linear map from an ultrabornological space into a locally convex space is
 continuous if it maps fast convergent null sequences to bounded sequences.
 
@@ -217,7 +217,7 @@ end Frechet
 
 section Ultrabornological
 
-/-- **In an ultrabornological space a convex balanced set that absorbs the fast convergent null
+/-- **In an ultrabornological space a `ℝ`-convex balanced set that absorbs the fast convergent null
 sequences is a neighbourhood of zero**, Köthe II §35.7.(3). -/
 theorem UltrabornologicalSpace.mem_nhds_zero_of_forall_absorbs_isFastNullSeq
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E]
@@ -238,7 +238,7 @@ theorem UltrabornologicalSpace.mem_nhds_zero_of_forall_absorbs_isFastNullSeq
     range_comp _ _] at habs'
   exact habs'.preimage_linearMap
 
-/-- **A Hausdorff locally convex space in which every convex balanced set that absorbs the fast
+/-- **A Hausdorff locally convex space in which every `ℝ`-convex balanced set that absorbs the fast
 convergent null sequences is a neighbourhood of zero is ultrabornological**,
 Köthe II §35.7.(3). -/
 theorem UltrabornologicalSpace.of_forall_absorbs_isFastNullSeq [UniformSpace E]

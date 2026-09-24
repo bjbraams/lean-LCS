@@ -64,7 +64,7 @@ variable {𝕜 : Type*} [RCLike 𝕜] {E F : Type*}
   [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E]
   [AddCommGroup F] [Module 𝕜 F] [Module ℝ F] [IsScalarTower ℝ 𝕜 F]
 
-/-- If the preimage under a linear map of a convex symmetric set is not meagre, then the closure
+/-- If the preimage under a linear map of a `ℝ`-convex symmetric set is not meagre, then the closure
 of every positive multiple of the preimage is a neighbourhood of zero. -/
 private theorem LinearMap.closure_smul_preimage_mem_nhds_zero [IsTopologicalAddGroup E]
     [ContinuousSMul ℝ E] (A : E →ₗ[𝕜] F) {S : Set F} (hconv : Convex ℝ S)
@@ -121,7 +121,7 @@ variable {𝕜 : Type*} [RCLike 𝕜] {E F : Type*}
 omit [BaireSpace E] in
 /-- The core of the localization theorems for a sequentially closed graph. Let `A` be a linear
 map with sequentially closed graph from a first-countable topological vector space, let `σ` be a
-strand of a family `C` of convex symmetric sets such that no `A ⁻¹' C (res σ k)` is meagre, and
+strand of a family `C` of `ℝ`-convex symmetric sets such that no `A ⁻¹' C (res σ k)` is meagre, and
 let `c k > 0` be radii and `D k₀` sets such that for `X k ∈ C (res σ (k + 1))` the series
 `∑ c (k₀ + j) • X (k₀ + j)` converges to a point of `D k₀`. Then every `A ⁻¹' D k₀` is a
 neighbourhood of zero. -/

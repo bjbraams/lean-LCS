@@ -11,7 +11,7 @@ public import Mathlib.Analysis.Normed.Module.Convex
 public import Mathlib.Analysis.RCLike.Basic
 
 /-!
-# Balanced and convex polars of linear pairings
+# Balanced and `ℝ`-convex polars of linear pairings
 
 Neither result requires a topology on the paired modules.
 
@@ -46,7 +46,7 @@ section Polar
 variable [AddCommGroup E] [Module 𝕜 E] [AddCommGroup F] [Module 𝕜 F]
   (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) (s : Set E)
 
-/-- Polars are convex. -/
+/-- Polars are `ℝ`-convex. -/
 theorem convex_polar [Module ℝ F] [IsScalarTower ℝ 𝕜 F] : Convex ℝ (B.polar s) := by
   rw [polar_eq_biInter_preimage]
   exact convex_iInter₂ fun x _ ↦

@@ -12,8 +12,8 @@ public import WebbedSpaces.DeWilde.Localization
 /-!
 # The localization theorem for completing webs
 
-For a completing web `C` of convex balanced sets, which need not be strict, the localization theorem
-holds with the closures of the sets of the web ([G. Köthe, *Topological Vector Spaces
+For a completing web `C` of `ℝ`-convex balanced sets, which need not be strict, the localization
+theorem holds with the closures of the sets of the web ([G. Köthe, *Topological Vector Spaces
 II*][kothe1979], §35.6.(4)): for a linear map `A` with sequentially closed graph from a
 first-countable Baire topological vector space `E`, or with closed graph from a Baire topological
 vector space `E`, into a space with such a web there is a strand `σ` such that every
@@ -21,7 +21,7 @@ vector space `E`, into a space with such a web there is a strand `σ` such that 
 
 Köthe leaves the proof to the reader. Here it follows from the cores of the localization
 theorems in `WebbedSpaces.DeWilde.Localization`: with radii `c k ≤ 2⁻ᵏ⁻¹` the partial sums
-of a series `∑ c (k₀ + j) • X (k₀ + j)` with `X k ∈ C (res σ (k + 1))` lie in the convex set
+of a series `∑ c (k₀ + j) • X (k₀ + j)` with `X k ∈ C (res σ (k + 1))` lie in the `ℝ`-convex set
 `C (res σ (k₀ + 1))`, so the sum lies in its closure.
 
 ## Main statements
@@ -50,7 +50,7 @@ section Series
 variable {F : Type*} [AddCommGroup F] [Module ℝ F] [TopologicalSpace F]
   [IsTopologicalAddGroup F]
 
-/-- Along a strand `σ` of a completing web of convex symmetric sets there are radii `c k > 0`
+/-- Along a strand `σ` of a completing web of `ℝ`-convex symmetric sets there are radii `c k > 0`
 such that for `X k ∈ C (res σ (k + 1))` every tail `∑ c (k₀ + j) • X (k₀ + j)` converges to a
 point of the closure of `C (res σ (k₀ + 1))`. -/
 theorem IsCompletingWeb.exists_radius_forall_tendsto_mem_closure {C : List ℕ → Set F}
@@ -87,7 +87,7 @@ variable {𝕜 : Type*} [RCLike 𝕜] {E F : Type*}
 
 /-- **The localization theorem for a completing web**: for a linear map `A` with sequentially
 closed graph from a first-countable Baire topological vector space into a space with a
-completing web `C` of convex balanced sets there is a strand `σ` such that every
+completing web `C` of `ℝ`-convex balanced sets there is a strand `σ` such that every
 `A ⁻¹' closure (C (res σ k))` is a neighbourhood of zero, Köthe II §35.6.(4) a). -/
 theorem LinearMap.exists_forall_preimage_closure_res_mem_nhds_zero [FirstCountableTopology E]
     {C : List ℕ → Set F} (hC : IsCompletingWeb C) (hconv : ∀ l, Convex ℝ (C l))
@@ -109,7 +109,7 @@ theorem LinearMap.exists_forall_preimage_closure_res_mem_nhds_zero [FirstCountab
 
 /-- **The localization theorem for a completing web and a closed graph**: for a linear map `A`
 with closed graph from a Baire topological vector space into a space with a completing web `C`
-of convex balanced sets there is a strand `σ` such that every `A ⁻¹' closure (C (res σ k))` is a
+of `ℝ`-convex balanced sets there is a strand `σ` such that every `A ⁻¹' closure (C (res σ k))` is a
 neighbourhood of zero, Köthe II §35.6.(4) b). -/
 theorem LinearMap.exists_forall_preimage_closure_res_mem_nhds_zero_of_isClosed
     {C : List ℕ → Set F} (hC : IsCompletingWeb C) (hconv : ∀ l, Convex ℝ (C l))

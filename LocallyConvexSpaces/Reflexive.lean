@@ -40,7 +40,7 @@ holds if and only if the strong topology is coarser than the Mackey topology `τ
   continuity of the bidual map imply semi-reflexivity of the strong dual.
 * `semiReflexiveSpace_iff_isCompatibleTopology`, `semiReflexiveSpace_iff_mackeyTopology_le`.
 * `semiReflexiveSpace_iff_forall_isVonNBounded`: a Hausdorff locally convex space is
-  semi-reflexive if and only if every bounded set lies in a weakly compact convex balanced set.
+  semi-reflexive if and only if every bounded set lies in a weakly compact `ℝ`-convex balanced set.
 
 The characterizations of reflexive spaces (semi-reflexive and barrelled; barrelled Montel
 spaces) are in `LocallyConvexSpaces.QuasiBarrelled`.
@@ -180,7 +180,7 @@ section Bounded
 variable [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [IsTopologicalAddGroup E]
 
 omit [IsTopologicalAddGroup E] in
-/-- If every bounded subset of `E` lies in a weakly compact, convex, balanced set, then `E` is
+/-- If every bounded subset of `E` lies in a weakly compact, `ℝ`-convex, balanced set, then `E` is
 semi-reflexive. -/
 theorem SemiReflexiveSpace.of_forall_isVonNBounded
     (h : ∀ S : Set E, Bornology.IsVonNBounded 𝕜 S →
@@ -199,7 +199,7 @@ theorem SemiReflexiveSpace.of_forall_isVonNBounded
 variable [LocallyConvexSpace ℝ E] [T2Space E]
 
 /-- In a semi-reflexive Hausdorff locally convex space every bounded set lies in a weakly
-compact, convex, balanced set. -/
+compact, `ℝ`-convex, balanced set. -/
 theorem SemiReflexiveSpace.exists_mem_mackeyFamily_subset [SemiReflexiveSpace 𝕜 E] {S : Set E}
     (hS : Bornology.IsVonNBounded 𝕜 S) :
     ∃ K ∈ (topDualPairing 𝕜 E).mackeyFamily, toWeakSpace 𝕜 E '' S ⊆ K := by
@@ -226,7 +226,7 @@ theorem SemiReflexiveSpace.exists_mem_mackeyFamily_subset [SemiReflexiveSpace �
   exact hφS x hx
 
 /-- A Hausdorff locally convex space is **semi-reflexive if and only if every bounded set lies
-in a weakly compact, convex, balanced set**; in particular if and only if its bounded sets are
+in a weakly compact, `ℝ`-convex, balanced set**; in particular if and only if its bounded sets are
 relatively weakly compact. -/
 theorem semiReflexiveSpace_iff_forall_isVonNBounded :
     SemiReflexiveSpace 𝕜 E ↔ ∀ S : Set E, Bornology.IsVonNBounded 𝕜 S →

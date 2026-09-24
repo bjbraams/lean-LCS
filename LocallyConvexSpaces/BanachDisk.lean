@@ -14,7 +14,8 @@ public import MathlibExtras.Analysis.ConvexHull
 /-!
 # Banach disks and the normed spaces `E_B`
 
-A *disk* in a vector space `E` is a convex balanced set `B`. It spans a subspace `E_B` of `E`,
+A *disk* in a vector space `E` over `𝕜` is a set `B` that is convex over `ℝ` and balanced
+over `𝕜`. It spans a subspace `E_B` of `E`,
 on which the gauge of `B` is a seminorm; if `E` is a Hausdorff topological vector space and `B`
 is bounded, the gauge is a norm and the inclusion `E_B → E` is continuous. The disk `B` is a
 *Banach disk* if `E_B` is complete.
@@ -22,7 +23,7 @@ is bounded, the gauge is a norm and the inclusion `E_B → E` is continuous. The
 ## Implementation
 
 `DiskSpace 𝕜 B` is a type synonym of the span of `B`. It is defined for an arbitrary set `B`
-and carries the gauge of the *disk hull* `diskHull 𝕜 B`, the convex balanced hull of
+and carries the gauge of the *disk hull* `diskHull 𝕜 B`, the `ℝ`-convex balanced hull of
 `insert 0 B`, which is `B` itself when `B` is a nonempty disk. In this way the instances
 `SeminormedAddCommGroup` and `NormedSpace` need no hypotheses on `B`, nothing has to be bundled,
 and hypotheses on `B` appear only in theorems. This keeps the algebraic span independent of
@@ -66,8 +67,8 @@ open scoped Topology Pointwise
 variable (𝕜 : Type*) {E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module ℝ E]
   [IsScalarTower ℝ 𝕜 E]
 
-/-- The **disk hull** of a set `B`: the convex balanced hull of `insert 0 B`. It is `B` itself if
-`B` is a nonempty convex balanced set. -/
+/-- The **disk hull** of a set `B`: the `ℝ`-convex balanced hull of `insert 0 B`. It is `B` itself
+if `B` is a nonempty `ℝ`-convex balanced set. -/
 @[expose]
 def diskHull (B : Set E) : Set E :=
   convexHull ℝ (balancedHull 𝕜 (insert 0 B))
@@ -92,7 +93,7 @@ theorem zero_mem_diskHull (B : Set E) : (0 : E) ∈ diskHull 𝕜 B :=
   subset_convexHull ℝ _ (subset_balancedHull 𝕜 (mem_insert 0 B))
 
 omit [IsScalarTower ℝ 𝕜 E] in
-/-- The disk hull is convex. -/
+/-- The disk hull is `ℝ`-convex. -/
 theorem convex_diskHull (B : Set E) : Convex ℝ (diskHull 𝕜 B) :=
   convex_convexHull ℝ _
 
@@ -101,7 +102,7 @@ theorem balanced_diskHull (B : Set E) : Balanced 𝕜 (diskHull 𝕜 B) :=
   (balancedHull.balanced _).convexHull_real
 
 omit [IsScalarTower ℝ 𝕜 E] in
-/-- The disk hull of a nonempty convex balanced set is the set itself. -/
+/-- The disk hull of a nonempty `ℝ`-convex balanced set is the set itself. -/
 theorem diskHull_eq_self {B : Set E} (hc : Convex ℝ B) (hb : Balanced 𝕜 B) (hne : B.Nonempty) :
     diskHull 𝕜 B = B := by
   have h0 : insert (0 : E) B = B := insert_eq_of_mem (hb.zero_mem hne)
@@ -168,7 +169,7 @@ variable (𝕜 B)
 def unitDisk : Set (DiskSpace 𝕜 B) :=
   incl 𝕜 B ⁻¹' diskHull 𝕜 B
 
-/-- The unit disk of `E_B` is convex. -/
+/-- The unit disk of `E_B` is `ℝ`-convex. -/
 theorem convex_unitDisk : Convex ℝ (unitDisk 𝕜 B) :=
   (convex_diskHull B).is_linear_preimage ((incl 𝕜 B).restrictScalars ℝ).isLinear
 
@@ -435,13 +436,13 @@ theorem absorbent_diskHull_of_span_eq_top (B : Set E) (h : Submodule.span 𝕜 B
   rw [inv_mul_le_iff₀ hapos, mul_one]
   exact (le_max_left r 1).trans ha
 
-/-- A subset `B` of a topological vector space is a **Banach disk** if it is convex, balanced and
-bounded, and `DiskSpace 𝕜 B` is complete for the gauge of `diskHull 𝕜 B`. For a nonempty disk
+/-- A subset `B` of a topological vector space is a **Banach disk** if it is `ℝ`-convex, balanced
+and bounded, and `DiskSpace 𝕜 B` is complete for the gauge of `diskHull 𝕜 B`. For a nonempty disk
 this is the gauge of `B` itself. The empty set is allowed. Without Hausdorffness of the ambient
 space the resulting complete space is only seminormed in general. -/
 structure Bornology.IsBanachDisk (𝕜 : Type*) {E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E]
     [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] (B : Set E) : Prop where
-  /-- A Banach disk is convex. -/
+  /-- A Banach disk is `ℝ`-convex. -/
   convex : Convex ℝ B
   /-- A Banach disk is balanced. -/
   balanced : Balanced 𝕜 B

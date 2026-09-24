@@ -15,12 +15,12 @@ public import TopologicalVectorSpaces.Basic
 /-!
 # The bipolar theorem
 
-The bipolar of a set is its closed, convex, balanced hull. This file proves the theorem in a
-form that does not mention a hull operator: if `t` is a nonempty, closed, convex, balanced set
-containing `s` then `t` contains the bipolar of `s`; in particular a nonempty, closed, convex,
-balanced set is its own bipolar. Since polars are closed, convex and balanced and the bipolar of
+The bipolar of a set is its closed, `ℝ`-convex, balanced hull. This file proves the theorem in a
+form that does not mention a hull operator: if `t` is a nonempty, closed, `ℝ`-convex, balanced set
+containing `s` then `t` contains the bipolar of `s`; in particular a nonempty, closed, `ℝ`-convex,
+balanced set is its own bipolar. Since polars are closed, `ℝ`-convex and balanced and the bipolar of
 `s` contains `s`, this characterizes the bipolar of a nonempty set as the smallest closed,
-convex, balanced set containing it.
+`ℝ`-convex, balanced set containing it.
 
 The theorem is given in two settings.
 
@@ -35,7 +35,7 @@ which `WeakBilin B` unfolds to `WeakDual 𝕜 E`.
 
 ## Main statements
 
-* `StrongDual.exists_mem_polar_one_lt_norm`: a point outside a nonempty, closed, convex,
+* `StrongDual.exists_mem_polar_one_lt_norm`: a point outside a nonempty, closed, `ℝ`-convex,
   balanced subset `s` of a locally convex space is separated from it by a functional `φ` in the
   polar of `s` with `1 < ‖φ x‖`.
 * `LinearMap.eq_zero_of_forall_norm_le_one`: a linear functional bounded by one on a submodule
@@ -69,12 +69,13 @@ the form `LinearMap.pairing_flip_polar_polar`:
 `(pairing B).flip.polar ((pairing B).polar s) = closedAbsConvexHull 𝕜 s` for a nonempty subset `s`
 of `WeakBilin B`, where `WeakBilin.pairing` is introduced in the same PR. That is the same
 mathematical content as `LinearMap.flip_polar_polar_subset` below, in a different formulation. The
-present file was written after reading that PR. The proof here is organized differently, through the
-separation lemma for an arbitrary locally convex space, but the central steps are the same classical
-ones as in the PR: strict separation of a point from a closed convex set, rotation of the scalar to
-pass from the real part to the norm, rescaling of the functional, and the representation of weakly
-continuous functionals (`LinearMap.dualEmbedding_surjective`). When that PR is in the pinned
-Mathlib, the pairing version here should be restated in terms of it or removed.
+present file was written after reading that PR. The proof here is organized differently, through
+the separation lemma for an arbitrary locally convex space, but the central steps are the same
+classical ones as in the PR: strict separation of a point from a closed `ℝ`-convex set, rotation
+of the scalar to pass from the real part to the norm, rescaling of the functional, and the
+representation of weakly continuous functionals (`LinearMap.dualEmbedding_surjective`). When that
+PR is in the pinned Mathlib, the pairing version here should be restated in terms of it or
+removed.
 
 ## References
 
@@ -100,7 +101,7 @@ section Separation
 variable [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E]
   [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E]
 
-/-- In a locally convex space, a point `x` outside a nonempty, closed, convex, balanced set `s`
+/-- In a locally convex space, a point `x` outside a nonempty, closed, `ℝ`-convex, balanced set `s`
 is separated from `s` by a continuous linear functional in the polar of `s`: there is `φ` with
 `‖φ y‖ ≤ 1` for all `y ∈ s` and `1 < ‖φ x‖`.
 
@@ -155,7 +156,7 @@ variable [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜
   [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E]
 
 /-- The **bipolar theorem** for a locally convex space `E` and its continuous dual: a nonempty,
-closed, convex, balanced set `t` that contains `s` contains the bipolar of `s`.
+closed, `ℝ`-convex, balanced set `t` that contains `s` contains the bipolar of `s`.
 
 Provenance: a reformulated corollary of `LinearMap.pairing_flip_polar_polar` in Mathlib PR
 #26345 (C. Hoskin), file `Mathlib/Analysis/LocallyConvex/Bipolar.lean`. This proof uses the
@@ -170,7 +171,7 @@ theorem StrongDual.bipolar_subset {s t : Set E} (hst : s ⊆ t) (hc : Convex ℝ
   exact hφx.not_ge (hx φ fun y hy ↦ hφ y (hst hy))
 
 /-- The **bipolar theorem** for a locally convex space `E` and its continuous dual: a nonempty,
-closed, convex, balanced set is its own bipolar.
+closed, `ℝ`-convex, balanced set is its own bipolar.
 
 Provenance: a reformulated corollary of `LinearMap.pairing_flip_polar_polar` in Mathlib PR
 #26345 (C. Hoskin), file `Mathlib/Analysis/LocallyConvex/Bipolar.lean`. This proof uses the
@@ -191,7 +192,7 @@ section Pairing
 variable [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E]
   [AddCommGroup F] [Module 𝕜 F] (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜)
 
-/-- For a bilinear pairing `B`, a point `x` outside a nonempty, weakly closed, convex, balanced
+/-- For a bilinear pairing `B`, a point `x` outside a nonempty, weakly closed, `ℝ`-convex, balanced
 subset `t` of `E` is separated from `t` by an element of the polar of `t`: there is `y : F` with
 `‖B z y‖ ≤ 1` for all `z ∈ t` and `1 < ‖B x y‖`.
 
@@ -206,7 +207,7 @@ theorem exists_mem_polar_one_lt_norm {t : Set (WeakBilin B)} (hc : Convex ℝ t)
   obtain ⟨y, rfl⟩ := B.dualEmbedding_surjective φ
   exact ⟨y, fun z hz ↦ hφ z hz, hφx⟩
 
-/-- The **bipolar theorem** for a bilinear pairing: a nonempty, weakly closed, convex, balanced
+/-- The **bipolar theorem** for a bilinear pairing: a nonempty, weakly closed, `ℝ`-convex, balanced
 set `t` that contains `s` contains the bipolar of `s`.
 
 The same content, formulated as `bipolar s = closedAbsConvexHull 𝕜 s`, is
@@ -222,7 +223,7 @@ theorem flip_polar_polar_subset {s t : Set (WeakBilin B)} (hst : s ⊆ t) (hc : 
   obtain ⟨y, hy, hyx⟩ := B.exists_mem_polar_one_lt_norm hc hb hcl hne hxt
   exact hyx.not_ge (hx y fun z hz ↦ hy z (hst hz))
 
-/-- The **bipolar theorem** for a bilinear pairing: a nonempty, weakly closed, convex, balanced
+/-- The **bipolar theorem** for a bilinear pairing: a nonempty, weakly closed, `ℝ`-convex, balanced
 set is its own bipolar.
 
 Provenance: a reformulated corollary of `LinearMap.pairing_flip_polar_polar` in Mathlib PR

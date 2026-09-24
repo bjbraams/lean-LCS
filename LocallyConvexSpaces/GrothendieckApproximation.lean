@@ -14,7 +14,7 @@ public import Mathlib.Analysis.LocallyConvex.WeakDual
 # Uniform approximation of linear forms and Grothendieck's completeness theorem
 
 A linear form on a real or complex locally convex space that is continuous on a closed
-convex balanced set can be uniformly approximated there by continuous linear forms on the
+`ℝ`-convex balanced set can be uniformly approximated there by continuous linear forms on the
 whole space. Separation of its graph from a point on the scalar axis gives the approximation.
 
 Applied to the weak dual, this shows that a linear form weak-* continuous on a polar is
@@ -43,7 +43,7 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module
   [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] [IsTopologicalAddGroup E]
   [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E]
 
-/-- A linear form continuous on a closed convex balanced set can be approximated uniformly
+/-- A linear form continuous on a closed `ℝ`-convex balanced set can be approximated uniformly
 there by continuous linear forms on the entire space. Boundedness of the set is unnecessary.
 This is the approximation step in Schaefer–Wolff, IV §6.2, using
 separation of its graph in the product with the scalar field. -/

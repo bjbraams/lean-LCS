@@ -350,7 +350,7 @@ end Bidual
 section Montel
 
 /-- In a Montel space, that is a space in which closed bounded sets are compact, every bounded
-set lies in a weakly compact, convex, balanced set; hence a locally convex Montel space is
+set lies in a weakly compact, `ℝ`-convex, balanced set; hence a locally convex Montel space is
 semi-reflexive. -/
 theorem MontelSpace.semiReflexiveSpace [T2Space E] [MontelSpace 𝕜 E] : SemiReflexiveSpace 𝕜 E := by
   have : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜

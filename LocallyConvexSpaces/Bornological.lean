@@ -17,8 +17,8 @@ A subset of a topological vector space is *bornivorous* if it absorbs every boun
 topological vector space is *bornological* if every seminorm that is bounded on the bounded sets is
 continuous. This follows Mathlib's seminorm definition of `BarrelledSpace` and makes sense over any
 seminormed ring. For real or complex spaces it is equivalent to the classical condition that every
-convex, balanced, bornivorous set is a neighbourhood of zero, and it implies that every linear map
-into a locally convex space that maps bounded sets to bounded sets is continuous.
+`ℝ`-convex, balanced, bornivorous set is a neighbourhood of zero, and it implies that every linear
+map into a locally convex space that maps bounded sets to bounded sets is continuous.
 
 A topological vector space `E` is *ultrabornological* if every seminorm whose compositions with
 the continuous linear maps from complete seminormed spaces into `E` are continuous is itself
@@ -48,7 +48,7 @@ map on such a space is continuous as soon as its restrictions to Banach spaces a
   bounded on the bounded sets if and only if its balls are bornivorous.
 * `BornologicalSpace.mem_nhds_zero`, `BornologicalSpace.of_forall_mem_nhds_zero`,
   `bornologicalSpace_iff_forall_mem_nhds_zero`: the characterization of real or complex
-  bornological spaces by convex, balanced, bornivorous sets.
+  bornological spaces by `ℝ`-convex, balanced, bornivorous sets.
 * `BornologicalSpace.of_firstCountableTopology`: first-countable (in particular metrizable, in
   particular normed) spaces are bornological.
 * `LinearMap.continuous_of_forall_isVonNBounded_image`: a linear map from a bornological space
@@ -66,7 +66,9 @@ map on such a space is continuous as soon as its restrictions to Banach spaces a
   continuous linear map from a complete seminormed space into `E` is continuous.
 * `UltrabornologicalSpace.mem_nhds_zero`, `UltrabornologicalSpace.of_forall_mem_nhds_zero`,
   `ultrabornologicalSpace_iff_forall_mem_nhds_zero`: the characterization of real or complex
-  ultrabornological spaces by convex, balanced, absorbent sets.
+  ultrabornological spaces by the condition that every `ℝ`-convex, balanced, absorbent set
+  whose preimage under every continuous linear map from a complete seminormed space is a
+  neighbourhood of zero is itself a neighbourhood of zero.
 * `UltrabornologicalSpace.of_eq_locallyConvexFinalTopology`: a final locally convex topology of
   complete seminormed spaces is ultrabornological.
 * `locallyConvexFinalTopology.ultrabornologicalSpace`: inductive limits of ultrabornological
@@ -81,7 +83,7 @@ maps.
 
 That Fréchet spaces are ultrabornological is proved in
 `LocallyConvexSpaces.FrechetUltrabornological`, through maps from `ℓ¹`. Banach disks (the normed
-spaces spanned by bounded, convex, balanced sets) are in `LocallyConvexSpaces.BanachDisk`; that
+spaces spanned by bounded, `ℝ`-convex, balanced sets) are in `LocallyConvexSpaces.BanachDisk`; that
 every quasi-complete bornological space is ultrabornological is in
 `LocallyConvexSpaces.BornologicalUltrabornological`, and the characterizations of
 ultrabornological spaces by Banach disks, compact disks and fast convergent sequences are in
@@ -201,7 +203,7 @@ variable (𝕜 E : Type*) [SeminormedRing 𝕜] [AddGroup E] [SMul 𝕜 E] [Topo
 /-- A topological vector space is **bornological** if every seminorm that is bounded on the von
 Neumann bounded sets is continuous. This mirrors Mathlib's seminorm definition of
 `BarrelledSpace`. For real or complex spaces it is equivalent to the classical condition that
-every convex, balanced, bornivorous set is a neighbourhood of zero; see
+every `ℝ`-convex, balanced, bornivorous set is a neighbourhood of zero; see
 `bornologicalSpace_iff_forall_mem_nhds_zero`. -/
 class BornologicalSpace : Prop where
   /-- In a bornological space every seminorm that is bounded on the bounded sets is
@@ -247,7 +249,7 @@ section BornologicalRCLike
 variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module ℝ E]
   [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E]
 
-/-- In a real or complex bornological space every convex, balanced, bornivorous set is a
+/-- In a real or complex bornological space every `ℝ`-convex, balanced, bornivorous set is a
 neighbourhood of zero. -/
 theorem BornologicalSpace.mem_nhds_zero [BornologicalSpace 𝕜 E] (s : Set E) (hc : Convex ℝ s)
     (hb : Balanced 𝕜 s) (hs : IsBornivorous 𝕜 s) : s ∈ 𝓝 (0 : E) := by
@@ -263,7 +265,7 @@ theorem BornologicalSpace.mem_nhds_zero [BornologicalSpace 𝕜 E] (s : Set E) (
   rw [p.mem_ball_zero, gaugeSeminorm_toFun] at hx
   exact setOfPred_gauge_lt_one_subset_self hc hs.absorbent.zero_mem ha hx
 
-/-- A real or complex topological vector space in which every convex, balanced, bornivorous set
+/-- A real or complex topological vector space in which every `ℝ`-convex, balanced, bornivorous set
 is a neighbourhood of zero is bornological. -/
 theorem BornologicalSpace.of_forall_mem_nhds_zero
     (h : ∀ s : Set E, Convex ℝ s → Balanced 𝕜 s → IsBornivorous 𝕜 s → s ∈ 𝓝 (0 : E)) :
@@ -271,7 +273,7 @@ theorem BornologicalSpace.of_forall_mem_nhds_zero
   ⟨fun p hp ↦ Seminorm.continuous (r := 1) (h _ (p.convex_ball 0 1) (p.balanced_ball_zero 1)
     (p.isBornivorous_ball hp one_pos))⟩
 
-/-- A real or complex topological vector space is bornological if and only if every convex,
+/-- A real or complex topological vector space is bornological if and only if every `ℝ`-convex,
 balanced, bornivorous set is a neighbourhood of zero. -/
 theorem bornologicalSpace_iff_forall_mem_nhds_zero :
     BornologicalSpace 𝕜 E ↔
@@ -397,7 +399,7 @@ section UltrabornologicalRCLike
 variable {𝕜 : Type*} {E : Type u} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module ℝ E]
   [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E]
 
-/-- In a real or complex ultrabornological space a convex, balanced, absorbent set is a
+/-- In a real or complex ultrabornological space a `ℝ`-convex, balanced, absorbent set is a
 neighbourhood of zero as soon as its preimage under every continuous linear map from a complete
 seminormed space is a neighbourhood of zero. -/
 theorem UltrabornologicalSpace.mem_nhds_zero [UltrabornologicalSpace 𝕜 E] {S : Set E}
@@ -416,7 +418,7 @@ theorem UltrabornologicalSpace.mem_nhds_zero [UltrabornologicalSpace 𝕜 E] {S 
     (by simp)) fun x hx ↦ ?_
   exact setOfPred_gauge_lt_one_subset_self hc ha.zero_mem ha.restrictScalars_real hx
 
-/-- A real or complex topological vector space is ultrabornological if every convex, balanced,
+/-- A real or complex topological vector space is ultrabornological if every `ℝ`-convex, balanced,
 absorbent set whose preimages under the continuous linear maps from complete seminormed spaces
 are neighbourhoods of zero is itself a neighbourhood of zero. -/
 theorem UltrabornologicalSpace.of_forall_mem_nhds_zero [IsTopologicalAddGroup E]
@@ -433,7 +435,7 @@ theorem UltrabornologicalSpace.of_forall_mem_nhds_zero [IsTopologicalAddGroup E]
           exact hx)⟩
 
 /-- A real or complex topological vector space is ultrabornological if and only if every
-convex, balanced, absorbent set whose preimages under the continuous linear maps from complete
+`ℝ`-convex, balanced, absorbent set whose preimages under the continuous linear maps from complete
 seminormed spaces are neighbourhoods of zero is itself a neighbourhood of zero. -/
 theorem ultrabornologicalSpace_iff_forall_mem_nhds_zero [IsTopologicalAddGroup E]
     [ContinuousConstSMul 𝕜 E] :

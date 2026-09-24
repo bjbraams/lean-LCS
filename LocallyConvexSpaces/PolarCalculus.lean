@@ -10,16 +10,16 @@ public import Mathlib.Analysis.LocallyConvex.Bounded
 public import TopologicalVectorSpaces.PolarCalculus
 
 /-!
-# Bounded convex hulls
+# Bounded `ℝ`-convex hulls
 
 The real convex hull of a bounded set in a real or complex locally convex space is bounded.
-Balanced hulls preserve boundedness (`Bornology.IsVonNBounded.balancedHull`), so convex
+Balanced hulls preserve boundedness (`Bornology.IsVonNBounded.balancedHull`), so `ℝ`-convex
 balanced hulls of bounded sets are bounded as well. The polar identities for closures, hulls
 and scalar multiples are in `TopologicalVectorSpaces.PolarCalculus`.
 
 ## Main statements
 
-* `Bornology.IsVonNBounded.convexHull`: the convex hull of a bounded set is bounded.
+* `Bornology.IsVonNBounded.convexHull`: the `ℝ`-convex hull of a bounded set is bounded.
 
 ## References
 
@@ -37,7 +37,7 @@ section Bounded
 variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module ℝ E]
   [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E]
 
-/-- In a locally convex space the convex hull of a bounded set is bounded. -/
+/-- In a locally convex space the `ℝ`-convex hull of a bounded set is bounded. -/
 theorem Bornology.IsVonNBounded.convexHull [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E]
     {s : Set E} (hs : IsVonNBounded 𝕜 s) : IsVonNBounded 𝕜 (convexHull ℝ s) := by
   intro V hV

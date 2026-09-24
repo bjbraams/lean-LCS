@@ -12,7 +12,7 @@ public import TopologicalVectorSpaces.Basic
 /-!
 # Barrels
 
-A *barrel* in a topological vector space over `ℝ` or `ℂ` is a set that is closed, convex,
+A *barrel* in a topological vector space over `ℝ` or `ℂ` is a set that is closed, `ℝ`-convex,
 balanced and absorbent. Mathlib defines `BarrelledSpace 𝕜 E` by the requirement that every lower
 semicontinuous seminorm on `E` is continuous. This file introduces barrels and shows that this
 agrees with the classical definition: `E` is barrelled if and only if every barrel is a
@@ -20,7 +20,7 @@ neighbourhood of zero. This resolves the TODO in `Mathlib/Analysis/LocallyConvex
 
 ## Main definitions
 
-* `IsBarrel 𝕜 s`: the set `s` is closed, convex, balanced and absorbent.
+* `IsBarrel 𝕜 s`: the set `s` is closed, `ℝ`-convex, balanced and absorbent.
 * `IsBarrel.gaugeSeminorm`: the gauge of a barrel, as a seminorm.
 
 ## Main statements
@@ -36,12 +36,13 @@ neighbourhood of zero. This resolves the TODO in `Mathlib/Analysis/LocallyConvex
 * `nhds_zero_hasBasis_isBarrel`: in a polynormable (in particular, in a locally convex) space
   the barrels that are neighbourhoods of zero form a basis of neighbourhoods of zero.
 * `IsBarrel.preimage`: the preimage of a barrel under a continuous linear map is a barrel.
-* `isBarrel_closure_preimage`, `LinearMap.closure_preimage_mem_nhds_of_barrelledSpace`: for a linear
-  map `f` (not assumed continuous) the closure of the preimage of a convex balanced neighbourhood of
-  zero is a barrel; hence it is a neighbourhood of zero if the domain is barrelled. This "near
-  continuity" is the point of entry of barrelledness into the closed graph theorem.
+* `isBarrel_closure_preimage`, `LinearMap.closure_preimage_mem_nhds_of_barrelledSpace`: for a
+  linear   map `f` (not assumed continuous) the closure of the preimage of a `ℝ`-convex balanced
+  neighbourhood of zero is a barrel; hence it is a neighbourhood of zero if the domain is
+  barrelled.   This "near   continuity" is the point of entry of barrelledness into the closed
+  graph theorem.
 * `isBarrel_closure_image`, `LinearMap.closure_image_mem_nhds_of_barrelledSpace`: for a surjective
-  linear map `f` (not assumed continuous) the closure of the image of a convex balanced
+  linear map `f` (not assumed continuous) the closure of the image of a `ℝ`-convex balanced
   neighbourhood of zero is a barrel; hence it is a neighbourhood of zero if the codomain is
   barrelled. This "near openness" is the point of entry of barrelledness into the open mapping
   theorem.
@@ -81,11 +82,11 @@ section Defs
 
 variable (𝕜) [SeminormedRing 𝕜] [AddCommMonoid E] [SMul 𝕜 E] [Module ℝ E] [TopologicalSpace E]
 
-/-- A set is a **barrel** if it is closed, convex, balanced and absorbent. -/
+/-- A set is a **barrel** if it is closed, convex over `ℝ`, and balanced and absorbent over `𝕜`. -/
 structure IsBarrel (s : Set E) : Prop where
   /-- A barrel is closed. -/
   isClosed : IsClosed s
-  /-- A barrel is convex. -/
+  /-- A barrel is `ℝ`-convex. -/
   convex : Convex ℝ s
   /-- A barrel is balanced. -/
   balanced : Balanced 𝕜 s
@@ -120,7 +121,7 @@ theorem inter (hs : IsBarrel 𝕜 s) (ht : IsBarrel 𝕜 t) : IsBarrel 𝕜 (s �
 
 end IsBarrel
 
-/-- The closure of a convex, balanced and absorbent set is a barrel. -/
+/-- The closure of a `ℝ`-convex, balanced and absorbent set is a barrel. -/
 theorem isBarrel_closure [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [ContinuousConstSMul ℝ E]
     (hc : Convex ℝ s) (hb : Balanced 𝕜 s) (ha : Absorbent 𝕜 s) : IsBarrel 𝕜 (closure s) :=
   ⟨isClosed_closure, hc.closure, hb.closure, ha.mono subset_closure⟩
@@ -243,7 +244,7 @@ section NearContinuity
 variable [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E]
   [AddCommGroup F] [Module 𝕜 F] [Module ℝ F] [IsScalarTower ℝ 𝕜 F]
 
-/-- The closure of the preimage under a linear map of a convex, balanced and absorbent set is
+/-- The closure of the preimage under a linear map of a `ℝ`-convex, balanced and absorbent set is
 a barrel. The linear map is not assumed to be continuous. -/
 theorem isBarrel_closure_preimage (f : E →ₗ[𝕜] F) {V : Set F} (hc : Convex ℝ V)
     (hb : Balanced 𝕜 V) (ha : Absorbent 𝕜 V) : IsBarrel 𝕜 (closure (f ⁻¹' V)) :=
@@ -252,7 +253,7 @@ theorem isBarrel_closure_preimage (f : E →ₗ[𝕜] F) {V : Set F} (hc : Conve
     (hb.preimage f) (ha.preimage f)
 
 /-- A linear map from a barrelled space is *nearly continuous*: the closure of the preimage of a
-convex balanced neighbourhood of zero is a neighbourhood of zero. The linear map is not assumed
+`ℝ`-convex balanced neighbourhood of zero is a neighbourhood of zero. The linear map is not assumed
 to be continuous. -/
 theorem LinearMap.closure_preimage_mem_nhds_of_barrelledSpace [BarrelledSpace 𝕜 E]
     [TopologicalSpace F]
@@ -285,7 +286,7 @@ variable [ContinuousSMul 𝕜 E]
   [TopologicalSpace F] [IsTopologicalAddGroup F] [ContinuousSMul 𝕜 F]
 
 omit [TopologicalSpace E] [ContinuousSMul 𝕜 E] in
-/-- The closure of the image under a surjective linear map of a convex, balanced and absorbent
+/-- The closure of the image under a surjective linear map of a `ℝ`-convex, balanced and absorbent
 set is a barrel. The linear map is not assumed to be continuous. -/
 theorem isBarrel_closure_image {f : E →ₗ[𝕜] F} (hf : Function.Surjective f) {U : Set E}
     (hc : Convex ℝ U) (hb : Balanced 𝕜 U) (ha : Absorbent 𝕜 U) :
@@ -295,7 +296,7 @@ theorem isBarrel_closure_image {f : E →ₗ[𝕜] F} (hf : Function.Surjective 
     (hb.image f) (ha.image_of_surjective hf)
 
 /-- A surjective linear map onto a barrelled space is *nearly open*: the closure of the image
-of a convex balanced neighbourhood of zero is a neighbourhood of zero. The linear map is not
+of a `ℝ`-convex balanced neighbourhood of zero is a neighbourhood of zero. The linear map is not
 assumed to be continuous. -/
 theorem LinearMap.closure_image_mem_nhds_of_barrelledSpace [BarrelledSpace 𝕜 F] {f : E →ₗ[𝕜] F}
     (hf : Function.Surjective f) {U : Set E} (hc : Convex ℝ U) (hb : Balanced 𝕜 U)

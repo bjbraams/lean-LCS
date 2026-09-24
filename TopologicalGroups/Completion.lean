@@ -8,9 +8,10 @@ module
 public import Mathlib.Topology.Algebra.GroupCompletion
 
 /-!
-# Neighbourhoods in group completions
+# Neighbourhoods in completions
 
-This specializes Mathlib's neighbourhood-basis theorem for dense inducing maps. The
+This specializes Mathlib's neighbourhood-basis theorem for dense inducing maps at zero.
+Only a uniform space with a distinguished zero is needed, without a group structure. The
 scalar-action and continuous-dual constructions are in `TopologicalVectorSpaces.Completion`.
 
 ## Main statements
@@ -31,11 +32,8 @@ open scoped Topology Pointwise
 
 namespace UniformSpace.Completion
 
-section Group
+variable {E : Type*} [Zero E] [UniformSpace E]
 
-variable {E : Type*} [AddCommGroup E] [UniformSpace E] [IsUniformAddGroup E]
-
-omit [IsUniformAddGroup E] in
 /-- The closures of the images of the neighbourhoods of zero in `E` form a basis of
 neighbourhoods of zero in the completion of `E`. -/
 theorem hasBasis_nhds_zero_closure_image :
@@ -43,7 +41,5 @@ theorem hasBasis_nhds_zero_closure_image :
       fun V ↦ closure (((↑) : E → Completion E) '' V) := by
   simpa only [coe_zero, id_eq] using
     (𝓝 (0 : E)).basis_sets.hasBasis_of_isDenseInducing (isDenseInducing_coe (α := E))
-
-end Group
 
 end UniformSpace.Completion

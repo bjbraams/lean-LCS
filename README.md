@@ -20,6 +20,11 @@ The library contains no `sorry` placeholders and no project-specific axioms. Con
 integration builds it on every push with warnings treated as errors, which includes Lean's
 warning for a `sorry`.
 
+The Palomar submission contains **52 theorems**, including two on webbed spaces: De Wilde's
+closed graph and open mapping theorems. [Challenge.lean](Challenge.lean) states the submission
+problems, [Solution.lean](Solution.lean) proves them, and [formalization.yaml](formalization.yaml)
+records the submission metadata.
+
 ## Main results
 
 A selection of headline theorems, with their Lean names. Spaces are real or complex

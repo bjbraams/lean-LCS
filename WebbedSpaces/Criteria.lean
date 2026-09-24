@@ -19,7 +19,7 @@ Two criteria from [G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.1
 
 * (1) a web is completing if along every strand the points of its sets, suitably scaled, lie in
   a Banach disk;
-* (2) a completing web whose sets are convex, balanced and sequentially closed is strict.
+* (2) a completing web whose sets are `ℝ`-convex, balanced and sequentially closed is strict.
 
 As an application, a locally convex space that is the union of a sequence of Banach disks is
 strictly webbed; this covers sequentially complete (DF)-spaces, Köthe II §35.4.(12).
@@ -51,7 +51,7 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module
   [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] [IsTopologicalAddGroup E]
 
 omit [IsScalarTower ℝ 𝕜 E] in
-/-- **Köthe II §35.1.(2)**: a completing web whose sets are convex, balanced and sequentially
+/-- **Köthe II §35.1.(2)**: a completing web whose sets are `ℝ`-convex, balanced and sequentially
 closed is strict. -/
 theorem IsCompletingWeb.isStrictWeb_of_isSeqClosed {C : List ℕ → Set E}
     (hC : IsCompletingWeb C) (hconv : ∀ l, Convex ℝ (C l)) (hbal : ∀ l, Balanced 𝕜 (C l))

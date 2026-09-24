@@ -53,13 +53,7 @@
     "LeanLCS.IsStrictInductiveLimit.reflexiveSpace",
     "LeanLCS.IsStrictInductiveLimit.montelSpace",
     "LeanLCS.LinearMap.continuous_of_isSeqClosed_graph_of_ultrabornologicalSpace",
-    "LeanLCS.LinearMap.isOpenMap_of_isSeqClosed_graph_of_ultrabornologicalSpace",
-    "LeanLCS.LinearMap.continuous_of_isClosed_graph_of_locallyConvexFinalTopology",
-    "LeanLCS.StrictlyWebbedSpace.of_completeSpace_firstCountableTopology",
-    "LeanLCS.StrongDual.instStrictlyWebbedSpace",
-    "LeanLCS.LinearMap.exists_continuousLinearMap_comp_eq_of_isSeqClosed_graph",
-    "LeanLCS.LinearMap.isClosed_range_of_rank_quotient_le_aleph0",
-    "LeanLCS.Submodule.isClosed_of_isSeqClosed_of_rank_quotient_le_aleph0"
+    "LeanLCS.LinearMap.isOpenMap_of_isSeqClosed_graph_of_ultrabornologicalSpace"
   ],
   "permitted_axioms": [
     "propext",

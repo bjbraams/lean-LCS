@@ -14,8 +14,8 @@ public import WebbedSpaces.Basic
 /-!
 # Spaces covered by a sequence of bounded closed disks are strictly webbed
 
-A complete topological vector space that is the union of a sequence of closed, convex, balanced, von
-Neumann bounded sets is strictly webbed: the sets of the web depend only on the first index. The
+A complete topological vector space that is the union of a sequence of closed, `ℝ`-convex, balanced,
+von Neumann bounded sets is strictly webbed: the sets of the web depend only on the first index. The
 main application is that the strong dual of a first-countable (for instance metrizable) topological
 vector space is strictly webbed, with the polars of a countable basis of neighbourhoods of zero as
 the covering sequence ([G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.4.(11); compare
@@ -104,7 +104,7 @@ theorem IsWeb.isWeb_ofSeq {K : ℕ → Set F} (hK : ⋃ n, K n = univ) :
 variable {𝕜 : Type*} [NormedField 𝕜] [AddCommGroup F] [Module 𝕜 F] [Module ℝ F]
   [TopologicalSpace F]
 
-/-- A covering sequence of convex balanced sets `K n` defines a strict web, if for points
+/-- A covering sequence of `ℝ`-convex balanced sets `K n` defines a strict web, if for points
 `x k ∈ K n` and coefficients `0 ≤ c k ≤ (1 / 2) ^ (k + 1)` every tail of the series
 `∑ c k • x k` converges to a point of `K n`. -/
 theorem IsWeb.isStrictWeb_ofSeq {K : ℕ → Set F} (hK : ⋃ n, K n = univ)
@@ -137,7 +137,7 @@ section Bounded
 variable {𝕜 F : Type*} [RCLike 𝕜] [AddCommGroup F] [Module 𝕜 F] [Module ℝ F]
   [IsScalarTower ℝ 𝕜 F] [UniformSpace F] [IsUniformAddGroup F] [CompleteSpace F]
 
-/-- The series condition of `IsWeb.isStrictWeb_ofSeq` for a closed, convex, balanced,
+/-- The series condition of `IsWeb.isStrictWeb_ofSeq` for a closed, `ℝ`-convex, balanced,
 von Neumann bounded subset of a complete topological vector space. -/
 theorem Bornology.IsVonNBounded.exists_mem_tendsto_sum_smul {K : Set F} (hcl : IsClosed K)
     (hconv : Convex ℝ K) (hbal : Balanced 𝕜 K) (hbdd : IsVonNBounded 𝕜 K) {x : ℕ → F}
@@ -186,7 +186,7 @@ theorem Bornology.IsVonNBounded.exists_mem_tendsto_sum_smul {K : Set F} (hcl : I
   exact hconv.sum_smul_mem h0 (fun k _ ↦ (hc k).1)
     ((Finset.sum_le_sum fun k _ ↦ (hc k).2).trans (sum_half_pow_succ_le_one N)) fun k _ ↦ hx k
 
-/-- A complete topological vector space that is the union of a sequence of closed, convex,
+/-- A complete topological vector space that is the union of a sequence of closed, `ℝ`-convex,
 balanced, von Neumann bounded sets is strictly webbed; compare Köthe II §35.4.(12). -/
 theorem StrictlyWebbedSpace.of_iUnion_isVonNBounded {K : ℕ → Set F} (hK : ⋃ n, K n = univ)
     (hcl : ∀ n, IsClosed (K n)) (hconv : ∀ n, Convex ℝ (K n)) (hbal : ∀ n, Balanced 𝕜 (K n))

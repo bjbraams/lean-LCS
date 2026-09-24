@@ -12,8 +12,8 @@ Conventions. The scalar field is `ℝ` or `ℂ` (`RCLike 𝕜`) unless stated ot
 convexity is expressed as `LocallyConvexSpace ℝ E`, with `E` a real vector space through
 `IsScalarTower ℝ 𝕜 E`. `StrongDual 𝕜 E` is the continuous dual with the topology of uniform
 convergence on bounded sets, and `WeakDual 𝕜 E` is the same space with the weak-* topology. A
-Fréchet space is a complete, first-countable locally convex space; the Hausdorff condition is
-stated separately where it is needed.
+Fréchet space is a Hausdorff, complete, first-countable locally convex space. Results without
+Hausdorffness are stated for complete, first-countable locally convex spaces.
 -/
 
 open Set Filter Function Bornology PiNat
@@ -43,11 +43,11 @@ variable {𝕜 E : Type*}
 
 variable (𝕜) [SeminormedRing 𝕜] [AddCommMonoid E] [SMul 𝕜 E] [Module ℝ E] [TopologicalSpace E]
 
-/-- A set is a **barrel** if it is closed, convex, balanced and absorbent. -/
+/-- A set is a **barrel** if it is closed, convex over `ℝ`, and balanced and absorbent over `𝕜`. -/
 structure IsBarrel (s : Set E) : Prop where
   /-- A barrel is closed. -/
   isClosed : IsClosed s
-  /-- A barrel is convex. -/
+  /-- A barrel is `ℝ`-convex. -/
   convex : Convex ℝ s
   /-- A barrel is balanced. -/
   balanced : Balanced 𝕜 s
@@ -151,13 +151,13 @@ section Mackey
 variable {𝕜 E F : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [AddCommGroup F] [Module 𝕜 F]
   [Module ℝ F] [IsScalarTower ℝ 𝕜 F] (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜)
 
-/-- The family of `σ(F, E)`-compact, convex, balanced subsets of `F`, which defines the Mackey
+/-- The family of `σ(F, E)`-compact, `ℝ`-convex, balanced subsets of `F`, which defines the Mackey
 topology on `E`. -/
 def mackeyFamily : Set (Set (WeakBilin B.flip)) :=
   {K | IsCompact K ∧ Convex ℝ K ∧ Balanced 𝕜 K}
 
 /-- The **Mackey topology** `τ(E, F)` on `E` for a pairing `B`: the topology of uniform
-convergence on the `σ(F, E)`-compact, convex, balanced subsets of `F`. -/
+convergence on the `σ(F, E)`-compact, `ℝ`-convex, balanced subsets of `F`. -/
 @[instance_reducible]
 noncomputable def mackeyTopology : TopologicalSpace E :=
   B.polarTopology B.mackeyFamily
@@ -190,7 +190,7 @@ variable (𝕜 E : Type*) [SeminormedRing 𝕜] [AddGroup E] [SMul 𝕜 E] [Topo
 
 /-- A topological vector space is **bornological** if every seminorm that is bounded on the von
 Neumann bounded sets is continuous. For real or complex spaces this is equivalent to the classical
-condition that every convex, balanced, bornivorous set is a neighbourhood of zero (see
+condition that every `ℝ`-convex, balanced, bornivorous set is a neighbourhood of zero (see
 `bornologicalSpace_iff_forall_mem_nhds_zero` below). -/
 class BornologicalSpace : Prop where
   /-- In a bornological space every seminorm that is bounded on the bounded sets is
@@ -262,6 +262,9 @@ class ReflexiveSpace : Prop extends SemiReflexiveSpace 𝕜 E where
   /-- The canonical map into the bidual is inducing. -/
   isInducing_inclusionInDoubleDual : Topology.IsInducing (StrongDual.inclusionInDoubleDual 𝕜 E)
 
+/-- A reflexive space is semi-reflexive. -/
+add_decl_doc ReflexiveSpace.toSemiReflexiveSpace
+
 end Reflexive
 
 clear_aux_lemma_cache
@@ -317,15 +320,18 @@ structure IsCompletingWeb (C : List ℕ → Set E) : Prop extends IsWeb C where
     ∀ (x : ℕ → E) (c : ℕ → ℝ), (∀ k, x k ∈ C (res σ (k + 1))) → (∀ k, 0 ≤ c k ∧ c k ≤ ρ k) →
       ∃ s : E, Tendsto (fun N ↦ ∑ k ∈ Finset.range N, c k • x k) atTop (𝓝 s)
 
-/-- A web is **strict** if its sets are convex and balanced and along every strand `σ` there
+/-- The underlying web of a completing web. -/
+add_decl_doc IsCompletingWeb.toIsWeb
+
+/-- A web is **strict** if its sets are `ℝ`-convex and `𝕜`-balanced and along every strand `σ` there
 are numbers `ρ k > 0` such that for `x k ∈ C (res σ (k + 1))` and `0 ≤ λ k ≤ ρ k` the series
 `∑ λ k • x k` converges and each of its tails `∑_{k ≥ k₀} λ k • x k` lies in
 `C (res σ (k₀ + 1))`. -/
 structure IsStrictWeb (𝕜 : Type*) [NormedField 𝕜] [Module 𝕜 E] (C : List ℕ → Set E) :
     Prop extends IsWeb C where
-  /-- The sets of a strict web are convex. -/
+  /-- The sets of a strict web are `ℝ`-convex. -/
   convex : ∀ l, Convex ℝ (C l)
-  /-- The sets of a strict web are balanced. -/
+  /-- The sets of a strict web are balanced over `𝕜`. -/
   balanced : ∀ l, Balanced 𝕜 (C l)
   /-- Along every strand there is a sequence of radii for which the associated series converge
   and their tails stay in the sets of the strand. -/
@@ -333,6 +339,9 @@ structure IsStrictWeb (𝕜 : Type*) [NormedField 𝕜] [Module 𝕜 E] (C : Lis
     ∀ (x : ℕ → E) (c : ℕ → ℝ), (∀ k, x k ∈ C (res σ (k + 1))) → (∀ k, 0 ≤ c k ∧ c k ≤ ρ k) →
       ∀ k₀, ∃ s ∈ C (res σ (k₀ + 1)),
         Tendsto (fun N ↦ ∑ k ∈ Finset.range N, c (k₀ + k) • x (k₀ + k)) atTop (𝓝 s)
+
+/-- The underlying web of a strict web. -/
+add_decl_doc IsStrictWeb.toIsWeb
 
 variable (E) in
 /-- A topological vector space is **webbed** if it has a completing web. -/
@@ -455,7 +464,7 @@ theorem ContinuousLinearMap.isOpenMap_of_ptakSpace {𝕜 : Type*} {E : Type*} {F
 /-! ### Duality -/
 
 /-- The **bipolar theorem** for a locally convex space `E` and its continuous dual: a nonempty,
-closed, convex, balanced set is its own bipolar. -/
+closed, `ℝ`-convex, balanced set is its own bipolar. -/
 theorem StrongDual.bipolar_eq_self {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E]
     [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] [IsTopologicalAddGroup E]
     [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] {s : Set E} (hc : Convex ℝ s) (hb : Balanced 𝕜 s)
@@ -463,8 +472,8 @@ theorem StrongDual.bipolar_eq_self {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [Add
     (topDualPairing 𝕜 E).polar (StrongDual.polar 𝕜 s) = s := by
   sorry
 
-/-- The **bipolar theorem** for a bilinear pairing: a nonempty, weakly closed, convex, balanced set
-is its own bipolar. -/
+/-- The **bipolar theorem** for a bilinear pairing: a nonempty, weakly closed, `ℝ`-convex, balanced
+set is its own bipolar. -/
 theorem LinearMap.flip_polar_polar_eq_self {𝕜 : Type*} {E : Type*} {F : Type*} [RCLike 𝕜]
     [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [AddCommGroup F] [Module 𝕜 F]
     (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) {s : Set (WeakBilin B)} (hc : Convex ℝ s) (hb : Balanced 𝕜 s)
@@ -512,7 +521,7 @@ theorem StrongDual.exists_isCompact_polar_subset {𝕜 : Type*} {E : Type*} [Non
   sorry
 
 /-- The **Krein–Šmulian theorem**. In the dual of a complete, first-countable, locally convex space
-every convex almost weak-\* closed set is weak-\* closed. -/
+every `ℝ`-convex almost weak-\* closed set is weak-\* closed. -/
 theorem StrongDual.isClosed_of_isAlmostWeakStarClosed {𝕜 : Type*} {E : Type*} [RCLike 𝕜]
     [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [UniformSpace E]
     [IsUniformAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] [CompleteSpace E]
@@ -539,7 +548,7 @@ theorem CompactConvergenceCLM.exists_forall_apply_eq {𝕜 : Type*} {E : Type*} 
     ∃ x, ∀ (f : CompactConvergenceCLM (RingHom.id 𝕜) E 𝕜), Λ f = f x := by
   sorry
 
-/-- In a complete locally convex space every compact set lies in a compact convex balanced set
+/-- In a complete locally convex space every compact set lies in a compact `ℝ`-convex balanced set
 containing zero. -/
 theorem IsCompact.exists_isCompact_convex_balanced_superset {𝕜 : Type*} {E : Type*} [RCLike 𝕜]
     [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [UniformSpace E]
@@ -548,8 +557,8 @@ theorem IsCompact.exists_isCompact_convex_balanced_superset {𝕜 : Type*} {E : 
     ∃ K', K ⊆ K' ∧ IsCompact K' ∧ Convex ℝ K' ∧ Balanced 𝕜 K' ∧ 0 ∈ K' := by
   sorry
 
-/-- **Milman's converse**: the extreme points of a compact closed convex hull belong to the closure
-of the generating set. -/
+/-- **Milman's converse**: the extreme points of a compact closed `ℝ`-convex hull belong to the
+closure of the generating set. -/
 theorem IsCompact.extremePoints_closure_convexHull_subset_closure {E : Type*} [AddCommGroup E]
     [Module ℝ E] [TopologicalSpace E] [T2Space E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     [LocallyConvexSpace ℝ E] {s : Set E} (hC : IsCompact (closure (convexHull ℝ s))) :
@@ -558,7 +567,7 @@ theorem IsCompact.extremePoints_closure_convexHull_subset_closure {E : Type*} [A
 
 /-! ### Bornological and ultrabornological spaces -/
 
-/-- A real or complex topological vector space is bornological if and only if every convex,
+/-- A real or complex topological vector space is bornological if and only if every `ℝ`-convex,
 balanced, bornivorous set is a neighbourhood of zero. -/
 theorem bornologicalSpace_iff_forall_mem_nhds_zero {𝕜 : Type*} {E : Type*} [RCLike 𝕜]
     [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E]
@@ -640,8 +649,8 @@ theorem reflexiveSpace_iff_semiReflexiveSpace_and_barrelledSpace {𝕜 : Type*} 
   sorry
 
 /-- A Hausdorff locally convex space is **semi-reflexive if and only if every bounded set lies in a
-weakly compact, convex, balanced set**; in particular if and only if its bounded sets are relatively
-weakly compact. -/
+weakly compact, `ℝ`-convex, balanced set**; in particular if and only if its bounded sets are
+relatively weakly compact. -/
 theorem semiReflexiveSpace_iff_forall_isVonNBounded (𝕜 : Type*) (E : Type*) [RCLike 𝕜]
     [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E] [ContinuousSMul 𝕜 E] [Module ℝ E]
     [IsScalarTower ℝ 𝕜 E] [IsTopologicalAddGroup E] [LocallyConvexSpace ℝ E] [T2Space E] :
@@ -846,79 +855,6 @@ theorem LinearMap.isOpenMap_of_isSeqClosed_graph_of_ultrabornologicalSpace {𝕜
     [ContinuousSMul 𝕜 F] [LocallyConvexSpace ℝ F] [WebbedSpace F] (A : F →ₗ[𝕜] E)
     (hA : IsSeqClosed (A.graph : Set (F × E))) (hsurj : Function.Surjective A) :
     IsOpenMap A := by
-  sorry
-
-/-- A linear map with closed graph from a locally convex hull of Baire topological vector spaces
-into a webbed locally convex space is continuous, Köthe II §35.2.(5). It suffices that the
-compositions with the maps that define the hull have closed graphs. -/
-theorem LinearMap.continuous_of_isClosed_graph_of_locallyConvexFinalTopology {𝕜 : Type*} [RCLike 𝕜]
-    {ι : Type*} {X : ι → Type*} {E : Type*} {F : Type*} [∀ i, AddCommGroup (X i)]
-    [∀ i, Module 𝕜 (X i)] [∀ i, Module ℝ (X i)] [∀ i, IsScalarTower ℝ 𝕜 (X i)]
-    [∀ i, TopologicalSpace (X i)] [∀ i, IsTopologicalAddGroup (X i)] [∀ i, ContinuousSMul ℝ (X i)]
-    [∀ i, BaireSpace (X i)] [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E]
-    [AddCommGroup F] [Module 𝕜 F] [Module ℝ F] [IsScalarTower ℝ 𝕜 F] [TopologicalSpace F]
-    [IsTopologicalAddGroup F] [ContinuousSMul 𝕜 F] [LocallyConvexSpace ℝ F] [WebbedSpace F]
-    (f : ∀ i, X i →ₗ[𝕜] E) (A : E →ₗ[𝕜] F) (hA : ∀ i, IsClosed ((A ∘ₗ f i).graph : Set (X i × F))) :
-    @Continuous E F (locallyConvexFinalTopology f) _ A := by
-  sorry
-
-/-- **Fréchet spaces are strictly webbed**, Köthe II §35.1.(4). More generally, the result holds for
-every complete, first-countable locally convex space, without a Hausdorff assumption. -/
-theorem StrictlyWebbedSpace.of_completeSpace_firstCountableTopology {𝕜 : Type*} {E : Type*}
-    [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [UniformSpace E] [IsUniformAddGroup E]
-    [CompleteSpace E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [ContinuousSMul 𝕜 E]
-    [LocallyConvexSpace ℝ E] [FirstCountableTopology E] :
-    StrictlyWebbedSpace 𝕜 E := by
-  sorry
-
-/-- **The strong dual of a first-countable topological vector space is strictly webbed**, Köthe II
-§35.4.(11). In particular the strong dual of a metrizable locally convex space is strictly webbed.
--/
-theorem StrongDual.instStrictlyWebbedSpace {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [AddCommGroup E]
-    [Module 𝕜 E] [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E]
-    [FirstCountableTopology E] :
-    StrictlyWebbedSpace 𝕜 (StrongDual 𝕜 E) := by
-  sorry
-
-/-- **Grothendieck's factorization theorem**: let `F` be the union of the ranges of injective
-sequentially continuous linear maps `f n` defined on strictly webbed locally convex spaces `X n`,
-for instance an LF space with its steps. A linear map `A` with sequentially closed graph from a
-first-countable Baire topological vector space into `F` factors through one of the `f n`, with a
-continuous factor. -/
-theorem LinearMap.exists_continuousLinearMap_comp_eq_of_isSeqClosed_graph {𝕜 : Type*} [RCLike 𝕜]
-    {E : Type*} {F : Type*} [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E]
-    [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] [BaireSpace E]
-    [FirstCountableTopology E] [AddCommGroup F] [Module 𝕜 F] [Module ℝ F] [IsScalarTower ℝ 𝕜 F]
-    [TopologicalSpace F] {X : ℕ → Type*} [∀ n, AddCommGroup (X n)] [∀ n, Module 𝕜 (X n)]
-    [∀ n, Module ℝ (X n)] [∀ n, IsScalarTower ℝ 𝕜 (X n)] [∀ n, TopologicalSpace (X n)]
-    [∀ n, StrictlyWebbedSpace 𝕜 (X n)] [ContinuousAdd F] [∀ n, IsTopologicalAddGroup (X n)]
-    [∀ n, ContinuousSMul 𝕜 (X n)] [∀ n, LocallyConvexSpace ℝ (X n)] (f : ∀ n, X n →ₗ[𝕜] F)
-    (hf : ∀ n, SeqContinuous (f n)) (hinj : ∀ n, Function.Injective (f n))
-    (hsurj : ⋃ n, Set.range (f n) = Set.univ) (A : E →ₗ[𝕜] F) (hA : IsSeqClosed (A.graph : Set (E × F))) :
-    ∃ (n : ℕ) (A' : E →L[𝕜] X n), ∀ x, f n (A' x) = A x := by
-  sorry
-
-/-- `LinearMap.isClosed_range_of_basis_quotient` with the codimension expressed by `Module.rank`: a
-linear map with sequentially closed graph from a webbed locally convex space into an
-ultrabornological space whose range has at most countable codimension has a closed range. -/
-theorem LinearMap.isClosed_range_of_rank_quotient_le_aleph0 {𝕜 : Type*} [RCLike 𝕜] {E : Type*}
-    {F : Type*} [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E]
-    [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E]
-    [WebbedSpace E] [AddCommGroup F] [Module 𝕜 F] [Module ℝ F] [IsScalarTower ℝ 𝕜 F]
-    [TopologicalSpace F] [IsTopologicalAddGroup F] [ContinuousSMul 𝕜 F] [LocallyConvexSpace ℝ F]
-    [UltrabornologicalSpace 𝕜 F] (A : E →ₗ[𝕜] F) (hA : IsSeqClosed (A.graph : Set (E × F)))
-    (hr : Module.rank 𝕜 (F ⧸ A.range) ≤ ℵ₀) :
-    IsClosed (Set.range A) := by
-  sorry
-
-/-- `Submodule.isClosed_of_isSeqClosed_of_basis_quotient` with the codimension expressed by
-`Module.rank`, Köthe II §35.5.(5) b). -/
-theorem Submodule.isClosed_of_isSeqClosed_of_rank_quotient_le_aleph0 {𝕜 : Type*} [RCLike 𝕜]
-    {E : Type*} [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E]
-    [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E]
-    [UltrabornologicalSpace 𝕜 E] [WebbedSpace E] [T2Space E] (H : Submodule 𝕜 E)
-    (hH : IsSeqClosed (H : Set E)) (hr : Module.rank 𝕜 (E ⧸ H) ≤ ℵ₀) :
-    IsClosed (H : Set E) := by
   sorry
 
 end LeanLCS

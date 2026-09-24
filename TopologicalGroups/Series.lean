@@ -13,8 +13,9 @@ public import Mathlib.Topology.Algebra.InfiniteSum.Basic
 /-!
 # Series in topological groups
 
-Throughout this library the convergence of a series `∑ a k` in a topological group means the
-convergence of the partial sums `∑ k ∈ Finset.range N, a k`. This file states the group
+In this file and in the definitions of webs, convergence of a series `∑ a k` means convergence
+of the ordered partial sums `∑ k ∈ Finset.range N, a k`. Elsewhere, `Summable` and `HasSum` retain
+their Mathlib meaning of convergence of the net of finite subsums. This file states the group
 lemmas multiplicatively and generates their additive forms with `to_additive`.
 
 The main result is the successive approximation step in De Wilde's proof of the closed graph

@@ -12,18 +12,18 @@ public import MathlibExtras.Topology.UniformConvergence
 /-!
 # Grothendieck's criterion for completeness of a dual
 
-For uniform convergence on a covering directed family with cofinally many closed convex
+For uniform convergence on a covering directed family with cofinally many closed `ℝ`-convex
 balanced members, completeness of the continuous dual is equivalent to continuity of every
 linear form whose restriction to each member is continuous. Saturated covering families of
 bounded sets satisfy these hypotheses. Boundedness and closure under scalar multiples are
 unnecessary for the completeness equivalence itself.
 
 The approximation lemma imported from `LocallyConvexSpaces.GrothendieckApproximation` uses
-separation of the graph of a linear form restricted to a closed convex balanced set. The notation
-`E →Lᵤ[𝕜, 𝔖] 𝕜` denotes Mathlib's continuous dual with uniform convergence on the members of `𝔖`;
-`E →ᵤ[𝔖] 𝕜` denotes all functions with the same convergence. The dual-pair formulation uses
-`LinearMap.polarUniformSpace` and expresses completeness as representation of forms which are weakly
-continuous on the family.
+separation of the graph of a linear form restricted to a closed `ℝ`-convex balanced set. The
+notation `E →Lᵤ[𝕜, 𝔖] 𝕜` denotes Mathlib's continuous dual with uniform convergence on the members
+of `𝔖`; `E →ᵤ[𝔖] 𝕜` denotes all functions with the same convergence. The dual-pair formulation
+uses `LinearMap.polarUniformSpace` and expresses completeness as representation of forms which are
+weakly continuous on the family.
 
 ## Main statements
 
@@ -95,7 +95,7 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E]
   [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [IsTopologicalAddGroup E]
   [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E]
 
-/-- If a directed nonempty family has cofinally many closed convex balanced members,
+/-- If a directed nonempty family has cofinally many closed `ℝ`-convex balanced members,
 a linear form continuous on every member is approximable by continuous linear forms
 for uniform convergence on the family. This is the approximation part of the general
 Grothendieck criterion, following Schaefer–Wolff, IV §6.2. -/
@@ -117,7 +117,7 @@ theorem mem_closure_range_coeFn_of_continuousOn
     using hg x (hST hx)
 
 /-- If the continuous dual is complete for uniform convergence on a covering directed
-family with cofinally many closed convex balanced members, continuity of a linear form
+family with cofinally many closed `ℝ`-convex balanced members, continuity of a linear form
 on every member implies its global continuity. This is the necessity
 part of Schaefer–Wolff, IV §6.2. -/
 theorem continuous_of_continuousOn_of_completeSpace
@@ -134,7 +134,7 @@ theorem continuous_of_continuousOn_of_completeSpace
 
 /-- Grothendieck's completeness criterion for the dual with uniform convergence on a family:
 the dual is complete exactly when continuity on the family detects continuity of linear
-forms. A covering directed family with cofinally many closed convex balanced members suffices;
+forms. A covering directed family with cofinally many closed `ℝ`-convex balanced members suffices;
 in particular, this applies to saturated covering families of bounded sets. Boundedness
 is unnecessary for this uniform-space statement. This is
 Schaefer–Wolff, IV §6.2. -/

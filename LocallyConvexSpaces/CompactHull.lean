@@ -10,10 +10,10 @@ public import MathlibExtras.Analysis.ConvexCompact
 public import MathlibExtras.Analysis.ConvexHull
 
 /-!
-# Compact convex balanced hulls
+# Compact `ℝ`-convex balanced hulls
 
 In a quasi-complete locally convex space over `ℝ` or `ℂ` every compact set is contained in a compact
-set that is convex and balanced, namely the closure of the convex hull of its balanced hull.
+set that is `ℝ`-convex and balanced, namely the closure of the `ℝ`-convex hull of its balanced hull.
 
 Mathlib provides the absolute-convex-hull API with scalar convexity. Here
 `MathlibExtras.Analysis.ConvexHull` relates that API to real convexity, while balancedness remains
@@ -24,7 +24,7 @@ over `𝕜`. Compactness follows from Mathlib's quasi-completeness theorem for t
 * `IsCompact.exists_isCompact_convex_balanced_superset_of_quasiCompleteSpace`: the quasi-complete
   version.
 * `IsCompact.exists_isCompact_convex_balanced_superset`: a compact subset of a complete locally
-  convex space lies in a compact convex balanced set that contains zero.
+  convex space lies in a compact `ℝ`-convex balanced set that contains zero.
 
 ## Tags
 
@@ -43,7 +43,7 @@ variable {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module
 variable [UniformSpace E] [IsUniformAddGroup E] [ContinuousSMul 𝕜 E]
   [LocallyConvexSpace ℝ E]
 
-/-- In a quasi-complete locally convex space every compact set lies in a compact convex
+/-- In a quasi-complete locally convex space every compact set lies in a compact `ℝ`-convex
 balanced set containing zero. -/
 theorem IsCompact.exists_isCompact_convex_balanced_superset_of_quasiCompleteSpace
     [QuasiCompleteSpace 𝕜 E] {K : Set E} (hK : IsCompact K) :
@@ -69,7 +69,7 @@ theorem IsCompact.exists_isCompact_convex_balanced_superset_of_quasiCompleteSpac
   · exact ((subset_insert 0 K).trans hBsub).trans ((subset_convexHull ℝ B).trans subset_closure)
   · exact subset_closure (subset_convexHull ℝ B (hBsub (mem_insert 0 K)))
 
-/-- In a complete locally convex space every compact set lies in a compact convex balanced set
+/-- In a complete locally convex space every compact set lies in a compact `ℝ`-convex balanced set
 containing zero. -/
 theorem IsCompact.exists_isCompact_convex_balanced_superset [CompleteSpace E]
     {K : Set E} (hK : IsCompact K) :
