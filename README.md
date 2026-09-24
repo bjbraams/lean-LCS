@@ -200,8 +200,8 @@ Directories determine import paths. Declarations use mathematical namespaces suc
 
 ## Building
 
-The project pins **Lean 4.34.0** in [lean-toolchain](lean-toolchain) and **Mathlib
-v4.34.0** in [lakefile.toml](lakefile.toml), with resolved dependencies recorded in
+The project pins **Lean 4.35.0-rc2** in [lean-toolchain](lean-toolchain) and **Mathlib
+v4.35.0-rc2** in [lakefile.toml](lakefile.toml), with resolved dependencies recorded in
 [lake-manifest.json](lake-manifest.json). Install Lean through
 [elan](https://github.com/leanprover/elan), which selects the pinned toolchain
 automatically. Then:

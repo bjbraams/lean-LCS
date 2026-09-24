@@ -96,7 +96,8 @@ noncomputable def quotient : Seminorm 𝕜 (E ⧸ N) :=
       rcases eq_or_lt_of_le (norm_nonneg a) with h0 | hpos
       · obtain ⟨x, hx⟩ := N.mkQ_surjective q
         have := hle x hx
-        rwa [← h0, zero_mul] at this ⊢
+        rw [← h0, zero_mul] at this ⊢
+        exact this
       · rw [← div_le_iff₀' hpos]
         refine le_csInf (quotient_fiber_nonempty p N q) ?_
         rintro _ ⟨x, hx, rfl⟩
