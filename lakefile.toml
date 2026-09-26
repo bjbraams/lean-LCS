@@ -1,6 +1,7 @@
 name = "LeanLCS"
 version = "0.1.1"
 defaultTargets = ["LeanLCS"]
+buildDir = ".lake/build-LCS"
 
 [[lean_lib]]
 name = "LeanLCS"

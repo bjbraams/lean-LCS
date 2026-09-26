@@ -8,11 +8,17 @@
 - Never run lake build from a subdirectory as if it were the package root.
 - Never copy Mathlib or .lake onto NFS ($HOME).
 - Do not “fix” the link because it points outside the repo. That is intentional.
+- That lake directory is shared with the companion projects (lean-SCV, lean-CA, lean-codes, lean-AAR).
+  They share `.lake/packages` (all pin the same Mathlib), but this project writes its own
+  build outputs to `.lake/build-LCS` (`buildDir` in `lakefile.toml`), because Lake's build
+  traces include the package name and modules with equal names in different projects would
+  otherwise overwrite each other. Keep that `buildDir` setting; never write to or delete
+  another project's build directory.
 - Do not set `LEAN_PATH`, `LAKE_HOME`, or a custom cache dir unless asked.
 - If `.lake` is missing or is no longer a symlink to the path above, stop and ask. Do not
   repair it.
 - After every Lean edit: `lake build` from the Lake root.
-- For ordinary builds, use lake build > /tmp/SCV-build.log 2>&1; reuse this filename to
+- For ordinary builds, use lake build > /tmp/LCS-build.log 2>&1; reuse this filename to
   preserve the existing command approval.
 - Without LSP/MCP: treat `lake build` output as the only proof-state.
 - Do not bump lean-toolchain or Mathlib unless asked.
