@@ -13,12 +13,12 @@ public import Mathlib.Topology.UniformSpace.AbstractCompletion
 /-!
 # Projective representation by local Banach spaces
 
-A directed defining family of seminorms gives a system of local Banach spaces
-`Seminorm.LocalBanachSpace` and contraction maps between them. Its projective limit is the closed
-subspace of compatible families in the product. The original space maps densely and uniformly
-inducingly into this limit, which identifies the limit with the separated completion. The proof
-uses Mathlib's uniqueness of completions. The directed and monotone defining families are
-provided by `TopologicalVectorSpaces.CountableSeminorms`.
+A directed defining family of seminorms, indexed by an arbitrary (possibly empty) type, gives a
+system of local Banach spaces `Seminorm.LocalBanachSpace` and contraction maps between them. Its
+projective limit is the closed subspace of compatible families in the product. The original space
+maps densely and uniformly inducingly into this limit, which identifies the limit with the
+separated completion. The proof uses Mathlib's uniqueness of completions. The directed and
+monotone defining families are provided by `TopologicalVectorSpaces.CountableSeminorms`.
 
 ## Main definitions
 
@@ -120,14 +120,17 @@ def toProjectiveLimit : E →ₗ[𝕜] p.projectiveLimit :=
     (p.toProjectiveLimit x).val i = (p i).toLocalBanachSpace x := rfl
 
 /-- A compatible family is approximated simultaneously in finitely many coordinates.
-This is the density step of the classical projective completion construction. -/
-theorem closure_range_toLocalBanachSpaceProduct [Nonempty ι] (hp : Directed (· ≤ ·) p) :
+This is the density step of the classical projective completion construction. For an empty
+index type the product is a single point, which lies in the range. -/
+theorem closure_range_toLocalBanachSpaceProduct (hp : Directed (· ≤ ·) p) :
     closure (range p.toLocalBanachSpaceProduct) = p.projectiveLimit := by
   apply Subset.antisymm
   · apply closure_minimal _ p.isClosed_projectiveLimit
     rintro _ ⟨x, rfl⟩
     exact (p.toProjectiveLimit x).property
   · intro z hz
+    rcases isEmpty_or_nonempty ι with hι | hι
+    · exact subset_closure ⟨0, Subsingleton.elim _ _⟩
     classical
     apply mem_closure_iff.mpr
     intro U hU hzU
@@ -151,7 +154,7 @@ theorem closure_range_toLocalBanachSpaceProduct [Nonempty ι] (hp : Directed (·
     simpa only [Seminorm.LocalBanachSpace.mapOfLE_toLocalBanachSpace] using hx ⟨i, hi⟩
 
 /-- The original space is dense in the projective limit for a directed defining family. -/
-theorem denseRange_toProjectiveLimit [Nonempty ι] (hp : Directed (· ≤ ·) p) :
+theorem denseRange_toProjectiveLimit (hp : Directed (· ≤ ·) p) :
     DenseRange p.toProjectiveLimit := by
   intro z
   rw [Topology.IsInducing.subtypeVal.closure_eq_preimage_closure_image]
@@ -191,7 +194,7 @@ theorem isUniformEmbedding_toLocalBanachSpaceProduct [T2Space E] (hp : WithSemin
     (p.isUniformInducing_toLocalBanachSpaceProduct hp).injective⟩
 
 /-- The projective limit is a completion of the space defined by the seminorm family. -/
-def projectiveCompletion [Nonempty ι] (hp : WithSeminorms p) (hd : Directed (· ≤ ·) p) :
+def projectiveCompletion (hp : WithSeminorms p) (hd : Directed (· ≤ ·) p) :
     AbstractCompletion E where
   space := p.projectiveLimit
   coe := p.toProjectiveLimit
@@ -203,12 +206,12 @@ def projectiveCompletion [Nonempty ι] (hp : WithSeminorms p) (hd : Directed (·
 
 /-- The separated completion is uniformly isomorphic to the projective limit.
 This is the projective completion theorem of Casselman, §5. -/
-def completionUniformEquiv [Nonempty ι] (hp : WithSeminorms p) (hd : Directed (· ≤ ·) p) :
+def completionUniformEquiv (hp : WithSeminorms p) (hd : Directed (· ≤ ·) p) :
     UniformSpace.Completion E ≃ᵤ p.projectiveLimit :=
   UniformSpace.Completion.cPkg.compareEquiv (p.projectiveCompletion hp hd)
 
 /-- The completion comparison extends the canonical diagonal map. -/
-@[simp] theorem completionUniformEquiv_coe [Nonempty ι]
+@[simp] theorem completionUniformEquiv_coe
     (hp : WithSeminorms p) (hd : Directed (· ≤ ·) p) (x : E) :
     p.completionUniformEquiv hp hd (x : UniformSpace.Completion E) = p.toProjectiveLimit x :=
   UniformSpace.Completion.cPkg.compare_coe (p.projectiveCompletion hp hd) x
@@ -216,7 +219,7 @@ def completionUniformEquiv [Nonempty ι] (hp : WithSeminorms p) (hd : Directed (
 variable [UniformContinuousConstSMul 𝕜 E]
 
 /-- A complete Hausdorff space is itself the projective limit of its local Banach spaces. -/
-def equivProjectiveLimit [Nonempty ι] [CompleteSpace E] [T2Space E]
+def equivProjectiveLimit [CompleteSpace E] [T2Space E]
     (hp : WithSeminorms p) (hd : Directed (· ≤ ·) p) : E ≃L[𝕜] p.projectiveLimit := by
   let e : E ≃ᵤ p.projectiveLimit := (AbstractCompletion.ofComplete (α := E)).compareEquiv
     (p.projectiveCompletion hp hd)
@@ -248,7 +251,7 @@ def completionMap (hp : WithSeminorms p) :
     (UniformSpace.Completion.isUniformInducing_coeCLM 𝕜 E) x
 
 /-- The uniform completion comparison is the continuous linear extension. -/
-theorem completionMap_eq_uniformEquiv [Nonempty ι]
+theorem completionMap_eq_uniformEquiv
     (hp : WithSeminorms p) (hd : Directed (· ≤ ·) p) :
     ⇑(p.completionMap hp) = p.completionUniformEquiv hp hd := by
   apply UniformSpace.Completion.ext (p.completionMap hp).continuous
@@ -257,7 +260,7 @@ theorem completionMap_eq_uniformEquiv [Nonempty ι]
   simp
 
 /-- The projective representation of the completion as a continuous linear equivalence. -/
-def completionEquiv [Nonempty ι] (hp : WithSeminorms p) (hd : Directed (· ≤ ·) p) :
+def completionEquiv (hp : WithSeminorms p) (hd : Directed (· ≤ ·) p) :
     UniformSpace.Completion E ≃L[𝕜] p.projectiveLimit where
   toLinearEquiv :=
     { (p.completionMap hp).toLinearMap with
@@ -274,7 +277,7 @@ def completionEquiv [Nonempty ι] (hp : WithSeminorms p) (hd : Directed (· ≤ 
   continuous_invFun := (p.completionUniformEquiv hp hd).symm.continuous
 
 /-- The continuous linear representation extends the original diagonal map. -/
-@[simp] theorem completionEquiv_coe [Nonempty ι]
+@[simp] theorem completionEquiv_coe
     (hp : WithSeminorms p) (hd : Directed (· ≤ ·) p) (x : E) :
     p.completionEquiv hp hd (x : UniformSpace.Completion E) = p.toProjectiveLimit x :=
   p.completionMap_coe hp x
@@ -291,7 +294,6 @@ variable [UniformContinuousConstSMul 𝕜 E]
 /-- All continuous seminorms give a canonical projective representation of the completion. -/
 def completionEquiv : UniformSpace.Completion E ≃L[𝕜]
     SeminormFamily.projectiveLimit (fun p : {p : Seminorm 𝕜 E // Continuous p} ↦ p.1) := by
-  letI : Nonempty {p : Seminorm 𝕜 E // Continuous p} := ⟨⟨0, continuous_const⟩⟩
   exact SeminormFamily.completionEquiv _ (withSeminorms 𝕜 E) fun p q ↦
     ⟨⟨p.1 ⊔ q.1, p.2.max q.2⟩, le_sup_left, le_sup_right⟩
 

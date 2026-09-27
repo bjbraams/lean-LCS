@@ -293,8 +293,8 @@ end Convex
 
 section Graph
 
-variable {𝕜 E F : Type*} [Ring 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E]
-  [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F]
+variable {𝕜 E F : Type*} [Semiring 𝕜] [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E]
+  [AddCommMonoid F] [Module 𝕜 F] [TopologicalSpace F]
 
 /-- The graph of a continuous linear map into a Hausdorff space is closed. -/
 theorem ContinuousLinearMap.isClosed_graph [T2Space E] (A : F →L[𝕜] E) :

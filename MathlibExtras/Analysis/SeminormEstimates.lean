@@ -10,7 +10,7 @@ public import Mathlib.Analysis.Normed.Lp.lpSpace
 public import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
-# Seminorm bounds for finite sums and convergent sequences
+# Seminorm bounds for finite sums, convergent sequences and bounded families
 
 ## Main statements
 
@@ -18,8 +18,10 @@ public import Mathlib.Analysis.SpecificLimits.Basic
   `p (x n) ≤ C` for the terms that occur.
 * `Seminorm.exists_forall_le_of_tendsto_zero`: a continuous seminorm is bounded on a null
   sequence.
-* `lp.sum_norm_le_norm_one`: the norm of an element of `ℓ¹` dominates its finite partial sums;
-  a specialization of Mathlib's `lp.sum_rpow_le_norm_rpow`.
+* `Seminorm.exists_forall_le_of_isVonNBounded`: a continuous seminorm is bounded on a family with
+  von Neumann bounded range.
+* `lp.sum_norm_le_norm_one`: the norm of an element of `ℓ¹` dominates every finite sum of the
+  norms of its coordinates; a specialization of Mathlib's `lp.sum_rpow_le_norm_rpow`.
 -/
 
 public section
@@ -54,11 +56,23 @@ theorem Seminorm.exists_forall_le_of_tendsto_zero [TopologicalSpace E] {p : Semi
 
 end Estimates
 
+/-- A continuous seminorm is bounded on a family with von Neumann bounded range. -/
+theorem Seminorm.exists_forall_le_of_isVonNBounded {𝕜 E ι : Type*} [NontriviallyNormedField 𝕜]
+    [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E] {p : Seminorm 𝕜 E} (hp : Continuous p)
+    {x : ι → E} (hx : Bornology.IsVonNBounded 𝕜 (range x)) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ i, p (x i) ≤ C := by
+  obtain ⟨r, -, h⟩ := (hx (p.ball_mem_nhds hp one_pos)).exists_pos
+  obtain ⟨c, hc⟩ := NormedField.exists_lt_norm 𝕜 r
+  refine ⟨‖c‖, norm_nonneg _, fun i ↦ ?_⟩
+  obtain ⟨y, hy, hyx⟩ := h c hc.le (mem_range_self i)
+  rw [← hyx, map_smul_eq_mul]
+  exact mul_le_of_le_one_right (norm_nonneg _) (p.mem_ball_zero.mp hy).le
+
 section Lp
 
 variable {ι : Type*} {E : ι → Type*} [∀ i, NormedAddCommGroup (E i)]
 
-/-- The norm of an element of `ℓ¹` dominates every finite partial sum of its coordinates. -/
+/-- The norm of an element of `ℓ¹` dominates every finite sum of the norms of its coordinates. -/
 theorem lp.sum_norm_le_norm_one (a : lp E 1) (t : Finset ι) : ∑ n ∈ t, ‖a n‖ ≤ ‖a‖ := by
   simpa using lp.sum_rpow_le_norm_rpow (p := 1) (by norm_num) a t
 

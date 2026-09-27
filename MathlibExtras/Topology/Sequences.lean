@@ -42,11 +42,11 @@ theorem PiNat.res_comp {α β : Type*} (g : α → β) (σ : ℕ → α) (k : �
 
 /-- Every finite sequence, stored with the newest entry at the head, is the restriction of an
 infinite sequence. -/
-theorem PiNat.exists_res_eq {α : Type*} [Inhabited α] (l : List α) :
+theorem PiNat.exists_res_eq {α : Type*} [Nonempty α] (l : List α) :
     ∃ σ : ℕ → α, res σ l.length = l := by
   classical
   induction l with
-  | nil => exact ⟨fun _ ↦ default, rfl⟩
+  | nil => exact ⟨fun _ ↦ Classical.arbitrary α, rfl⟩
   | cons a l ih =>
     obtain ⟨σ, hσ⟩ := ih
     refine ⟨Function.update σ l.length a, ?_⟩

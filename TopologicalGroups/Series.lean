@@ -19,18 +19,18 @@ their Mathlib meaning of convergence of the net of finite subsums. This file sta
 lemmas multiplicatively and generates their additive forms with `to_additive`.
 
 The main result is the successive approximation step in De Wilde's proof of the closed graph
-theorem, which is also the step in the classical proof of the open mapping theorem. Let `G` be a
-first-countable commutative topological group and let `S k` be a sequence of subsets whose
-closures are neighbourhoods of zero. Then every point `x₀` of the closure of `S 0` is the sum of
-a series `∑ x k` with `x k ∈ S k` for all `k`. No completeness is needed, because the limit of
-the series is prescribed. Without first countability the same construction gives terms
-`x k ∈ S k` whose remainders `x₀ - ∑ k < n + 1, x k` lie in the closure of `S (n + 1)` and in
-prescribed neighbourhoods of zero.
+theorem, which is also the step in the classical proof of the open mapping theorem. In additive
+notation, let `G` be a first-countable commutative topological group and let `S k` be a sequence
+of subsets whose closures are neighbourhoods of zero. Then every point `x₀` of the closure of
+`S 0` is the sum of a series `∑ x k` with `x k ∈ S k` for all `k`. No completeness is needed,
+because the limit of the series is prescribed. Without first countability the same construction
+gives terms `x k ∈ S k` whose remainders `x₀ - ∑ k < n + 1, x k` lie in the closure of
+`S (n + 1)` and in prescribed neighbourhoods of zero.
 
 ## Main statements
 
 * `Finset.sum_range_add_mem_of_add_subset`: finite sums of `x k ∈ V (k + 1)` stay in `V j` when
-  `V (k + 1) + V (k + 1) ⊆ V k`.
+  each `V k` contains zero and `V (k + 1) + V (k + 1) ⊆ V k`.
 * `tendsto_sum_range_of_tendsto_sum_range_add`, `tendsto_sum_range_add_of_tendsto_sum_range`:
   a series converges if and only if one of its tails does, with the expected sums.
 * `tendsto_sum_pi`, `tendsto_sum_prod`: series in products converge coordinatewise.

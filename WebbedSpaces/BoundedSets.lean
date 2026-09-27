@@ -25,8 +25,8 @@ The explicit web constructions and their calculation lemmas live in the `IsWeb` 
 
 ## Main definitions
 
-* `IsWeb.ofSeq K`: the web whose set for a finite sequence with first index `n` is
-  `K n`.
+* `IsWeb.ofSeq K`: the family of sets whose set for a finite sequence with first index `n` is
+  `K n`; it is a web when the sets `K n` cover the space (`IsWeb.isWeb_ofSeq`).
 
 ## Main statements
 
@@ -54,8 +54,9 @@ section WebOfSeq
 
 variable {F : Type*}
 
-/-- The web defined by a sequence `K` of sets: the set attached to a finite sequence with first
-index `n` is `K n`. As the newest index of a web is at the head of the list, the first index is
+/-- The family of sets defined by a sequence `K` of sets: the set attached to a finite sequence
+with first index `n` is `K n`. It is a web when the sets `K n` cover the space
+(`IsWeb.isWeb_ofSeq`). As the newest index of a web is at the head of the list, the first index is
 the last entry of the list. -/
 @[expose]
 def IsWeb.ofSeq (K : ℕ → Set F) (l : List ℕ) : Set F :=

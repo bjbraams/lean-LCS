@@ -594,8 +594,9 @@ theorem BornologicalSpace.of_firstCountableTopology {𝕜 : Type*} {E : Type*}
   sorry
 
 /-- A complete, first-countable, Hausdorff locally convex space (a Fréchet space) is
-ultrabornological: its topology is the final locally convex topology for the maps `lp.tsumSMulCLM x
-hx : ℓ¹(ℕ, 𝕜) → E`, where `x` ranges over the sequences in `E` that tend to zero. -/
+ultrabornological: its topology is the final locally convex topology for the maps
+`a ↦ ∑' n, a n • x n` from `ℓ¹(ℕ, 𝕜)` to `E` (`lp.tsumSMulCLM`), where `x` ranges over the
+sequences in `E` that tend to zero. -/
 theorem UltrabornologicalSpace.of_completeSpace_firstCountableTopology {𝕜 : Type*} {E : Type*}
     [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [UniformSpace E]
     [IsUniformAddGroup E] [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] [CompleteSpace E]
