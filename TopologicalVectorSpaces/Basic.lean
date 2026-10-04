@@ -296,14 +296,14 @@ section Graph
 variable {𝕜 E F : Type*} [Semiring 𝕜] [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E]
   [AddCommMonoid F] [Module 𝕜 F] [TopologicalSpace F]
 
-/-- The graph of a continuous linear map into a Hausdorff space is closed. -/
+/-- The graph of a continuous linear map into a Hausdorff space is closed.
+
+This specializes Mathlib's `Continuous.isClosed_graph` to `LinearMap.graph`. -/
 theorem ContinuousLinearMap.isClosed_graph [T2Space E] (A : F →L[𝕜] E) :
     IsClosed (A.toLinearMap.graph : Set (F × E)) := by
-  have h : (A.toLinearMap.graph : Set (F × E)) = {p | p.2 = A p.1} := by
-    ext p
-    exact LinearMap.mem_graph_iff _ _
-  rw [h]
-  exact isClosed_eq continuous_snd (A.continuous.comp continuous_fst)
+  convert A.continuous.isClosed_graph using 1
+  ext p
+  exact eq_comm
 
 end Graph
 

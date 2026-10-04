@@ -8,6 +8,7 @@ module
 public import Mathlib.Topology.Algebra.Group.Neighborhood
 public import Mathlib.Topology.Algebra.Group.Pointwise
 public import Mathlib.Topology.Baire.Lemmas
+public import TauCeti.Topology.Algebra.Group.FirstCountable
 
 /-!
 # General lemmas on topological groups
@@ -19,12 +20,16 @@ Mathlib.
 
 * `IsTopologicalAddGroup.le_of_nhds_zero_le`: two group topologies are comparable as soon as their
   neighbourhood filters of zero are.
-* `IsTopologicalAddGroup.firstCountableTopology_of_isCountablyGenerated_nhds_zero`: a topological
-  group is first-countable as soon as the neighbourhood filter of zero is countably generated;
-  `IsTopologicalAddGroup.firstCountableTopology_iff` is the equivalence.
-
 * `exists_mem_closure_image_div_mem_nhds_one` and its additive form: a non-meagre set
   has a translate whose closure is a neighbourhood of the identity.
+
+## Imported results
+
+First countability from countable generation of the neighbourhood filter at the identity is
+provided by the Tau Ceti contributors in `TauCeti.Topology.Algebra.Group.FirstCountable`,
+through `TauCeti.SeparatelyContinuousMul.toFirstCountableTopology` and its additive counterpart
+`TauCeti.SeparatelyContinuousAdd.toFirstCountableTopology`. These instances are imported
+directly; no local copies are retained.
 
 ## Tags
 
@@ -47,25 +52,6 @@ theorem IsTopologicalGroup.le_of_nhds_one_le {G : Type*} [Group G] {t₁ t₂ : 
     (h : @nhds G t₁ 1 ≤ @nhds G t₂ 1) : t₁ ≤ t₂ :=
   continuous_id_iff_le.mp (@continuous_of_continuousAt_one G t₁ _ h₁ G (G →* G) _ t₂
     h₂.toContinuousMul _ _ (MonoidHom.id G) (tendsto_id'.mpr h))
-
-/-- A topological group in which the neighbourhood filter of the identity is countably generated
-is first-countable. -/
-@[to_additive /-- A topological additive group in which the neighbourhood filter of zero is
-countably generated is first-countable. -/]
-theorem IsTopologicalGroup.firstCountableTopology_of_isCountablyGenerated_nhds_one {G : Type*}
-    [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (h : (𝓝 (1 : G)).IsCountablyGenerated) :
-    FirstCountableTopology G :=
-  ⟨fun x ↦ map_mul_left_nhds_one x ▸ inferInstance⟩
-
-/-- A topological group is first-countable if and only if the neighbourhood filter of the
-identity is countably generated. -/
-@[to_additive /-- A topological additive group is first-countable if and only if the
-neighbourhood filter of zero is countably generated. -/]
-theorem IsTopologicalGroup.firstCountableTopology_iff {G : Type*} [Group G]
-    [TopologicalSpace G] [IsTopologicalGroup G] :
-    FirstCountableTopology G ↔ (𝓝 (1 : G)).IsCountablyGenerated :=
-  ⟨fun _ ↦ inferInstance,
-    IsTopologicalGroup.firstCountableTopology_of_isCountablyGenerated_nhds_one⟩
 
 section Baire
 

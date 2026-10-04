@@ -185,3 +185,12 @@ info: 'StrictlyWebbedSpace.of_completeSpace_firstCountableTopology' depends on a
 -/
 #guard_msgs (whitespace := lax) in
 #print axioms StrictlyWebbedSpace.of_completeSpace_firstCountableTopology
+
+/-- Integration check: use the Tau Ceti contributors' imported
+`LocallyConvexSpace.toStronglyLocallyContractibleSpace` alongside the full project API.
+The instance comes directly from `TauCeti.Topology.Algebra.Module.LocallyConvex`:
+<https://github.com/TauCetiProject/TauCeti/blob/a780c7ad6beb23f60a17351a492d177878020ad5/TauCeti/Topology/Algebra/Module/LocallyConvex.lean>.
+No proof is copied or adapted here. -/
+example (E : Type*) [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [ContinuousAdd E]
+    [ContinuousSMul ℝ E] [LocallyConvexSpace ℝ E] :
+    StronglyLocallyContractibleSpace E := inferInstance

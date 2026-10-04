@@ -10,6 +10,7 @@ public import Mathlib.Analysis.LocallyConvex.BalancedCoreHull
 public import Mathlib.Analysis.LocallyConvex.SeparatingDual
 public import Mathlib.Analysis.RCLike.Lemmas
 public import Mathlib.Topology.Algebra.Module.LocallyConvex
+public import TauCeti.Topology.Algebra.Module.LocallyConvex
 public import TopologicalVectorSpaces.Basic
 
 /-!
@@ -32,6 +33,14 @@ neighbourhoods that are convex over `ℝ` and balanced over `𝕜`. This file pr
 
 * `SeparatingDual.of_locallyConvexSpace_real`: continuous functionals separate points in a
   Hausdorff real or complex locally convex space.
+
+## Imported result
+
+This file re-exports `LocallyConvexSpace.toStronglyLocallyContractibleSpace` directly from
+`TauCeti.Topology.Algebra.Module.LocallyConvex`, by the Tau Ceti contributors:
+<https://github.com/TauCetiProject/TauCeti/blob/a780c7ad6beb23f60a17351a492d177878020ad5/TauCeti/Topology/Algebra/Module/LocallyConvex.lean>.
+It supplies strong local contractibility for real locally convex topological vector spaces.
+The instance is imported, with no local copy of its statement or proof.
 
 ## Implementation notes
 
@@ -63,7 +72,7 @@ theorem nhds_zero_hasBasis_convex_balanced [TopologicalSpace E] [ContinuousSMul 
     fun s hs ↦ ⟨s, ⟨hs.1, hs.2.1⟩, Subset.rfl⟩
   exact ⟨balancedCore 𝕜 s,
     ⟨balancedCore_mem_nhds_zero hs.1, hs.2.balancedCore (mem_of_mem_nhds hs.1),
-      balancedCore_balanced s⟩,
+      balancedCore.balanced s⟩,
     balancedCore_subset s⟩
 
 section RCLike

@@ -6,6 +6,7 @@ Authors: Bastiaan J Braams
 module
 
 public import Mathlib.Topology.Algebra.IsUniformGroup.Defs
+public import TauCeti.Topology.Algebra.Group.FirstCountable
 public import TopologicalGroups.Basic
 public import WebbedSpaces.DeWilde.Localization
 
@@ -86,8 +87,9 @@ theorem firstCountableTopology_of_baireSpace [TopologicalSpace E]
     [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] [T2Space E] [BaireSpace E]
     [StrictlyWebbedSpace 𝕜 E] : FirstCountableTopology E := by
   obtain ⟨C, σ, ρ, -, hbasis, -⟩ := exists_hasBasis_nhds_zero_of_baireSpace (𝕜 := 𝕜) (E := E)
-  exact IsTopologicalAddGroup.firstCountableTopology_of_isCountablyGenerated_nhds_zero
-    hbasis.isCountablyGenerated
+  have : (𝓝 (0 : E)).IsCountablyGenerated := hbasis.isCountablyGenerated
+  -- Use the imported TauCeti.SeparatelyContinuousAdd.toFirstCountableTopology instance.
+  infer_instance
 
 /-- **A Hausdorff strictly webbed Baire space is complete**; together with
 `firstCountableTopology_of_baireSpace` it is a Fréchet space if it is locally convex,
@@ -155,26 +157,28 @@ theorem WebbedSpace.firstCountableTopology_of_baireSpace : FirstCountableTopolog
       rintro _ ⟨v, hv, rfl⟩
       exact ⟨(v + y, y), ⟨hv, mem_of_mem_nhds hSy⟩, by simp⟩
     exact mem_of_superset ((set_smul_mem_nhds_zero_iff (hρ k).ne').mpr hV) hsub
-  refine IsTopologicalAddGroup.firstCountableTopology_of_isCountablyGenerated_nhds_zero ?_
-  refine Filter.HasBasis.isCountablyGenerated (p := fun _ : ℕ ↦ True) (s := B)
-    ⟨fun U ↦ ⟨fun hU ↦ ?_, fun ⟨k, _, hk⟩ ↦ mem_of_superset (hB k) hk⟩⟩
-  -- A closed neighbourhood `U'` of zero with `U' - U' ⊆ U`.
-  have hsubc : Tendsto (fun p : E × E ↦ p.1 - p.2) (𝓝 ((0 : E), (0 : E))) (𝓝 0) := by
-    have h := (continuous_sub (G := E)).tendsto ((0 : E), (0 : E))
-    rwa [sub_zero] at h
-  obtain ⟨V₁, hV₁, V₂, hV₂, hV12⟩ := mem_nhds_prod_iff.mp (hsubc hU)
-  obtain ⟨U', ⟨hU', hU'cl⟩, hU'sub⟩ :=
-    (closed_nhds_basis (0 : E)).mem_iff.mp (inter_mem hV₁ hV₂)
-  obtain ⟨K, hK⟩ := hsmall U' hU'
-  refine ⟨K, trivial, ?_⟩
-  have hcl : ρ K • S K ⊆ U' := by
-    rintro _ ⟨a, ha, rfl⟩
-    exact hU'cl.closure_subset_iff.mpr (hK K le_rfl)
-      (map_mem_closure (continuous_const_smul (ρ K)) ha fun w hw ↦ smul_mem_smul_set hw)
-  rintro _ ⟨⟨a, b⟩, ⟨ha, hb⟩, rfl⟩
-  have h1 : ρ K • a ∈ V₁ := (hU'sub (hcl (smul_mem_smul_set ha))).1
-  have h2 : ρ K • b ∈ V₂ := (hU'sub (hcl (smul_mem_smul_set hb))).2
-  have h := hV12 (show (ρ K • a, ρ K • b) ∈ V₁ ×ˢ V₂ from ⟨h1, h2⟩)
-  simpa [smul_sub] using h
+  have : (𝓝 (0 : E)).IsCountablyGenerated := by
+    refine Filter.HasBasis.isCountablyGenerated (p := fun _ : ℕ ↦ True) (s := B)
+      ⟨fun U ↦ ⟨fun hU ↦ ?_, fun ⟨k, _, hk⟩ ↦ mem_of_superset (hB k) hk⟩⟩
+    -- A closed neighbourhood `U'` of zero with `U' - U' ⊆ U`.
+    have hsubc : Tendsto (fun p : E × E ↦ p.1 - p.2) (𝓝 ((0 : E), (0 : E))) (𝓝 0) := by
+      have h := (continuous_sub (G := E)).tendsto ((0 : E), (0 : E))
+      rwa [sub_zero] at h
+    obtain ⟨V₁, hV₁, V₂, hV₂, hV12⟩ := mem_nhds_prod_iff.mp (hsubc hU)
+    obtain ⟨U', ⟨hU', hU'cl⟩, hU'sub⟩ :=
+      (closed_nhds_basis (0 : E)).mem_iff.mp (inter_mem hV₁ hV₂)
+    obtain ⟨K, hK⟩ := hsmall U' hU'
+    refine ⟨K, trivial, ?_⟩
+    have hcl : ρ K • S K ⊆ U' := by
+      rintro _ ⟨a, ha, rfl⟩
+      exact hU'cl.closure_subset_iff.mpr (hK K le_rfl)
+        (map_mem_closure (continuous_const_smul (ρ K)) ha fun w hw ↦ smul_mem_smul_set hw)
+    rintro _ ⟨⟨a, b⟩, ⟨ha, hb⟩, rfl⟩
+    have h1 : ρ K • a ∈ V₁ := (hU'sub (hcl (smul_mem_smul_set ha))).1
+    have h2 : ρ K • b ∈ V₂ := (hU'sub (hcl (smul_mem_smul_set hb))).2
+    have h := hV12 (show (ρ K • a, ρ K • b) ∈ V₁ ×ˢ V₂ from ⟨h1, h2⟩)
+    simpa [smul_sub] using h
+  -- Use the imported TauCeti.SeparatelyContinuousAdd.toFirstCountableTopology instance.
+  infer_instance
 
 end Webbed

@@ -6,7 +6,8 @@
 **API documentation:** <https://bjbraams.github.io/lean-LCS/docs/>
 
 A Lean 4 formalization of locally convex topological vector spaces, their duality and
-completeness theory, and closed graph and open mapping theorems, built on Mathlib.
+completeness theory, and closed graph and open mapping theorems, built on Mathlib and
+[TauCeti](https://github.com/TauCetiProject/TauCeti).
 The project develops results and interfaces intended for contribution to Mathlib.
 
 The mathematical focus is locally convex spaces over the real or complex numbers.
@@ -205,9 +206,11 @@ Directories determine import paths. Declarations use mathematical namespaces suc
 
 ## Building
 
-The project pins **Lean 4.35.0-rc2** in [lean-toolchain](lean-toolchain) and **Mathlib
-v4.35.0-rc2** in [lakefile.toml](lakefile.toml), with resolved dependencies recorded in
-[lake-manifest.json](lake-manifest.json). Install Lean through
+The project pins **Lean 4.35.0-rc3** in [lean-toolchain](lean-toolchain), **Mathlib
+`5e0c4e5239cb`**, and **TauCeti `a780c7ad6beb`** in [lakefile.toml](lakefile.toml), with
+resolved dependencies recorded in [lake-manifest.json](lake-manifest.json). The Mathlib
+revision has the rc3 theorem sources and dependency updates matching this TauCeti revision.
+Install Lean through
 [elan](https://github.com/leanprover/elan), which selects the pinned toolchain
 automatically. Then:
 
@@ -222,6 +225,13 @@ The first build of the project itself takes several minutes; afterwards `lake bu
 rebuilds only what changed. A single module and its prerequisites can be built with, for
 example, `lake build LocallyConvexSpaces.Reflexive`. The same build, with warnings treated
 as errors (`lake build --wfail`), runs in continuous integration on every push.
+
+TauCeti modules are imported individually, alongside Mathlib modules; the root `import TauCeti`
+does not re-export its library. Lake builds the TauCeti modules used by this project and their
+dependencies. The first integration is `TauCeti.Topology.Algebra.Module.LocallyConvex`, re-exported
+by [LocallyConvexSpaces.Basic](LocallyConvexSpaces/Basic.lean). It supplies
+`LocallyConvexSpace.toStronglyLocallyContractibleSpace`; [MainResults.lean](MainResults.lean)
+checks that this instance is available alongside the project's existing API.
 
 ## Using the library
 
