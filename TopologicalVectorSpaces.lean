@@ -5,6 +5,7 @@ Authors: Bastiaan J Braams
 -/
 module
 
+public import TopologicalVectorSpaces.BaireMapping
 public import TopologicalVectorSpaces.Basic
 public import TopologicalVectorSpaces.Completion
 public import TopologicalVectorSpaces.CountableSeminorms
@@ -32,5 +33,6 @@ Quotient seminorms have a universal property, and seminorm-bounded linear maps e
 functorially to the associated completions. Summability can be checked by absolute
 summability in an arbitrary defining family of seminorms. The scalar-restriction criterion
 constructs a continuous complex action from the real action and multiplication by the
-imaginary unit; the test-function application uses this criterion.
+imaginary unit; the test-function application uses this criterion. The open mapping and closed
+graph theorems for Baire spaces need no local convexity.
 -/

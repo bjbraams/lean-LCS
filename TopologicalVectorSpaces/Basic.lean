@@ -243,7 +243,7 @@ end Bounded
 
 section Sequence
 
-variable {E : Type*} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [ContinuousSMul ℝ E]
+variable {E : Type*} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [ContinuousConstSMul ℝ E]
   [FirstCountableTopology E]
 
 /-- In a first-countable topological vector space, for every sequence `x n → 0` there are
@@ -298,7 +298,12 @@ variable {𝕜 E F : Type*} [Semiring 𝕜] [AddCommMonoid E] [Module 𝕜 E] [T
 
 /-- The graph of a continuous linear map into a Hausdorff space is closed.
 
-This specializes Mathlib's `Continuous.isClosed_graph` to `LinearMap.graph`. -/
+This specializes Mathlib's `Continuous.isClosed_graph` to `LinearMap.graph`.
+
+Related work outside Mathlib: the corresponding statement for the subgroup graph
+`AddMonoidHom.graph` of a continuous additive homomorphism is `AddMonoidHomClass.isClosed_graph`
+of the Tau Ceti library (Tau Ceti contributors), file `TauCeti/Topology/Algebra/Group/Graph.lean`.
+The statement here, for `LinearMap.graph` over a semiring, was obtained independently. -/
 theorem ContinuousLinearMap.isClosed_graph [T2Space E] (A : F →L[𝕜] E) :
     IsClosed (A.toLinearMap.graph : Set (F × E)) := by
   convert A.continuous.isClosed_graph using 1
@@ -318,13 +323,9 @@ neighbourhood of zero. -/
 theorem closure_mem_nhds_zero_of_not_isMeagre {S : Set E} (hc : Convex ℝ S)
     (hsymm : ∀ x ∈ S, -x ∈ S) (hS : ¬IsMeagre S) : closure S ∈ 𝓝 (0 : E) := by
   -- The closure has an interior point `x`, hence also `-x`, hence their midpoint `0`.
-  have hne : (interior (closure S)).Nonempty := by
-    by_contra h
-    exact hS (IsNowhereDense.isMeagre (not_nonempty_iff_eq_empty.mp h))
-  obtain ⟨x, hx⟩ := hne
-  have hclsymm : ∀ y ∈ closure S, -y ∈ closure S := fun y hy ↦ by
-    have h := (map_mem_closure continuous_neg hy fun z hz ↦ hsymm z hz)
-    exact h
+  obtain ⟨x, hx⟩ := nonempty_interior_closure_of_not_isMeagre hS
+  have hclsymm : ∀ y ∈ closure S, -y ∈ closure S := fun y hy ↦
+    map_mem_closure continuous_neg hy hsymm
   have hnegx : -x ∈ interior (closure S) := by
     rw [mem_interior_iff_mem_nhds] at hx ⊢
     have h : (fun y : E ↦ -y) ⁻¹' closure S ∈ 𝓝 (-x) :=

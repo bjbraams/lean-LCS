@@ -359,9 +359,17 @@ variable [UniformSpace E] [IsUniformAddGroup E] [ContinuousSMul 𝕜 E] [Locally
   [T2Space E]
 
 /-- If a bounded disk `B` is complete as a subset of a Hausdorff locally convex space, in
-particular if it is compact, then the space `E_B` is complete. -/
-theorem completeSpace_of_isComplete (hc : Convex ℝ B) (hb : Balanced 𝕜 B) (hne : B.Nonempty)
+particular if it is compact, then the space `E_B` is complete. For `B = ∅` the space `E_B` is
+zero. -/
+theorem completeSpace_of_isComplete (hc : Convex ℝ B) (hb : Balanced 𝕜 B)
     (hB : IsVonNBounded 𝕜 B) (hcomplete : IsComplete B) : CompleteSpace (DiskSpace 𝕜 B) := by
+  rcases B.eq_empty_or_nonempty with rfl | hne
+  · -- The span of the empty set is zero, and a subsingleton space is compact, hence complete.
+    have : Subsingleton (DiskSpace 𝕜 (∅ : Set E)) := by
+      change Subsingleton ↥(Submodule.span 𝕜 (∅ : Set E))
+      rw [Submodule.span_empty]
+      infer_instance
+    infer_instance
   have hhull : diskHull 𝕜 B = B := diskHull_eq_self hc hb hne
   have hclosed : IsClosed B := hcomplete.isClosed
   have : ContinuousSMul ℝ E := IsScalarTower.continuousSMul 𝕜
@@ -451,14 +459,14 @@ structure Bornology.IsBanachDisk (𝕜 : Type*) {E : Type*} [RCLike 𝕜] [AddCo
   /-- The space spanned by a Banach disk is complete. -/
   completeSpace : CompleteSpace (DiskSpace 𝕜 B)
 
-/-- A nonempty bounded disk that is complete as a subset of a Hausdorff locally convex space, in
+/-- A bounded disk that is complete as a subset of a Hausdorff locally convex space, in
 particular a compact disk, is a Banach disk. -/
 theorem Bornology.IsBanachDisk.of_isComplete {𝕜 E : Type*} [RCLike 𝕜] [AddCommGroup E] [Module 𝕜 E]
     [Module ℝ E] [IsScalarTower ℝ 𝕜 E] [UniformSpace E] [IsUniformAddGroup E]
     [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] [T2Space E] {B : Set E} (hc : Convex ℝ B)
-    (hb : Balanced 𝕜 B) (hne : B.Nonempty) (hB : IsVonNBounded 𝕜 B) (hcomplete : IsComplete B) :
+    (hb : Balanced 𝕜 B) (hB : IsVonNBounded 𝕜 B) (hcomplete : IsComplete B) :
     IsBanachDisk 𝕜 B :=
-  ⟨hc, hb, hB, DiskSpace.completeSpace_of_isComplete hc hb hne hB hcomplete⟩
+  ⟨hc, hb, hB, DiskSpace.completeSpace_of_isComplete hc hb hB hcomplete⟩
 
 section Polar
 

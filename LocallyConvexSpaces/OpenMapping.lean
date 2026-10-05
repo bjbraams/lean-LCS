@@ -49,6 +49,10 @@ topological vector space is a Baire space and therefore barrelled
 (`BaireSpace.instBarrelledSpace`), so for a locally convex domain over `ℝ` or `ℂ` the theorem of
 this file contains that of the PR; see the `example` at the end of the file.
 
+Without local convexity of the domain, the open mapping theorem onto a Baire codomain is
+`LinearMap.isOpenMap_of_isClosed_graph_of_baireSpace` in `TopologicalVectorSpaces.BaireMapping`;
+it contains the open mapping theorem of the PR.
+
 ## References
 
 * [N. Bourbaki, *Topological Vector Spaces*][bourbaki1987]

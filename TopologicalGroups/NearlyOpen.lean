@@ -57,12 +57,17 @@ Mathlib PR #41166 (K. H. Wilson, draft, "generalize the open mapping theorem"), 
 successive approximation in its proof is the same classical argument as in
 `Subgroup.closure_image_subset_image` below, specialized to the graph of a continuous linear
 map into a Hausdorff space, and with near openness derived from the Baire property. The proof
-below was written with that proof at hand and follows its organization (the recursive
-definition of the residuals and the telescoping of the partial products). What is added here is
+below was written with that proof at hand and follows its organization (the successive choice
+of residuals and the telescoping of the partial products); the residuals are now produced by
+`exists_seq_mem_div_prod_mem_closure` of `TopologicalGroups.Series`. What is added here is
 the formulation for closed relations, which replaces "continuous into a Hausdorff space" by
 "closed graph" and yields the closed graph form, and the separation of near openness as a
 hypothesis. The two auxiliary lemmas in the first section are copies of lemmas of PRs #40983
 and #41166; see the notes at those lemmas.
+
+The Tau Ceti library proves the Baire step that produces near openness for linear maps onto Baire
+spaces, `TauCeti.HasZeroSequenceOfUnits.closure_image_mem_nhds_zero`; it is combined with the
+theorems below in `TopologicalVectorSpaces.BaireMapping`.
 
 ## References
 
@@ -139,25 +144,6 @@ end Duplicates
 variable {G H : Type*} [CommGroup G] [UniformSpace G] [IsUniformGroup G] [CompleteSpace G]
   [CommGroup H] [TopologicalSpace H] [IsTopologicalGroup H]
 
-omit [UniformSpace G] [IsUniformGroup G] [CompleteSpace G] in
-/-- The approximation step of the open mapping and closed graph theorems. Let `R` be a subgroup
-of `G × H` and let the closure of `R[T]` be a neighbourhood of the identity. Then a point `w` of the
-closure of `R[S]` is approximated by some `z` with `(x, z) ∈ R` and `x ∈ S` in such a way that
-the residual `w / z` lies in the closure of `R[T]`. -/
-@[to_additive /-- The approximation step of the open mapping and closed graph theorems. Let `R` be a
-subgroup of `G × H` and let the closure of `R[T]` be a neighbourhood of zero. Then a point `w` of
-the closure of `R[S]` is approximated by some `z` with `(x, z) ∈ R` and `x ∈ S` in such a way that
-the residual `w - z` lies in the closure of `R[T]`. -/]
-private theorem Subgroup.exists_div_mem_closure_image (R : Subgroup (G × H)) {S T : Set G}
-    (hT : _root_.closure (SetRel.image (R : Set (G × H)) T) ∈ 𝓝 (1 : H)) {w : H}
-    (hw : w ∈ _root_.closure (SetRel.image (R : Set (G × H)) S)) :
-    ∃ x z, x ∈ S ∧ (x, z) ∈ R ∧ w / z ∈ _root_.closure (SetRel.image (R : Set (G × H)) T) := by
-  have : {p : H | w / p ∈ _root_.closure (SetRel.image (R : Set (G × H)) T)} ∈ 𝓝 w := by
-    apply ContinuousAt.preimage_mem_nhds (by fun_prop)
-    simpa using hT
-  obtain ⟨p, hp, x, hx, hxp⟩ := mem_closure_iff_nhds.mp hw _ this
-  exact ⟨x, p, hx, hxp, hp⟩
-
 /-- The successive approximation argument of the open mapping and closed graph theorems.
 
 Let `R` be a closed subgroup of `G × H`, with `G` complete, and let `V` be an antitone basis of
@@ -191,37 +177,28 @@ theorem Subgroup.closure_image_subset_image (R : Subgroup (G × H))
     (near : ∀ n, _root_.closure (SetRel.image (R : Set (G × H)) (V n)) ∈ 𝓝 (1 : H)) (n : ℕ) :
     _root_.closure (SetRel.image (R : Set (G × H)) (V (n + 2))) ⊆
       SetRel.image (R : Set (G × H)) (V n) := by
-  -- Step 1: the approximation step `Subgroup.exists_div_mem_closure_image`.
-  have step (m : ℕ) (w : H) (hw : w ∈ _root_.closure (SetRel.image (R : Set (G × H)) (V m))) :
-      ∃ x z, x ∈ V m ∧ (x, z) ∈ R ∧
-        w / z ∈ _root_.closure (SetRel.image (R : Set (G × H)) (V (m + 1))) :=
-    R.exists_div_mem_closure_image (near (m + 1)) hw
   intro y hy
-  -- Step 2: iterate. `yᵢ` are the residuals, `xᵢ` the corrections, `sᵢ` their partial products.
-  choose! xg zg hxg hRg hres using step
-  let yᵢ : ℕ → H := fun k ↦ k.recOn y (fun m ym ↦ ym / zg (n + 2 + m) ym)
-  let xᵢ : ℕ → G := fun m ↦ xg (n + 2 + m) (yᵢ m)
-  let sᵢ : ℕ → G := fun m ↦ (Finset.range m).prod xᵢ
-  have hyᵢ (k : ℕ) : yᵢ k ∈ _root_.closure (SetRel.image (R : Set (G × H)) (V (n + 2 + k))) := by
-    induction k with
-    | zero => exact hy
-    | succ k ih => exact hres (n + 2 + k) (yᵢ k) ih
-  have hxᵢ (k : ℕ) : xᵢ k ∈ V (n + 2 + k) := hxg (n + 2 + k) (yᵢ k) (hyᵢ k)
+  -- Step 1: successive approximation in `H` (`exists_seq_mem_div_prod_mem_closure`), lifting each
+  -- approximant `z k ∈ R[V (n + 2 + k)]` to a correction `xᵢ k ∈ V (n + 2 + k)`.
+  obtain ⟨z, hzS, hres⟩ := exists_seq_mem_div_prod_mem_closure
+    (S := fun k ↦ SetRel.image (R : Set (G × H)) (V (n + 2 + k))) (B := fun _ ↦ univ)
+    (fun k ↦ near _) (fun _ ↦ univ_mem) hy
+  choose xᵢ hxᵢ hRᵢ using hzS
+  let sᵢ : ℕ → G := fun m ↦ ∏ k ∈ Finset.range m, xᵢ k
+  -- The residuals `y / ∏ k < m, z k` lie in the closure of `R[V (n + 2 + m)]`.
+  have hres' (m : ℕ) : y / ∏ k ∈ Finset.range m, z k ∈
+      _root_.closure (SetRel.image (R : Set (G × H)) (V (n + 2 + m))) := by
+    cases m with
+    | zero => simpa using hy
+    | succ m => exact (hres m).1
   -- The partial products are related to `y` minus the residual.
-  have hsR (m : ℕ) : (sᵢ m, y / yᵢ m) ∈ R := by
-    induction m with
-    | zero =>
-      have h0 : (sᵢ 0, y / yᵢ 0) = (1 : G × H) := by simp [sᵢ, yᵢ]
-      rw [h0]
-      exact R.one_mem
-    | succ m ih =>
-      have h := R.mul_mem ih (hRg (n + 2 + m) (yᵢ m) (hyᵢ m))
-      have e : y / yᵢ (m + 1) = y / yᵢ m * zg (n + 2 + m) (yᵢ m) := by
-        change y / (yᵢ m / zg (n + 2 + m) (yᵢ m)) = _
-        simp only [div_div_eq_mul_div, div_mul_eq_mul_div]
-      rw [e]
-      simpa [sᵢ, xᵢ, Finset.prod_range_succ] using h
-  -- Step 3: the partial products form a Cauchy sequence, hence converge to some `x`.
+  have hsR (m : ℕ) : (sᵢ m, ∏ k ∈ Finset.range m, z k) ∈ R := by
+    have e : ((sᵢ m, ∏ k ∈ Finset.range m, z k) : G × H) =
+        ∏ k ∈ Finset.range m, (xᵢ k, z k) := by
+      ext <;> simp [sᵢ, Prod.fst_prod, Prod.snd_prod]
+    rw [e]
+    exact R.prod_mem fun k _ ↦ hRᵢ k
+  -- Step 2: the partial products form a Cauchy sequence, hence converge to some `x`.
   have hcauchy : CauchySeq sᵢ := by
     have hunif : (𝓤 G).HasAntitoneBasis fun i ↦ {p : G × G | p.2 / p.1 ∈ V i} :=
       ⟨hV.toHasBasis.uniformity_of_nhds_one, fun _ _ hij _ hp ↦ hV.antitone hij hp⟩
@@ -230,38 +207,37 @@ theorem Subgroup.closure_image_subset_image (R : Subgroup (G × H))
       simpa using hadd k (Set.mul_mem_mul hbc hab)
     · simpa [sᵢ, Finset.prod_range_succ] using hV.antitone (by lia) (hxᵢ k)
   obtain ⟨x, hx⟩ := cauchySeq_tendsto_of_complete hcauchy
-  -- Step 4: `x ∈ V n`, because all partial products lie in `V (n + 1)`.
+  -- Step 3: `x ∈ V n`, because all partial products lie in `V (n + 1)`.
   have hxV : x ∈ V n := by
     refine hcl n (mem_closure_of_tendsto hx (Eventually.of_forall fun m ↦ ?_))
     have h := Finset.prod_range_add_mem_of_mul_subset (V := fun k ↦ V (n + 1 + k))
       (fun k ↦ mem_of_mem_nhds (hV.mem _)) (fun k ↦ hadd _) (x := xᵢ)
       (fun k ↦ hV.antitone (by lia) (hxᵢ k)) m 0
     simpa using h
-  -- Step 5: `(x, y) ∈ R`, because `R` is closed. Every neighbourhood of `(x, y)` contains a
-  -- point `(sᵢ m * u, y / yᵢ m * p)` of `R`, with `u` small and `p` close to `yᵢ m`.
+  -- Step 4: `(x, y) ∈ R`, because `R` is closed. Every neighbourhood of `(x, y)` contains a
+  -- point `(sᵢ m * u, y / r * p)` of `R`, with `u` small and `p` close to the residual `r`.
   refine ⟨x, hxV, ?_⟩
   change (x, y) ∈ (R : Set (G × H))
   rw [← hR.closure_eq, mem_closure_iff_nhds]
   intro N hN
   obtain ⟨S, hS, T, hT, hST⟩ := mem_nhds_prod_iff.mp hN
-  -- Split `S` as `S' + B` with `S'` a neighbourhood of `x` and `B` a neighbourhood of the identity.
+  -- Split `S` as `S' * B` with `S'` a neighbourhood of `x` and `B` a neighbourhood of the identity.
   have hadd_mem : (fun q : G × G ↦ q.1 * q.2) ⁻¹' S ∈ 𝓝 ((x, 1) : G × G) :=
     continuous_mul.continuousAt.preimage_mem_nhds (by simpa using hS)
   obtain ⟨S', hS', B, hB, hS'B⟩ := mem_nhds_prod_iff.mp hadd_mem
   obtain ⟨j, hj⟩ := hV.mem_iff.mp hB
   obtain ⟨m, hmS', hmj⟩ := ((hx.eventually hS').and (eventually_ge_atTop j)).exists
-  -- Approximate the residual `yᵢ m` by some `p` related to a small `u`.
-  have hW : {p : H | y / (yᵢ m / p) ∈ T} ∈ 𝓝 (yᵢ m) := by
+  set r := y / ∏ k ∈ Finset.range m, z k
+  -- Approximate the residual `r` by some `p` related to a small `u`.
+  have hW : {p : H | y / (r / p) ∈ T} ∈ 𝓝 r := by
     apply ContinuousAt.preimage_mem_nhds (by fun_prop)
-    simpa using hT
-  obtain ⟨p, hp, u, hu, hup⟩ := mem_closure_iff_nhds.mp (hyᵢ m) _ hW
-  refine ⟨(sᵢ m * u, y / yᵢ m * p), hST ⟨?_, ?_⟩, R.mul_mem (hsR m) hup⟩
+    simpa [r] using hT
+  obtain ⟨p, hp, u, hu, hup⟩ := mem_closure_iff_nhds.mp (hres' m) _ hW
+  have hsr : (sᵢ m, y / r) ∈ R := by simpa only [r, div_div_cancel] using hsR m
+  refine ⟨(sᵢ m * u, y / r * p), hST ⟨?_, ?_⟩, R.mul_mem hsr hup⟩
   · exact hS'B (show (sᵢ m, u) ∈ S' ×ˢ B from ⟨hmS', hj (hV.antitone (by lia) hu)⟩)
-  · have e : y / yᵢ m * p = y / (yᵢ m / p) := by
-      simp only [div_div_eq_mul_div, div_mul_eq_mul_div]
-    change y / yᵢ m * p ∈ T
-    rw [e]
-    exact hp
+  · have e : y / r * p = y / (r / p) := by simp only [div_div_eq_mul_div, div_mul_eq_mul_div]
+    exact e ▸ hp
 
 variable [FirstCountableTopology G]
 

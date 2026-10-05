@@ -114,10 +114,7 @@ theorem StrongDual.exists_mem_polar_one_lt_norm {s : Set E} (hc : Convex ℝ s) 
     (hcl : IsClosed s) (hne : s.Nonempty) {x : E} (hx : x ∉ s) :
     ∃ φ ∈ StrongDual.polar 𝕜 s, 1 < ‖φ x‖ := by
   obtain ⟨f, u, hf, hu⟩ := RCLike.geometric_hahn_banach_closed_point (𝕜 := 𝕜) hc hcl hx
-  have h0 : (0 : E) ∈ s := by
-    obtain ⟨y, hy⟩ := hne
-    have h := balanced_iff_smul_mem.mp hb (show ‖(0 : 𝕜)‖ ≤ 1 by simp) hy
-    simpa using h
+  have h0 : (0 : E) ∈ s := hb.zero_mem hne
   have hu0 : 0 < u := by simpa using hf 0 h0
   -- Rotate the scalar to pass from the real part to the norm.
   have hnorm (a : E) (ha : a ∈ s) : ‖f a‖ < u := by

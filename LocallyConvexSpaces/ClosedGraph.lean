@@ -43,6 +43,11 @@ space is a Baire space and therefore barrelled (`BaireSpace.instBarrelledSpace`)
 locally convex codomain over `ℝ` or `ℂ` the theorem of this file contains that of the PR; see
 the `example` at the end of the file.
 
+Without local convexity of the codomain, the closed graph theorem for a Baire domain and a
+complete first-countable codomain is
+`LinearMap.continuous_of_isClosed_graph_of_baireSpace_of_firstCountableTopology` in
+`TopologicalVectorSpaces.BaireMapping`; it contains the closed graph theorem of the PR.
+
 ## References
 
 * [N. Bourbaki, *Topological Vector Spaces*][bourbaki1987]

@@ -50,6 +50,30 @@ info: 'ContinuousLinearMap.isOpenMap_of_barrelledSpace' depends on axioms:
 #guard_msgs (whitespace := lax) in
 #print axioms ContinuousLinearMap.isOpenMap_of_barrelledSpace
 
+-- Closed graph theorem, Baire domain and complete first-countable codomain.
+/--
+info: 'LinearMap.continuous_of_isClosed_graph_of_baireSpace_of_firstCountableTopology' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms LinearMap.continuous_of_isClosed_graph_of_baireSpace_of_firstCountableTopology
+
+-- Open mapping theorem, closed graph form, Baire codomain.
+/--
+info: 'LinearMap.isOpenMap_of_isClosed_graph_of_baireSpace' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms LinearMap.isOpenMap_of_isClosed_graph_of_baireSpace
+
+-- Open mapping theorem, complete first-countable domain and Baire codomain.
+/--
+info: 'ContinuousLinearMap.isOpenMap_of_baireSpace' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms ContinuousLinearMap.isOpenMap_of_baireSpace
+
 -- Pták's closed graph theorem.
 /--
 info: 'LinearMap.continuous_of_isClosed_graph_of_infraPtakSpace' depends on axioms:

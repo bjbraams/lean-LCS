@@ -93,12 +93,8 @@ private theorem LinearMap.exists_tendsto_map_sum_of_strand [TopologicalSpace F]
     {x : ℕ → E} (hx : ∀ j, x j ∈ c (k₀ + j) • (A ⁻¹' C (res σ (k₀ + j + 1)))) :
     ∃ y ∈ D k₀, Tendsto (fun N ↦ A (∑ j ∈ Finset.range N, x j)) atTop (𝓝 y) := by
   -- Every set of the strand is nonempty.
-  have hne (k : ℕ) : (C (res σ (k + 1))).Nonempty := by
-    by_contra hcon
-    rw [not_nonempty_iff_eq_empty] at hcon
-    refine hσ (k + 1) ?_
-    rw [hcon, preimage_empty]
-    exact IsMeagre.empty
+  have hne (k : ℕ) : (C (res σ (k + 1))).Nonempty :=
+    (nonempty_of_not_isMeagre (hσ (k + 1))).image A |>.mono (image_preimage_subset _ _)
   have hw (j : ℕ) : ∃ w, A w ∈ C (res σ (k₀ + j + 1)) ∧ c (k₀ + j) • w = x j := by
     obtain ⟨w, hw, hwx⟩ := hx j
     exact ⟨w, hw, hwx⟩

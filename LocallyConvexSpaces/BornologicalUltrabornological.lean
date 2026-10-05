@@ -122,10 +122,10 @@ theorem UltrabornologicalSpace.of_bornologicalSpace_of_quasiCompleteSpace
   have heq := BornologicalSpace.eq_locallyConvexFinalTopology_diskSpace (𝕜 := 𝕜) (E := E)
   -- Every `E_B` is a Banach space, hence ultrabornological.
   have hX (B : closedBoundedDisks 𝕜 E) : UltrabornologicalSpace 𝕜 (DiskSpace 𝕜 B.1) := by
-    obtain ⟨hcl, hc, hb, hbdd, hne⟩ := B.2
+    obtain ⟨hcl, hc, hb, hbdd, -⟩ := B.2
     let _ := DiskSpace.normedAddCommGroup (𝕜 := 𝕜) hbdd
     have : CompleteSpace (DiskSpace 𝕜 B.1) :=
-      DiskSpace.completeSpace_of_isComplete hc hb hne hbdd
+      DiskSpace.completeSpace_of_isComplete hc hb hbdd
         (QuasiCompleteSpace.quasiComplete hbdd hcl)
     infer_instance
   have key := locallyConvexFinalTopology.ultrabornologicalSpace (𝕜 := 𝕜)

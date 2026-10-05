@@ -16,14 +16,15 @@ public import WebbedSpaces.DeWilde.Localization
 Let `E` be a Hausdorff topological vector space that is strictly webbed and a Baire space. The
 localization theorem, applied to the identity map of `E`, gives a strand `σ` of a strict web `C`
 all of whose sets `C (res σ k)` are neighbourhoods of zero. By Köthe II §35.1.(3) the multiples
-`ρ k • C (res σ (k + 1))` then form a countable basis of neighbourhoods of zero, so `E` is
-first-countable, and the strictness of the web makes every Cauchy sequence converge, so `E` is
-complete ([G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.6.(3)).
+`ρ k • C (res σ (k + 1))` then form a countable basis of neighbourhoods of zero, and the
+strictness of the web makes every Cauchy sequence converge, so `E` is complete
+([G. Köthe, *Topological Vector Spaces II*][kothe1979], §35.6.(3)).
 
 For a space that is only webbed, the closures `S k` of the sets of a strand without meagre sets
 have interior points, so that the sets `ρ k • (S k - S k)` form a countable basis of
 neighbourhoods of zero: a webbed Baire space is first-countable, and metrizable when it is
-Hausdorff (§35.6.(5)).
+Hausdorff (§35.6.(5)). In particular a strictly webbed Baire space is first-countable, without a
+separation hypothesis.
 
 Consequently a product of Banach spaces with uncountably many nontrivial factors, which is a
 Baire space but is not metrizable, is not webbed.
@@ -82,18 +83,9 @@ theorem exists_hasBasis_nhds_zero_of_baireSpace [TopologicalSpace E] [IsTopologi
     rw [LinearMap.id_coe, preimage_id] at h
     exact mem_of_superset ((set_smul_mem_nhds_zero_iff (hρ k).ne').mpr h) hk
 
-/-- A Hausdorff strictly webbed Baire space is first-countable. -/
-theorem firstCountableTopology_of_baireSpace [TopologicalSpace E]
-    [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] [T2Space E] [BaireSpace E]
-    [StrictlyWebbedSpace 𝕜 E] : FirstCountableTopology E := by
-  obtain ⟨C, σ, ρ, -, hbasis, -⟩ := exists_hasBasis_nhds_zero_of_baireSpace (𝕜 := 𝕜) (E := E)
-  have : (𝓝 (0 : E)).IsCountablyGenerated := hbasis.isCountablyGenerated
-  -- Use the imported TauCeti.SeparatelyContinuousAdd.toFirstCountableTopology instance.
-  infer_instance
-
 /-- **A Hausdorff strictly webbed Baire space is complete**; together with
-`firstCountableTopology_of_baireSpace` it is a Fréchet space if it is locally convex,
-Köthe II §35.6.(3). -/
+`StrictlyWebbedSpace.firstCountableTopology_of_baireSpace` it is a Fréchet space if it is locally
+convex, Köthe II §35.6.(3). -/
 theorem completeSpace_of_baireSpace [UniformSpace E] [IsUniformAddGroup E] [ContinuousSMul ℝ E]
     [T2Space E] [BaireSpace E] [StrictlyWebbedSpace 𝕜 E] : CompleteSpace E := by
   obtain ⟨C, σ, ρ, hbal, hbasis, hseries⟩ :=
@@ -145,10 +137,7 @@ theorem WebbedSpace.firstCountableTopology_of_baireSpace : FirstCountableTopolog
   let B : ℕ → Set E := fun k ↦ (fun p : E × E ↦ ρ k • (p.1 - p.2)) '' S k ×ˢ S k
   -- The closure of a non-meagre set has an interior point `y`, and `S k - y ⊆ S k - S k`.
   have hB (k : ℕ) : B k ∈ 𝓝 (0 : E) := by
-    have hne : (interior (S k)).Nonempty := by
-      by_contra h
-      exact hσ (k + 1) (IsNowhereDense.isMeagre (not_nonempty_iff_eq_empty.mp h))
-    obtain ⟨y, hy⟩ := hne
+    obtain ⟨y, hy⟩ := nonempty_interior_closure_of_not_isMeagre (hσ (k + 1))
     have hSy : S k ∈ 𝓝 y := mem_interior_iff_mem_nhds.mp hy
     have hc : ContinuousAt (fun v : E ↦ v + y) 0 := by fun_prop
     have hV : (fun v : E ↦ v + y) ⁻¹' S k ∈ 𝓝 (0 : E) :=
@@ -180,5 +169,13 @@ theorem WebbedSpace.firstCountableTopology_of_baireSpace : FirstCountableTopolog
     simpa [smul_sub] using h
   -- Use the imported TauCeti.SeparatelyContinuousAdd.toFirstCountableTopology instance.
   infer_instance
+
+omit [WebbedSpace E] in
+/-- A strictly webbed Baire space is first-countable. This is the case of
+`WebbedSpace.firstCountableTopology_of_baireSpace` for a strict web; no separation is needed. -/
+theorem StrictlyWebbedSpace.firstCountableTopology_of_baireSpace {𝕜 : Type*} [NormedField 𝕜]
+    [Module 𝕜 E] [StrictlyWebbedSpace 𝕜 E] : FirstCountableTopology E :=
+  have := StrictlyWebbedSpace.toWebbedSpace (𝕜 := 𝕜) (E := E)
+  WebbedSpace.firstCountableTopology_of_baireSpace
 
 end Webbed

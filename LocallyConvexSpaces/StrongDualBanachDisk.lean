@@ -62,8 +62,7 @@ private theorem WeakDual.completeSpace_diskSpace_polar {U : Set E} (hU : U ∈ �
   have hbal' : Balanced 𝕜 (StrongDual.polar 𝕜 U) := LinearMap.balanced_polar _ _
   have hconv : Convex ℝ (WeakDual.polar 𝕜 U) := hconv'
   have hbal : Balanced 𝕜 (WeakDual.polar 𝕜 U) := hbal'
-  exact DiskSpace.completeSpace_of_isComplete hconv hbal ⟨0, StrongDual.zero_mem_polar 𝕜 U⟩
-    (hc.isVonNBounded 𝕜) hc.isComplete
+  exact DiskSpace.completeSpace_of_isComplete hconv hbal (hc.isVonNBounded 𝕜) hc.isComplete
 
 /-- The space spanned by the polar of a neighbourhood of zero is complete for the gauge of the
 polar. -/

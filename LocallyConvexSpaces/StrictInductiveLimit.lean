@@ -268,6 +268,69 @@ theorem isClosed_range_transition (hj : ∀ n, Topology.IsClosedEmbedding (j n))
 
 end Transition
 
+section Separation
+
+variable {𝕜 : Type*} [RCLike 𝕜] {E : ℕ → Type*} {F : Type*}
+  [∀ n, AddCommGroup (E n)] [∀ n, Module 𝕜 (E n)] [∀ n, TopologicalSpace (E n)]
+  [∀ n, IsTopologicalAddGroup (E n)] [∀ n, ContinuousSMul 𝕜 (E n)]
+  [AddCommGroup F] [Module 𝕜 F] [Module ℝ F] [IsScalarTower ℝ 𝕜 F]
+  (j : ∀ n, E n →L[𝕜] E (n + 1)) (f : ∀ n, E n →ₗ[𝕜] F)
+
+/-- Let `φ n` be linear functionals on `F` such that `φ n` vanishes on the range of `f n` and every
+`φ n ∘ f m` is continuous, and let `a n` be positive. If the ranges of the maps `f n` increase and
+cover `F`, then the set of points `z` with `‖φ n z‖ ≤ a n` for all `n` is a neighbourhood of zero
+for the final locally convex topology: only the functionals `φ n` with `n < m` give a condition on
+the `m`-th step. -/
+theorem setOf_forall_norm_le_mem_nhds (hf : ∀ n x, f (n + 1) (j n x) = f n x)
+    (hcover : ∀ y : F, ∃ n x, f n x = y) (φ : ℕ → F →ₗ[𝕜] 𝕜)
+    (hφc : ∀ n m, Continuous fun x : E m ↦ φ n (f m x))
+    (hφ0 : ∀ n, ∀ z ∈ range (f n), φ n z = 0) {a : ℕ → ℝ} (ha : ∀ n, 0 < a n) :
+    {z : F | ∀ n, ‖φ n z‖ ≤ a n} ∈ @nhds F (locallyConvexFinalTopology f) 0 := by
+  have hUeq : {z : F | ∀ n, ‖φ n z‖ ≤ a n} =
+      ⋂ n, φ n ⁻¹' Metric.closedBall (0 : 𝕜) (a n) := by
+    ext z
+    simp
+  refine locallyConvexFinalTopology.mem_nhds_zero_of_forall_exists_apply_eq f ?_ ?_ hcover
+    fun m ↦ ?_
+  · rw [hUeq]
+    exact convex_iInter fun n ↦ (convex_closedBall (0 : 𝕜) _).is_linear_preimage
+      ((φ n).restrictScalars ℝ).isLinear
+  · rw [hUeq]
+    exact balanced_iInter fun n ↦ balanced_closedBall_zero.preimage (φ n)
+  · have hfin : (⋂ n ∈ Finset.range m, {x : E m | ‖φ n (f m x)‖ ≤ a n}) ∈ 𝓝 (0 : E m) :=
+      (Filter.biInter_finset_mem _).mpr fun n _ ↦
+        ((hφc n m).norm.continuousAt (x := (0 : E m))).preimage_mem_nhds (t := Iic (a n))
+          (by simpa using Iic_mem_nhds (ha n))
+    refine mem_of_superset hfin fun x hx n ↦ ?_
+    rcases lt_or_ge n m with hnm | hmn
+    · exact (mem_iInter₂.mp hx) n (Finset.mem_range.mpr hnm)
+    · rw [hφ0 n _ (range_mono j f hf hmn ⟨x, rfl⟩), norm_zero]
+      exact (ha n).le
+
+omit [∀ n, TopologicalSpace (E n)] [∀ n, IsTopologicalAddGroup (E n)]
+  [∀ n, ContinuousSMul 𝕜 (E n)] in
+/-- Let `ψ n` be linear functionals on a module `X` and `z n` points with `ψ n (z n) ≠ 0`. A set
+`W` on which `‖ψ n w‖ ≤ ‖ψ n (z n)‖ / (n + 1)` for all `n` does not absorb any set that contains
+all the points `z n`. -/
+theorem not_absorbs_of_forall_norm_le {X : Type*} [AddCommGroup X] [Module 𝕜 X]
+    (ψ : ℕ → X →ₗ[𝕜] 𝕜) {z : ℕ → X} (hz : ∀ n, ψ n (z n) ≠ 0) {W A : Set X}
+    (hW : ∀ w ∈ W, ∀ n, ‖ψ n w‖ ≤ ‖ψ n (z n)‖ / (n + 1)) (hA : ∀ n, z n ∈ A) :
+    ¬Absorbs 𝕜 W A := by
+  intro habs
+  obtain ⟨r, hr⟩ := absorbs_iff_norm.mp habs
+  obtain ⟨c, hc⟩ := NormedField.exists_lt_norm 𝕜 (max r 0)
+  obtain ⟨n, hn⟩ := exists_nat_gt ‖c‖
+  obtain ⟨w, hw, hwz⟩ := hr c ((le_max_left _ _).trans hc.le) (hA n)
+  have hwz' : c • w = z n := hwz
+  have hpos : 0 < ‖ψ n (z n)‖ := norm_pos_iff.mpr (hz n)
+  have heq : ‖ψ n (z n)‖ = ‖c‖ * ‖ψ n w‖ := by rw [← hwz', map_smul, smul_eq_mul, norm_mul]
+  have h4 : ‖ψ n (z n)‖ ≤ ‖c‖ * (‖ψ n (z n)‖ / (n + 1)) :=
+    heq.le.trans (mul_le_mul_of_nonneg_left (hW w hw n) (norm_nonneg c))
+  rw [mul_div_assoc', le_div_iff₀ (by positivity)] at h4
+  nlinarith
+
+end Separation
+
 end StrictInductiveLimit
 
 section Structure
@@ -359,16 +422,8 @@ theorem exists_nhds_preimage_eq (n : ℕ) {V : Set (E n)} (hV : V ∈ 𝓝 (0 : 
     refine preimage_mem_nhds_of_add j f h.apply_step n m ?_
     have h := hUpre m
     rwa [Nat.add_comm n m] at h
-  have hUabs : Absorbent 𝕜 U := by
-    intro y
-    obtain ⟨m, x, rfl⟩ := h.exists_apply_eq y
-    have hx : Absorbs 𝕜 (f m ⁻¹' U) {x} := absorbent_nhds_zero (hUpre' m) x
-    refine Filter.Eventually.mono hx fun c hc ↦ ?_
-    rw [singleton_subset_iff] at hc ⊢
-    obtain ⟨z, hz, hzx⟩ := hc
-    exact ⟨f m z, hz, by rw [← hzx]; exact (map_smul (f m) c z).symm⟩
-  refine ⟨U, locallyConvexFinalTopology.mem_nhds_zero f hUc hUb hUabs hUpre',
-    Subset.antisymm ?_ ?_⟩
+  refine ⟨U, locallyConvexFinalTopology.mem_nhds_zero_of_forall_exists_apply_eq f hUc hUb
+    h.exists_apply_eq hUpre', Subset.antisymm ?_ ?_⟩
   · intro x hx
     obtain ⟨k, w, hw, hwx⟩ := mem_iUnion.mp hx
     have h1 : T k x = w := (h.injective (n + k) (hwx.trans (hT k x).symm)).symm
@@ -486,68 +541,15 @@ theorem exists_subset_range_of_isVonNBounded {B : Set F}
     · rw [h0, norm_zero] at hφy
       linarith
   choose φ hφ0 hφy using hφ
-  -- The set `U` is a neighbourhood of zero of the limit.
-  let U : Set F := {z | ∀ n : ℕ, ‖φ n z‖ ≤ ‖φ n (y n)‖ / (n + 1)}
-  have hUeq : U = ⋂ n : ℕ, (φ n) ⁻¹' Metric.closedBall (0 : 𝕜) (‖φ n (y n)‖ / (n + 1)) := by
-    ext z
-    simp [U]
-  have hUc : Convex ℝ U := by
-    rw [hUeq]
-    exact convex_iInter fun n ↦ (convex_closedBall (0 : 𝕜) _).is_linear_preimage
-      ((φ n).toLinearMap.restrictScalars ℝ).isLinear
-  have hUb : Balanced 𝕜 U := by
-    rw [hUeq]
-    exact balanced_iInter fun n ↦ (balanced_closedBall_zero).preimage (φ n).toLinearMap
-  have hUpre (m : ℕ) : f m ⁻¹' U ∈ 𝓝 (0 : E m) := by
-    -- Only the functionals `φ n` with `n < m` give a condition on the `m`-th step.
-    have hfin : (⋂ n ∈ Finset.range m,
-        {x : E m | ‖φ n (f m x)‖ ≤ ‖φ n (y n)‖ / (n + 1)}) ∈ 𝓝 (0 : E m) := by
-      refine (Filter.biInter_finset_mem _).mpr fun n _ ↦ ?_
-      have hc : Continuous fun x : E m ↦ ‖φ n (f m x)‖ :=
-        ((φ n).continuous.comp (locallyConvexFinalTopology.continuous_apply f m)).norm
-      have hpos : 0 < ‖φ n (y n)‖ / (n + 1) :=
-        div_pos (norm_pos_iff.mpr (hφy n)) (by positivity)
-      have hopen : IsOpen {x : E m | ‖φ n (f m x)‖ < ‖φ n (y n)‖ / (n + 1)} :=
-        isOpen_lt hc continuous_const
-      refine mem_of_superset (hopen.mem_nhds ?_) fun x hx ↦ ?_
-      · simpa using hpos
-      · have hx' : ‖φ n (f m x)‖ < ‖φ n (y n)‖ / (n + 1) := hx
-        exact hx'.le
-    refine mem_of_superset hfin fun x hx n ↦ ?_
-    rcases lt_or_ge n m with hnm | hmn
-    · exact (mem_iInter₂.mp hx) n (Finset.mem_range.mpr hnm)
-    · rw [hφ0 n _ (range_mono j f h.apply_step hmn ⟨x, rfl⟩), norm_zero]
-      exact div_nonneg (norm_nonneg _) (by positivity)
-  have hUabs : Absorbent 𝕜 U := by
-    intro z
-    obtain ⟨m, x, rfl⟩ := h.exists_apply_eq z
-    have hx : Absorbs 𝕜 (f m ⁻¹' U) {x} := absorbent_nhds_zero (hUpre m) x
-    refine Filter.Eventually.mono hx fun c hc ↦ ?_
-    rw [singleton_subset_iff] at hc ⊢
-    obtain ⟨w, hw, hwx⟩ := hc
-    exact ⟨f m w, hw, by rw [← hwx]; exact (map_smul (f m) c w).symm⟩
-  have hU : U ∈ 𝓝 (0 : F) := locallyConvexFinalTopology.mem_nhds_zero f hUc hUb hUabs hUpre
-  -- `B` is absorbed by `U`, which bounds `n + 1` by a fixed number for all `n`.
-  obtain ⟨r, hr⟩ := absorbs_iff_norm.mp (hB hU)
-  obtain ⟨c, hc⟩ := NormedField.exists_lt_norm 𝕜 (max r 0)
-  have hcr : r ≤ ‖c‖ := (le_max_left _ _).trans hc.le
-  have hcpos : 0 < ‖c‖ := (le_max_right _ _).trans_lt hc
-  obtain ⟨n, hn⟩ := exists_nat_gt ‖c‖
-  obtain ⟨z, hz, hzy⟩ := hr c hcr (hyB n)
-  have h4 : ‖φ n (y n)‖ ≤ ‖c‖ * (‖φ n (y n)‖ / (n + 1)) := by
-    have hzy' : c • z = y n := hzy
-    have heq : ‖φ n (y n)‖ = ‖c‖ * ‖φ n z‖ := by rw [← hzy', map_smul, norm_smul]
-    exact heq.le.trans (mul_le_mul_of_nonneg_left (hz n) hcpos.le)
-  have hpos : 0 < ‖φ n (y n)‖ := norm_pos_iff.mpr (hφy n)
-  have h5 : (n : ℝ) + 1 ≤ ‖c‖ := by
-    have h6 : ‖φ n (y n)‖ * ((n : ℝ) + 1) ≤ ‖c‖ * ‖φ n (y n)‖ := by
-      have hn1 : (0 : ℝ) < n + 1 := by positivity
-      calc ‖φ n (y n)‖ * ((n : ℝ) + 1) ≤ ‖c‖ * (‖φ n (y n)‖ / (n + 1)) * (n + 1) :=
-            mul_le_mul_of_nonneg_right h4 hn1.le
-        _ = ‖c‖ * ‖φ n (y n)‖ := by field_simp
-    have h7 : ‖φ n (y n)‖ * ((n : ℝ) + 1) ≤ ‖φ n (y n)‖ * ‖c‖ := by rwa [mul_comm ‖c‖] at h6
-    exact le_of_mul_le_mul_left h7 hpos
-  linarith
+  -- The set of points where `‖φ n z‖ ≤ ‖φ n (y n)‖ / (n + 1)` for all `n` is a neighbourhood of
+  -- zero of the limit, but it does not absorb `B`.
+  have hU := setOf_forall_norm_le_mem_nhds j f h.apply_step h.exists_apply_eq
+    (fun n ↦ (φ n).toLinearMap)
+    (fun n m ↦ (φ n).continuous.comp (locallyConvexFinalTopology.continuous_apply f m)) hφ0
+    (a := fun n ↦ ‖φ n (y n)‖ / (n + 1))
+    fun n ↦ div_pos (norm_pos_iff.mpr (hφy n)) (by positivity)
+  exact not_absorbs_of_forall_norm_le (fun n ↦ (φ n).toLinearMap) hφy
+    (W := {z : F | ∀ n, ‖φ n z‖ ≤ ‖φ n (y n)‖ / (n + 1)}) (fun w hw ↦ hw) hyB (hB hU)
 
 include h hjcl in
 /-- In a countable strict inductive limit with closed transition ranges, a bounded set is
@@ -622,46 +624,10 @@ theorem completeSpace {j : ∀ n, E n →L[𝕜] E (n + 1)} {f : ∀ n, E n →�
     rintro _ ⟨x, rfl⟩
     exact hψ0 n _ ⟨x, rfl⟩
   let U : Set F := {x | ∀ n : ℕ, ‖φ n x‖ ≤ ‖ψ n z‖ / (n + 1)}
-  have hUeq : U = ⋂ n : ℕ, (φ n) ⁻¹' Metric.closedBall (0 : 𝕜) (‖ψ n z‖ / (n + 1)) := by
-    ext z
-    simp [U]
-  have hUc : Convex ℝ U := by
-    rw [hUeq]
-    exact convex_iInter fun n ↦ (convex_closedBall (0 : 𝕜) _).is_linear_preimage
-      ((φ n).toLinearMap.restrictScalars ℝ).isLinear
-  have hUb : Balanced 𝕜 U := by
-    rw [hUeq]
-    exact balanced_iInter fun n ↦ (balanced_closedBall_zero).preimage (φ n).toLinearMap
-  have hUpre (m : ℕ) : f m ⁻¹' U ∈ 𝓝 (0 : E m) := by
-    -- Only the functionals `φ n` with `n < m` give a condition on the `m`-th step.
-    have hfin : (⋂ n ∈ Finset.range m,
-        {x : E m | ‖φ n (f m x)‖ ≤ ‖ψ n z‖ / (n + 1)}) ∈ 𝓝 (0 : E m) := by
-      refine (Filter.biInter_finset_mem _).mpr fun n _ ↦ ?_
-      have hc : Continuous fun x : E m ↦ ‖φ n (f m x)‖ :=
-        ((φ n).continuous.comp (hfi m).continuous).norm
-      have hpos : 0 < ‖ψ n z‖ / (n + 1) :=
-        div_pos (norm_pos_iff.mpr (hψz n)) (by positivity)
-      have hopen : IsOpen {x : E m | ‖φ n (f m x)‖ < ‖ψ n z‖ / (n + 1)} :=
-        isOpen_lt hc continuous_const
-      refine mem_of_superset (hopen.mem_nhds ?_) fun x hx ↦ ?_
-      · simpa using hpos
-      · have hx' : ‖φ n (f m x)‖ < ‖ψ n z‖ / (n + 1) := hx
-        exact hx'.le
-    refine mem_of_superset hfin fun x hx n ↦ ?_
-    rcases lt_or_ge n m with hnm | hmn
-    · exact (mem_iInter₂.mp hx) n (Finset.mem_range.mpr hnm)
-    · rw [hφ0 n _ (range_mono j f h.apply_step hmn ⟨x, rfl⟩), norm_zero]
-      exact div_nonneg (norm_nonneg _) (by positivity)
-  have hUabs : Absorbent 𝕜 U := by
-    intro z
-    obtain ⟨m, x, rfl⟩ := h.exists_apply_eq z
-    have hx : Absorbs 𝕜 (f m ⁻¹' U) {x} := absorbent_nhds_zero (hUpre m) x
-    refine Filter.Eventually.mono hx fun c hc ↦ ?_
-    rw [singleton_subset_iff] at hc ⊢
-    obtain ⟨w, hw, hwx⟩ := hc
-    exact ⟨f m w, hw, by rw [← hwx]; exact (map_smul (f m) c w).symm⟩
   have hU : U ∈ 𝓝 (0 : F) := by
-    exact hFtop.symm ▸ locallyConvexFinalTopology.mem_nhds_zero f hUc hUb hUabs hUpre
+    exact hFtop.symm ▸ setOf_forall_norm_le_mem_nhds j f h.apply_step h.exists_apply_eq
+      (fun n ↦ (φ n).toLinearMap) (fun n m ↦ (φ n).continuous.comp (hfi m).continuous) hφ0
+      (a := fun n ↦ ‖ψ n z‖ / (n + 1)) fun n ↦ div_pos (norm_pos_iff.mpr (hψz n)) (by positivity)
   let V : Set (UniformSpace.Completion F) := closure (c '' U)
   have hV : V ∈ 𝓝 (0 : UniformSpace.Completion F) :=
     UniformSpace.Completion.hasBasis_nhds_zero_closure_image.mem_of_mem hU
@@ -669,26 +635,8 @@ theorem completeSpace {j : ∀ n, E n →L[𝕜] E (n + 1)} {f : ∀ n, E n →�
       ‖ψ n w‖ ≤ ‖ψ n z‖ / (n + 1) := by
     exact (closure_minimal (by rintro _ ⟨x, hx, rfl⟩; exact hx n)
       (isClosed_le (ψ n).continuous.norm continuous_const)) hw
-  obtain ⟨r, hr⟩ := absorbs_iff_norm.mp (absorbent_nhds_zero (𝕜 := 𝕜) hV z)
-  obtain ⟨c, hc⟩ := NormedField.exists_lt_norm 𝕜 (max r 0)
-  have hcr : r ≤ ‖c‖ := (le_max_left _ _).trans hc.le
-  have hcpos : 0 < ‖c‖ := (le_max_right _ _).trans_lt hc
-  obtain ⟨n, hn⟩ := exists_nat_gt ‖c‖
-  obtain ⟨w, hw, hwz⟩ := hr c hcr (Set.mem_singleton z)
-  have h4 : ‖ψ n z‖ ≤ ‖c‖ * (‖ψ n z‖ / (n + 1)) := by
-    have hwz' : c • w = z := hwz
-    have heq : ‖ψ n z‖ = ‖c‖ * ‖ψ n w‖ := by rw [← hwz', map_smul, norm_smul]
-    exact heq.le.trans (mul_le_mul_of_nonneg_left (hVbound n hw) hcpos.le)
-  have hpos : 0 < ‖ψ n z‖ := norm_pos_iff.mpr (hψz n)
-  have h5 : (n : ℝ) + 1 ≤ ‖c‖ := by
-    have h6 : ‖ψ n z‖ * ((n : ℝ) + 1) ≤ ‖c‖ * ‖ψ n z‖ := by
-      have hn1 : (0 : ℝ) < n + 1 := by positivity
-      calc ‖ψ n z‖ * ((n : ℝ) + 1) ≤ ‖c‖ * (‖ψ n z‖ / (n + 1)) * (n + 1) :=
-            mul_le_mul_of_nonneg_right h4 hn1.le
-        _ = ‖c‖ * ‖ψ n z‖ := by field_simp
-    have h7 : ‖ψ n z‖ * ((n : ℝ) + 1) ≤ ‖ψ n z‖ * ‖c‖ := by rwa [mul_comm ‖c‖] at h6
-    exact le_of_mul_le_mul_left h7 hpos
-  linarith
+  exact not_absorbs_of_forall_norm_le (fun n ↦ (ψ n).toLinearMap) (z := fun _ ↦ z) hψz
+    (fun w hw n ↦ hVbound n hw) (fun _ ↦ mem_singleton z) (absorbent_nhds_zero (𝕜 := 𝕜) hV z)
 
 
 end Completeness

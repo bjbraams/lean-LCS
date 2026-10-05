@@ -210,6 +210,19 @@ theorem mem_nhds_zero {U : Set F} (hc : Convex ℝ U) (hb : Balanced 𝕜 U) (ha
       (by simpa [Seminorm.mem_ball_zero, p] using hx)
   exact nhds_mono hle (mem_of_superset hball hsub)
 
+/-- If the ranges of the maps of the family cover `F`, then a `ℝ`-convex, balanced subset of `F`
+whose preimage under every map of the family is a neighbourhood of zero is a neighbourhood of zero
+for the final locally convex topology. Absorbency follows from the covering. -/
+theorem mem_nhds_zero_of_forall_exists_apply_eq {U : Set F} (hc : Convex ℝ U)
+    (hb : Balanced 𝕜 U) (hcover : ∀ y : F, ∃ i x, f i x = y)
+    (h : ∀ i, f i ⁻¹' U ∈ 𝓝 (0 : E i)) : U ∈ @nhds F (locallyConvexFinalTopology f) 0 := by
+  refine mem_nhds_zero f hc hb (fun y ↦ ?_) h
+  obtain ⟨i, x, rfl⟩ := hcover y
+  refine Filter.Eventually.mono (absorbent_nhds_zero (𝕜 := 𝕜) (h i) x) fun c hc ↦ ?_
+  rw [singleton_subset_iff] at hc ⊢
+  obtain ⟨w, hw, hwx⟩ := hc
+  exact ⟨f i w, hw, by rw [← hwx]; exact (map_smul (f i) c w).symm⟩
+
 /-- A seminorm on `F` is continuous for the final locally convex topology as soon as its
 compositions with the maps of the family are continuous. -/
 theorem continuous_seminorm (p : Seminorm 𝕜 F) (hp : ∀ i, Continuous fun x ↦ p (f i x)) :
@@ -219,11 +232,7 @@ theorem continuous_seminorm (p : Seminorm 𝕜 F) (hp : ∀ i, Continuous fun x 
   have h2 : ContinuousSMul 𝕜 F := continuousSMul f
   refine Seminorm.continuous (r := 1) (mem_nhds_zero f (p.convex_ball 0 1)
     (p.balanced_ball_zero 1) (p.absorbent_ball_zero one_pos) fun i ↦ ?_)
-  refine mem_of_superset (((hp i).isOpen_preimage _ (isOpen_Iio (a := (1 : ℝ)))).mem_nhds
-    (by simp)) ?_
-  intro x hx
-  rw [mem_preimage, p.mem_ball_zero]
-  exact hx
+  simpa [Seminorm.ball_comp] using (p.comp (f i)).ball_mem_nhds (hp i) one_pos
 
 /-- The final locally convex topology for a family of maps from barrelled spaces is barrelled.
 In particular locally convex direct sums and inductive limits of barrelled spaces are

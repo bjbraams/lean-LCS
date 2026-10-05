@@ -137,11 +137,23 @@ theorem tendsto_prod_range_add_of_tendsto_prod_range {a : ℕ → G} {s : G}
 /-- Let `S k` be subsets of a commutative topological group whose closures are neighbourhoods of the
 identity, and let `B k` be neighbourhoods of the identity. Then for every point `x₀` of the closure
 of `S 0` there are `x k ∈ S k` such that the remainder `x₀ / ∏ k < n + 1, x k` lies in the closure
-of `S (n + 1)` and in `B n`, for all `n`. -/
+of `S (n + 1)` and in `B n`, for all `n`.
+
+Related work outside Mathlib: the additive form, without the neighbourhoods `B k` and for the
+images `f '' S k` under an additive map `f`, is `TauCeti.exists_seq_mem_and_sub_sum_mem` of the
+Tau Ceti library (Tau Ceti contributors), file `TauCeti/Topology/Algebra/OpenMapping/Sequence.lean`.
+The statement and proof here were obtained independently and are retained because the primary
+form is multiplicative and carries the neighbourhoods `B k`. -/
 @[to_additive /-- Let `S k` be subsets of a commutative topological group whose closures are
 neighbourhoods of zero, and let `B k` be neighbourhoods of zero. Then for every point `x₀` of the
 closure of `S 0` there are `x k ∈ S k` such that the remainder `x₀ - ∑ k < n + 1, x k` lies in the
-closure of `S (n + 1)` and in `B n`, for all `n`. -/]
+closure of `S (n + 1)` and in `B n`, for all `n`.
+
+Related work outside Mathlib: the additive form, without the neighbourhoods `B k` and for the
+images `f '' S k` under an additive map `f`, is `TauCeti.exists_seq_mem_and_sub_sum_mem` of the
+Tau Ceti library (Tau Ceti contributors), file `TauCeti/Topology/Algebra/OpenMapping/Sequence.lean`.
+The statement and proof here were obtained independently and are retained because the primary
+form is multiplicative and carries the neighbourhoods `B k`. -/]
 theorem exists_seq_mem_div_prod_mem_closure {S B : ℕ → Set G}
     (hS : ∀ k, closure (S k) ∈ 𝓝 (1 : G)) (hB : ∀ k, B k ∈ 𝓝 (1 : G)) {x₀ : G}
     (hx₀ : x₀ ∈ closure (S 0)) :

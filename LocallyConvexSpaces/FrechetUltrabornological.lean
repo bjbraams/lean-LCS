@@ -179,56 +179,23 @@ instance (priority := 100) UltrabornologicalSpace.of_completeSpace_firstCountabl
   refine le_antisymm ?_ ?_
   · -- Every neighbourhood of zero for the final topology is one for the given topology.
     have h1 := locallyConvexFinalTopology.isTopologicalAddGroup f
-    have h2 := locallyConvexFinalTopology.continuousSMul f
-    have h3 := locallyConvexFinalTopology.locallyConvexSpace f
     rw [le_iff_nhds]
     intro y
     rw [← map_add_left_nhds_zero y, ← @map_add_left_nhds_zero E (locallyConvexFinalTopology f) _
       h1 y]
     refine Filter.map_mono fun U hU ↦ ?_
-    obtain ⟨W, ⟨hW, hWc, hWb⟩, hWU⟩ :=
-      (@nhds_zero_hasBasis_convex_balanced 𝕜 E _ _ _ _ _ (locallyConvexFinalTopology f) h2
-        h3).mem_iff.mp hU
-    refine mem_of_superset ?_ hWU
-    -- `W` absorbs every sequence tending to zero.
+    -- `U` absorbs every sequence `x` tending to zero: its preimage under `f x` absorbs the
+    -- closed unit ball of `ℓ¹`, whose image contains the range of `x`.
     refine mem_nhds_zero_of_forall_absorbs_range (𝕜 := 𝕜) fun x hx ↦ ?_
-    have hcont := locallyConvexFinalTopology.continuous_apply f ⟨x, hx⟩
-    obtain ⟨O, hOW, hO, h0O⟩ := (@mem_nhds_iff E (locallyConvexFinalTopology f) 0 W).mp hW
-    have hOpen : IsOpen (f ⟨x, hx⟩ ⁻¹' O) :=
-      @Continuous.isOpen_preimage _ E _ (locallyConvexFinalTopology f) _ hcont O hO
-    have h0 : (0 : ℓ¹(ℕ, 𝕜)) ∈ f ⟨x, hx⟩ ⁻¹' O := by
-      rw [mem_preimage, map_zero]
-      exact h0O
-    have hpre : f ⟨x, hx⟩ ⁻¹' W ∈ 𝓝 (0 : ℓ¹(ℕ, 𝕜)) :=
-      mem_of_superset (hOpen.mem_nhds h0) (preimage_mono hOW)
-    obtain ⟨δ, hδ, hδW⟩ := Metric.mem_nhds_iff.mp hpre
-    have hmem (n : ℕ) : ((δ / 2 : ℝ) : 𝕜) • x n ∈ W := by
-      have hball : lp.single 1 n ((δ / 2 : ℝ) : 𝕜) ∈ Metric.ball (0 : ℓ¹(ℕ, 𝕜)) δ := by
-        rw [Metric.mem_ball, dist_zero_right, lp.norm_single one_pos,
-          RCLike.norm_ofReal, abs_of_pos (half_pos hδ)]
-        exact half_lt_self hδ
-      have h := hδW hball
-      change lp.tsumSMulCLM x (hx.isVonNBounded_range 𝕜) (lp.single 1 n ((δ / 2 : ℝ) : 𝕜)) ∈ W
-        at h
-      rwa [lp.tsumSMulCLM_single] at h
-    have hne : ((δ / 2 : ℝ) : 𝕜) ≠ 0 := by
-      rw [Ne, RCLike.ofReal_eq_zero]
-      exact (half_pos hδ).ne'
-    refine absorbs_iff_norm.mpr ⟨(δ / 2)⁻¹, fun c hc ↦ ?_⟩
+    have hpre : f ⟨x, hx⟩ ⁻¹' U ∈ 𝓝 (0 : ℓ¹(ℕ, 𝕜)) :=
+      locallyConvexFinalTopology.preimage_mem_nhds_zero f ⟨x, hx⟩ hU
+    refine ((((NormedSpace.isVonNBounded_closedBall 𝕜 ℓ¹(ℕ, 𝕜) 1) hpre).image_linearMap
+      (f ⟨x, hx⟩)).mono_left (image_preimage_subset _ _)).mono_right ?_
     rintro _ ⟨n, rfl⟩
-    have hcpos : 0 < ‖c‖ := (inv_pos.mpr (half_pos hδ)).trans_le hc
-    have hc0 : c ≠ 0 := norm_pos_iff.mp hcpos
-    rw [mem_smul_set_iff_inv_smul_mem₀ hc0]
-    have hsm : c⁻¹ • x n = (c⁻¹ * (((δ / 2 : ℝ) : 𝕜))⁻¹) • (((δ / 2 : ℝ) : 𝕜) • x n) := by
-      rw [smul_smul, mul_assoc, inv_mul_cancel₀ hne, mul_one]
-    rw [hsm]
-    refine balanced_iff_smul_mem.mp hWb ?_ (hmem n)
-    rw [norm_mul, norm_inv, norm_inv, RCLike.norm_ofReal, abs_of_pos (half_pos hδ)]
-    calc ‖c‖⁻¹ * (δ / 2)⁻¹ ≤ ((δ / 2)⁻¹)⁻¹ * (δ / 2)⁻¹ := by
-          gcongr
-      _ = 1 := by
-          rw [inv_inv]
-          exact mul_inv_cancel₀ (half_pos hδ).ne'
+    refine ⟨lp.single 1 n 1, ?_, ?_⟩
+    · rw [mem_closedBall_zero_iff, lp.norm_single one_pos, norm_one]
+    · change lp.tsumSMulCLM x (hx.isVonNBounded_range 𝕜) (lp.single 1 n 1) = x n
+      rw [lp.tsumSMulCLM_single, one_smul]
   · exact (locallyConvexFinalTopology.le_iff f).mpr fun x ↦
     (lp.tsumSMulCLM x.1 (x.2.isVonNBounded_range 𝕜)).continuous
 

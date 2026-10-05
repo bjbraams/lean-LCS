@@ -29,7 +29,7 @@ that its trace on `E_B` is a neighbourhood of zero.
 
 ## Main statements
 
-* `Bornology.IsBanachDisk.of_isCompact`: a nonempty compact disk of a Hausdorff locally convex
+* `Bornology.IsBanachDisk.of_isCompact`: a compact disk of a Hausdorff locally convex
   space is a Banach disk.
 * `Bornology.IsBanachDisk.exists_mem_compactDisks_of_tendsto_zero`
 * `UltrabornologicalSpace.eq_locallyConvexFinalTopology_compactDisks`,
@@ -63,11 +63,11 @@ def Bornology.compactDisks [TopologicalSpace E] : Set (Set E) :=
 
 variable {𝕜 E}
 
-/-- A nonempty compact disk of a Hausdorff locally convex space is a Banach disk. -/
+/-- A compact disk of a Hausdorff locally convex space is a Banach disk. -/
 theorem Bornology.IsBanachDisk.of_isCompact [UniformSpace E] [IsUniformAddGroup E]
     [ContinuousSMul 𝕜 E] [LocallyConvexSpace ℝ E] [T2Space E] {K : Set E} (hK : IsCompact K)
-    (hc : Convex ℝ K) (hb : Balanced 𝕜 K) (hne : K.Nonempty) : IsBanachDisk 𝕜 K :=
-  IsBanachDisk.of_isComplete hc hb hne (hK.isVonNBounded 𝕜) hK.isComplete
+    (hc : Convex ℝ K) (hb : Balanced 𝕜 K) : IsBanachDisk 𝕜 K :=
+  IsBanachDisk.of_isComplete hc hb (hK.isVonNBounded 𝕜) hK.isComplete
 
 section Topology
 
@@ -164,4 +164,4 @@ theorem UltrabornologicalSpace.of_eq_locallyConvexFinalTopology_compactDisks [Un
       fun K : compactDisks 𝕜 E ↦ DiskSpace.incl 𝕜 K.1
     rwa [← h] at h1
   exact UltrabornologicalSpace.of_eq_locallyConvexFinalTopology_diskSpace
-    (fun K hK ↦ IsBanachDisk.of_isCompact hK.1 hK.2.1 hK.2.2.1 hK.2.2.2) h
+    (fun K hK ↦ IsBanachDisk.of_isCompact hK.1 hK.2.1 hK.2.2.1) h

@@ -240,10 +240,7 @@ theorem continuous_quotient [TopologicalSpace E] [IsTopologicalAddGroup E]
     (hp : Continuous p) : Continuous (p.quotient N) := by
   refine Seminorm.continuous_of_forall fun r hr ↦ ?_
   rw [← image_mkQ_ball]
-  have hball : p.ball 0 r ∈ 𝓝 (0 : E) := by
-    have h := (isOpen_lt hp continuous_const : IsOpen {x | p x < r}).mem_nhds
-      (show (0 : E) ∈ {x | p x < r} by simpa using hr)
-    exact mem_of_superset h fun x hx ↦ by simpa [Seminorm.mem_ball_zero] using hx
-  exact (Submodule.Quotient.nhds_zero_hasBasis_image N (𝓝 (0 : E)).basis_sets).mem_of_mem hball
+  exact (Submodule.Quotient.nhds_zero_hasBasis_image N (𝓝 (0 : E)).basis_sets).mem_of_mem
+    (p.ball_mem_nhds hp hr)
 
 end Seminorm

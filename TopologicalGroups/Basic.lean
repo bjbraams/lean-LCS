@@ -8,6 +8,7 @@ module
 public import Mathlib.Topology.Algebra.Group.Neighborhood
 public import Mathlib.Topology.Algebra.Group.Pointwise
 public import Mathlib.Topology.Baire.Lemmas
+public import MathlibExtras.Topology.Meagre
 public import TauCeti.Topology.Algebra.Group.FirstCountable
 
 /-!
@@ -65,10 +66,7 @@ of the translate `S / a` is a neighbourhood of the identity. -/
 closure of the translate `S - a` is a neighbourhood of zero. -/]
 theorem exists_mem_closure_image_div_mem_nhds_one {S : Set E} (hS : ¬IsMeagre S) :
     ∃ a ∈ S, closure ((fun w ↦ w / a) '' S) ∈ 𝓝 (1 : E) := by
-  have hne : (interior (closure S)).Nonempty := by
-    by_contra h
-    exact hS (IsNowhereDense.isMeagre (not_nonempty_iff_eq_empty.mp h))
-  obtain ⟨x, hx⟩ := hne
+  obtain ⟨x, hx⟩ := nonempty_interior_closure_of_not_isMeagre hS
   -- The open set `interior (closure S)` meets `S`.
   obtain ⟨a, haint, haS⟩ :=
     mem_closure_iff.mp (interior_subset hx) _ isOpen_interior hx

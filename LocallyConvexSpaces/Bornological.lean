@@ -414,9 +414,9 @@ theorem UltrabornologicalSpace.mem_nhds_zero [UltrabornologicalSpace 𝕜 E] {S 
         fun x hx ↦ by
           rw [Seminorm.mem_closedBall_zero, Seminorm.comp_apply]
           exact gauge_le_one_of_mem hx)
-  refine mem_of_superset ((hpc.isOpen_preimage _ (isOpen_Iio (a := (1 : ℝ)))).mem_nhds
-    (by simp)) fun x hx ↦ ?_
-  exact setOfPred_gauge_lt_one_subset_self hc ha.zero_mem ha.restrictScalars_real hx
+  exact mem_of_superset (p.ball_mem_nhds hpc one_pos) fun x hx ↦
+    setOfPred_gauge_lt_one_subset_self hc ha.zero_mem ha.restrictScalars_real
+      (p.mem_ball_zero.mp hx)
 
 /-- A real or complex topological vector space is ultrabornological if every `ℝ`-convex, balanced,
 absorbent set whose preimages under the continuous linear maps from complete seminormed spaces
@@ -428,11 +428,8 @@ theorem UltrabornologicalSpace.of_forall_mem_nhds_zero [IsTopologicalAddGroup E]
         (f : X →L[𝕜] E), f ⁻¹' S ∈ 𝓝 (0 : X)) → S ∈ 𝓝 (0 : E)) :
     UltrabornologicalSpace 𝕜 E :=
   ⟨fun p hp ↦ Seminorm.continuous (r := 1) (h _ (p.convex_ball 0 1) (p.balanced_ball_zero 1)
-    (p.absorbent_ball_zero one_pos) fun X _ _ _ f ↦
-      mem_of_superset (((hp X f).isOpen_preimage _ (isOpen_Iio (a := (1 : ℝ)))).mem_nhds
-        (by simp)) fun x hx ↦ by
-          rw [mem_preimage, p.mem_ball_zero]
-          exact hx)⟩
+    (p.absorbent_ball_zero one_pos) fun X _ _ _ f ↦ by
+      simpa [Seminorm.ball_comp] using (p.comp f.toLinearMap).ball_mem_nhds (hp X f) one_pos)⟩
 
 /-- A real or complex topological vector space is ultrabornological if and only if every
 `ℝ`-convex, balanced, absorbent set whose preimages under the continuous linear maps from complete

@@ -36,6 +36,8 @@ locally convex spaces unless stated otherwise.
 | Barrelled spaces: every barrel is a neighbourhood of zero | `barrelledSpace_iff_forall_isBarrel_mem_nhds` | [Barrel](LocallyConvexSpaces/Barrel.lean) |
 | Closed graph theorem, barrelled domain and complete first-countable codomain | `LinearMap.continuous_of_isClosed_graph_of_barrelledSpace` | [ClosedGraph](LocallyConvexSpaces/ClosedGraph.lean) |
 | Open mapping theorem, complete first-countable domain and barrelled codomain | `ContinuousLinearMap.isOpenMap_of_barrelledSpace` | [OpenMapping](LocallyConvexSpaces/OpenMapping.lean) |
+| Closed graph theorem, Baire domain and complete first-countable codomain (topological vector spaces, no local convexity) | `LinearMap.continuous_of_isClosed_graph_of_baireSpace_of_firstCountableTopology` | [BaireMapping](TopologicalVectorSpaces/BaireMapping.lean) |
+| Open mapping theorem, complete first-countable domain and Baire codomain (topological vector spaces, no local convexity) | `LinearMap.isOpenMap_of_isClosed_graph_of_baireSpace`, `ContinuousLinearMap.isOpenMap_of_baireSpace` | [BaireMapping](TopologicalVectorSpaces/BaireMapping.lean) |
 | Pták's closed graph and open mapping theorems | `LinearMap.continuous_of_isClosed_graph_of_infraPtakSpace`, `ContinuousLinearMap.isOpenMap_of_ptakSpace` | [Ptak](LocallyConvexSpaces/Ptak.lean) |
 | De Wilde's closed graph and open mapping theorems | `LinearMap.continuous_of_isSeqClosed_graph_of_ultrabornologicalSpace`, `LinearMap.isOpenMap_of_isSeqClosed_graph_of_ultrabornologicalSpace` | [DeWilde](WebbedSpaces/DeWilde) |
 | Bipolar theorem | `StrongDual.bipolar_eq_self` | [Bipolar](LocallyConvexSpaces/Bipolar.lean) |
@@ -124,7 +126,10 @@ Starting points: [ProjectiveLimit](LocallyConvexSpaces/ProjectiveLimit.lean),
 The LCS core contains closed graph and open mapping theorems for barrelled spaces
 and complete first-countable locally convex spaces, together with Pták's mapping
 theorems. Their successive-approximation foundation is a theorem about nearly open
-closed relations on commutative topological groups.
+closed relations on commutative topological groups. Combined with Tau Ceti's Baire-category
+step, the same foundation gives open mapping and closed graph theorems for Baire topological
+vector spaces without any local convexity
+([BaireMapping](TopologicalVectorSpaces/BaireMapping.lean)).
 
 The webbed-space extension develops completing and strict webs, subspaces, quotients,
 countable products and inductive constructions, and criteria for webbedness. Fréchet
@@ -280,7 +285,8 @@ module with a module docstring, every definition, theorem and structure field ha
 docstring, and lines are at most 100 characters. General supporting lemmas belong in the
 lowest layer that can state them, and assumptions are stated at the appropriate
 mathematical generality. Statements that duplicate material in an open Mathlib pull
-request carry a note beside the declaration naming the pull request.
+request or in Tau Ceti carry a note beside the declaration naming the source.
+[CREDITS.md](CREDITS.md) summarizes the Tau Ceti results used and the related pull requests.
 
 Module headers cite the mathematical literature by keys in [references.bib](references.bib).
 Sources include Bourbaki, Schaefer–Wolff, Köthe, Narici–Beckenstein, Casselman, and

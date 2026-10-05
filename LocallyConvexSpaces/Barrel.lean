@@ -191,11 +191,9 @@ theorem lowerSemicontinuous_gaugeSeminorm (hs : IsBarrel 𝕜 s) :
 theorem mem_nhds_zero [BarrelledSpace 𝕜 E] (hs : IsBarrel 𝕜 s) : s ∈ 𝓝 (0 : E) := by
   have hc : Continuous hs.gaugeSeminorm :=
     Seminorm.continuous_of_lowerSemicontinuous _ hs.lowerSemicontinuous_gaugeSeminorm
-  have h : {x | hs.gaugeSeminorm x < 1} ∈ 𝓝 (0 : E) :=
-    (isOpen_lt hc continuous_const).mem_nhds (by simp)
-  refine mem_of_superset h fun x hx ↦ ?_
-  rw [← hs.closedBall_gaugeSeminorm, Seminorm.mem_closedBall_zero]
-  exact le_of_lt hx
+  rw [← hs.closedBall_gaugeSeminorm]
+  exact mem_of_superset (hs.gaugeSeminorm.ball_mem_nhds hc one_pos)
+    (hs.gaugeSeminorm.ball_subset_closedBall 0 1)
 
 end IsBarrel
 
@@ -229,11 +227,7 @@ theorem nhds_zero_hasBasis_isBarrel [PolynormableSpace 𝕜 E] :
   have hp : Continuous p := hp
   refine ⟨p.closedBall 0 2⁻¹,
     ⟨?_, p.isBarrel_closedBall hp.lowerSemicontinuous (by norm_num)⟩, ?_⟩
-  · have h : {x | p x < 2⁻¹} ∈ 𝓝 (0 : E) :=
-      (isOpen_lt hp continuous_const).mem_nhds (by simp)
-    refine mem_of_superset h fun x hx ↦ ?_
-    rw [Seminorm.mem_closedBall_zero]
-    exact le_of_lt hx
+  · exact mem_of_superset (p.ball_mem_nhds hp (by norm_num)) (p.ball_subset_closedBall 0 _)
   · refine Subset.trans (fun x hx ↦ ?_) hpU
     rw [id, Seminorm.mem_closedBall_zero] at hx
     rw [Seminorm.mem_ball_zero]

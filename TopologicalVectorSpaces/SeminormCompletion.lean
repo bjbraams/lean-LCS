@@ -132,11 +132,6 @@ theorem toLocalBanachSpace_eq_zero_iff (p : Seminorm 𝕜 E) (x : E) :
 theorem denseRange_toLocalBanachSpace (p : Seminorm 𝕜 E) : DenseRange p.toLocalBanachSpace :=
   @UniformSpace.Completion.denseRange_coe p.LocalSpace _
 
-/-- Domination of seminorms gives a contraction between their seminormed spaces. -/
-def LocalSpace.mapOfLE {p q : Seminorm 𝕜 E} (h : p ≤ q) : q.LocalSpace →L[𝕜] p.LocalSpace :=
-  (p.toLocalSpace.toLinearMap.comp q.toLocalSpace.symm.toLinearMap).mkContinuous 1
-    (fun x ↦ by change p x ≤ 1 * q x; simpa using h x)
-
 section Maps
 
 variable {F G : Type*} [AddCommGroup F] [Module 𝕜 F] [AddCommGroup G] [Module 𝕜 G]
@@ -149,6 +144,11 @@ def LocalSpace.map (p : Seminorm 𝕜 E) (q : Seminorm 𝕜 F) (f : E →ₗ[�
 
 end Maps
 
+/-- Domination of seminorms gives a contraction between their seminormed spaces: the map induced
+by the identity with bound one. -/
+def LocalSpace.mapOfLE {p q : Seminorm 𝕜 E} (h : p ≤ q) : q.LocalSpace →L[𝕜] p.LocalSpace :=
+  LocalSpace.map q p LinearMap.id 1 fun x ↦ by simpa using h x
+
 namespace LocalBanachSpace
 
 /-- Domination of seminorms gives a contraction between the local Banach spaces. -/
@@ -159,20 +159,6 @@ def mapOfLE {p q : Seminorm 𝕜 E} (h : p ≤ q) :
 @[simp] theorem mapOfLE_toLocalBanachSpace {p q : Seminorm 𝕜 E} (h : p ≤ q) (x : E) :
     mapOfLE h (q.toLocalBanachSpace x) = p.toLocalBanachSpace x :=
   ContinuousLinearMap.completion_apply_coe _ _
-
-/-- The identity inequality induces the identity connecting map. -/
-@[simp] theorem mapOfLE_refl (p : Seminorm 𝕜 E) : mapOfLE (le_refl p) = .id 𝕜 _ := by
-  ext x
-  exact p.denseRange_toLocalBanachSpace.induction_on x
-    (isClosed_eq (mapOfLE _).continuous continuous_id) (by simp)
-
-/-- Connecting maps compose according to transitivity of domination. -/
-theorem mapOfLE_comp {p q r : Seminorm 𝕜 E} (hpq : p ≤ q) (hqr : q ≤ r) :
-    (mapOfLE hpq).comp (mapOfLE hqr) = mapOfLE (hpq.trans hqr) := by
-  ext x
-  exact r.denseRange_toLocalBanachSpace.induction_on x
-    (isClosed_eq ((mapOfLE hpq).comp (mapOfLE hqr)).continuous
-      (mapOfLE _).continuous) (by simp)
 
 /-- Connecting maps are contractions. -/
 theorem norm_mapOfLE_le {p q : Seminorm 𝕜 E} (h : p ≤ q) (x : q.LocalBanachSpace) :
@@ -256,10 +242,17 @@ theorem map_comp (p : Seminorm 𝕜 E) (q : Seminorm 𝕜 F) (r : Seminorm 𝕜 
 /-- The original contraction connecting two dominated seminorms is the induced completion
 map of the identity linear map. -/
 theorem mapOfLE_eq_map {p q : Seminorm 𝕜 E} (h : p ≤ q) :
-    mapOfLE h = map q p (LinearMap.id) 1
-      (fun x ↦ by simpa using h x) := by
-  apply map_unique
-  exact mapOfLE_toLocalBanachSpace h
+    mapOfLE h = map q p (LinearMap.id) 1 (fun x ↦ by simpa using h x) :=
+  rfl
+
+/-- The identity inequality induces the identity connecting map. -/
+@[simp] theorem mapOfLE_refl (p : Seminorm 𝕜 E) : mapOfLE (le_refl p) = .id 𝕜 _ :=
+  map_id p
+
+/-- Connecting maps compose according to transitivity of domination. -/
+theorem mapOfLE_comp {p q r : Seminorm 𝕜 E} (hpq : p ≤ q) (hqr : q ≤ r) :
+    (mapOfLE hpq).comp (mapOfLE hqr) = mapOfLE (hpq.trans hqr) :=
+  (map_comp r q p LinearMap.id LinearMap.id 1 1 _ _).trans (map_eq _ _ _ _ _ _ _)
 
 /-- Mutually dominating seminorms have continuously linearly equivalent completions;
 the equivalence extends the identity on the original module. -/

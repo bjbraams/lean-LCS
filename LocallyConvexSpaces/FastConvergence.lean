@@ -194,7 +194,7 @@ theorem Bornology.isFastNullSeq_iff_exists_isBanachDisk [T2Space E] {x : ℕ →
       (∀ n, DiskSpace.incl 𝕜 B (y n) = x n) ∧ Tendsto y atTop (𝓝 0) := by
   constructor
   · rintro ⟨K, hK, y, hyx, hy⟩
-    exact ⟨K, IsBanachDisk.of_isCompact hK.1 hK.2.1 hK.2.2.1 hK.2.2.2, y, hyx, hy⟩
+    exact ⟨K, IsBanachDisk.of_isCompact hK.1 hK.2.1 hK.2.2.1, y, hyx, hy⟩
   · rintro ⟨B, hB, y, hyx, hy⟩
     have h := hB.isFastNullSeq_of_tendsto_zero hy
     rwa [funext hyx] at h

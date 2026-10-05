@@ -108,6 +108,13 @@ intersection with the polar of every neighbourhood of zero in `E` is weak-\* clo
 def IsAlmostWeakStarClosed (C : Set (StrongDual 𝕜 E)) : Prop :=
   ∀ U ∈ 𝓝 (0 : E), IsClosed (WeakDual.toStrongDual ⁻¹' (C ∩ polar 𝕜 U))
 
+/-- The set where a continuous linear functional has norm at most one is a neighbourhood of
+zero. -/
+theorem setOf_norm_apply_le_one_mem_nhds (ψ : StrongDual 𝕜 E) :
+    {x : E | ‖ψ x‖ ≤ 1} ∈ 𝓝 (0 : E) :=
+  (ψ.continuous.norm.continuousAt (x := 0)).preimage_mem_nhds (t := Iic 1)
+    (by simpa using Iic_mem_nhds one_pos)
+
 variable {C D : Set (StrongDual 𝕜 E)}
 
 /-- A weak-\* closed set is almost weak-\* closed. -/
@@ -141,12 +148,7 @@ theorem IsAlmostWeakStarClosed.preimage_add_right [ContinuousSMul 𝕜 E]
     IsAlmostWeakStarClosed {φ : StrongDual 𝕜 E | φ + ψ ∈ C} := by
   intro U hU
   -- If `φ ∈ U°` then `φ + ψ ∈ V°`, where `V` is a small multiple of `U ∩ {x | ‖ψ x‖ ≤ 1}`.
-  have hN : {x : E | ‖ψ x‖ ≤ 1} ∈ 𝓝 (0 : E) := by
-    have h : ContinuousAt (fun x ↦ ‖ψ x‖) 0 := ψ.continuous.norm.continuousAt
-    have h1 : Iic (1 : ℝ) ∈ 𝓝 (‖ψ 0‖) := by
-      rw [map_zero, norm_zero]
-      exact Iic_mem_nhds one_pos
-    exact h.preimage_mem_nhds h1
+  have hN : {x : E | ‖ψ x‖ ≤ 1} ∈ 𝓝 (0 : E) := setOf_norm_apply_le_one_mem_nhds ψ
   obtain ⟨c, hc⟩ := NormedField.exists_lt_norm 𝕜 2
   have hcpos : 0 < ‖c‖ := two_pos.trans hc
   have hc0 : c ≠ 0 := norm_pos_iff.mp hcpos
@@ -301,13 +303,7 @@ theorem exists_isCompact_polar_subset {W : Set (StrongDual 𝕜 E)} (hW0 : (0 : 
       · exact mem_biUnion (Finset.mem_insert_self _ _) (hm h)
   · -- Every functional lies in the polar of some `V m`.
     intro φ hφ
-    have hN : {x : E | ‖φ x‖ ≤ 1} ∈ 𝓝 (0 : E) := by
-      have h : ContinuousAt (fun x ↦ ‖φ x‖) 0 := φ.continuous.norm.continuousAt
-      have h1 : Iic (1 : ℝ) ∈ 𝓝 (‖φ 0‖) := by
-        rw [map_zero, norm_zero]
-        exact Iic_mem_nhds one_pos
-      exact h.preimage_mem_nhds h1
-    obtain ⟨m, hm⟩ := hVbasis hN
+    obtain ⟨m, hm⟩ := hVbasis (setOf_norm_apply_le_one_mem_nhds φ)
     exact (G m).2.2 ⟨fun x hx ↦ hφ x (mem_insert_of_mem _ (mem_iUnion.mpr ⟨m, hx⟩)),
       fun x hx ↦ hm hx⟩
 
