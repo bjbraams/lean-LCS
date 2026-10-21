@@ -211,10 +211,20 @@ Directories determine import paths. Declarations use mathematical namespaces suc
 
 ## Building
 
-The project pins **Lean 4.35.0-rc3** in [lean-toolchain](lean-toolchain), **Mathlib
-`5e0c4e5239cb`**, and **TauCeti `a780c7ad6beb`** in [lakefile.toml](lakefile.toml), with
-resolved dependencies recorded in [lake-manifest.json](lake-manifest.json). The Mathlib
-revision has the rc3 theorem sources and dependency updates matching this TauCeti revision.
+The project pins **Lean 4.36.0-rc1** in [lean-toolchain](lean-toolchain), **Mathlib
+`911003dd6dea`**, and **TauCeti `5cdecf40e99d`** in [lakefile.toml](lakefile.toml), with
+resolved dependencies recorded in [lake-manifest.json](lake-manifest.json). The shared dependency pins are synchronized with the companion projects.
+
+The 18 October 2026 upgrade uses Mathlib's development head. TauCeti's own
+Mathlib pin is 65 commits earlier; [TauCeti-4.36.patch](TauCeti-4.36.patch)
+updates one renamed coercion lemma for this snapshot. The shared checkout
+already has this patch. After a fresh dependency checkout, apply it before
+building:
+
+```sh
+git -C .lake/packages/TauCeti apply "$PWD/TauCeti-4.36.patch"
+```
+
 Install Lean through
 [elan](https://github.com/leanprover/elan), which selects the pinned toolchain
 automatically. Then:

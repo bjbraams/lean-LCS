@@ -164,4 +164,4 @@ theorem UltrabornologicalSpace.of_eq_locallyConvexFinalTopology_compactDisks [Un
       fun K : compactDisks 𝕜 E ↦ DiskSpace.incl 𝕜 K.1
     rwa [← h] at h1
   exact UltrabornologicalSpace.of_eq_locallyConvexFinalTopology_diskSpace
-    (fun K hK ↦ IsBanachDisk.of_isCompact hK.1 hK.2.1 hK.2.2.1) h
+    (fun K (hK : K ∈ compactDisks 𝕜 E) ↦ IsBanachDisk.of_isCompact hK.1 hK.2.1 hK.2.2.1) h
